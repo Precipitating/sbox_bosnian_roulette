@@ -2,53 +2,6 @@
   "__guid": "11a1da55-1e8a-48dd-bf77-3fe634fb4eba",
   "GameObjects": [
     {
-      "__guid": "75d26ce5-5e51-4ab4-8d80-827a8e40fd8c",
-      "__version": 1,
-      "Flags": 0,
-      "Name": "Main Camera",
-      "Position": "-300,0,100",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.CameraComponent",
-          "__guid": "fbd817c6-61b9-4c8c-83b1-626cbd45f69f",
-          "__enabled": true,
-          "BackgroundColor": "0.33333,0.46275,0.52157,1",
-          "ClearFlags": "All",
-          "EnablePostProcessing": true,
-          "FieldOfView": 60,
-          "FovAxis": "Horizontal",
-          "IsMainCamera": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Orthographic": false,
-          "OrthographicHeight": 1204,
-          "PostProcessAnchor": null,
-          "Priority": 1,
-          "RenderExcludeTags": "",
-          "RenderTags": "",
-          "RenderTexture": null,
-          "TargetEye": "None",
-          "Viewport": "0,0,1,1",
-          "ZFar": 10000,
-          "ZNear": 10
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "f3e26380-2f31-451f-95c4-1874f77293f4",
       "__version": 1,
       "Flags": 0,
@@ -1072,7 +1025,7 @@
           "__enabled": true,
           "BodyGroups": 18446744073709551615,
           "Health": 0,
-          "IsStatic": false,
+          "IsStatic": true,
           "MaterialGroup": null,
           "Model": "models/props/trim_sheets/chairs/wooden_chair_a.vmdl",
           "OnComponentDestroy": null,
@@ -1088,7 +1041,7 @@
         },
         {
           "__type": "Sandbox.ModelRenderer",
-          "__guid": "a2db3781-d480-405c-b165-2c475f84b9bf",
+          "__guid": "620b28f4-a672-4b39-909c-d26025fdb7b7",
           "__enabled": true,
           "BodyGroups": 18446744073709551615,
           "CreateAttachments": false,
@@ -1114,7 +1067,7 @@
         },
         {
           "__type": "Sandbox.ModelCollider",
-          "__guid": "a1fde863-2bcf-4a81-82e7-dd58be3bd9f1",
+          "__guid": "635a031d-c3b4-4dbc-b651-bf2e5bc40aa1",
           "__enabled": true,
           "ColliderFlags": 0,
           "Elasticity": null,
@@ -1132,38 +1085,9 @@
           "OnTriggerEnter": null,
           "OnTriggerExit": null,
           "RollingResistance": null,
-          "Static": false,
+          "Static": true,
           "Surface": null,
           "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Sandbox.Rigidbody",
-          "__guid": "9f5971b9-d747-4280-ae97-c5f1140602fb",
-          "__enabled": true,
-          "AngularDamping": 0,
-          "Gravity": true,
-          "GravityScale": 1,
-          "LinearDamping": 0,
-          "Locking": {
-            "X": false,
-            "Y": false,
-            "Z": false,
-            "Pitch": false,
-            "Yaw": false,
-            "Roll": false
-          },
-          "MassCenterOverride": "0,0,0",
-          "MassOverride": 0,
-          "MotionEnabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OverrideMassCenter": false,
-          "RigidbodyFlags": 0,
-          "StartAsleep": false
         }
       ],
       "Children": []
@@ -1190,7 +1114,7 @@
           "__enabled": true,
           "BodyGroups": 18446744073709551615,
           "Health": 0,
-          "IsStatic": false,
+          "IsStatic": true,
           "MaterialGroup": null,
           "Model": "models/props/trim_sheets/chairs/wooden_chair_a.vmdl",
           "OnComponentDestroy": null,
@@ -1206,7 +1130,7 @@
         },
         {
           "__type": "Sandbox.ModelRenderer",
-          "__guid": "5e872b32-8357-4cb2-aa53-b15984e1d8ab",
+          "__guid": "32ca5e27-6ae4-4991-a52c-b162fd7bb1cd",
           "__enabled": true,
           "BodyGroups": 18446744073709551615,
           "CreateAttachments": false,
@@ -1232,7 +1156,7 @@
         },
         {
           "__type": "Sandbox.ModelCollider",
-          "__guid": "f9e09234-6250-4aa9-9ba7-303e10420190",
+          "__guid": "2f72900d-ee5a-4371-b587-d063713df786",
           "__enabled": true,
           "ColliderFlags": 0,
           "Elasticity": null,
@@ -1250,38 +1174,9 @@
           "OnTriggerEnter": null,
           "OnTriggerExit": null,
           "RollingResistance": null,
-          "Static": false,
+          "Static": true,
           "Surface": null,
           "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Sandbox.Rigidbody",
-          "__guid": "0a05e725-c726-451c-8feb-eeca8ca594f4",
-          "__enabled": true,
-          "AngularDamping": 0,
-          "Gravity": true,
-          "GravityScale": 1,
-          "LinearDamping": 0,
-          "Locking": {
-            "X": false,
-            "Y": false,
-            "Z": false,
-            "Pitch": false,
-            "Yaw": false,
-            "Roll": false
-          },
-          "MassCenterOverride": "0,0,0",
-          "MassOverride": 0,
-          "MotionEnabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OverrideMassCenter": false,
-          "RigidbodyFlags": 0,
-          "StartAsleep": false
         }
       ],
       "Children": []
@@ -1308,7 +1203,7 @@
           "__enabled": true,
           "BodyGroups": 18446744073709551615,
           "Health": 0,
-          "IsStatic": false,
+          "IsStatic": true,
           "MaterialGroup": null,
           "Model": "models/props/trim_sheets/table/table_round_a.vmdl",
           "OnComponentDestroy": null,
@@ -1324,7 +1219,7 @@
         },
         {
           "__type": "Sandbox.ModelRenderer",
-          "__guid": "dad30b09-4105-4988-a58e-ec91a6cdbb3c",
+          "__guid": "8c554ece-235e-491a-a939-8205a519a336",
           "__enabled": true,
           "BodyGroups": 18446744073709551615,
           "CreateAttachments": false,
@@ -1350,7 +1245,7 @@
         },
         {
           "__type": "Sandbox.ModelCollider",
-          "__guid": "ac9f8781-9da8-404c-a9b3-faf52a0673a6",
+          "__guid": "7e5a4c03-40a0-4f68-b1a2-b0cee2794c4f",
           "__enabled": true,
           "ColliderFlags": 0,
           "Elasticity": null,
@@ -1368,38 +1263,9 @@
           "OnTriggerEnter": null,
           "OnTriggerExit": null,
           "RollingResistance": null,
-          "Static": false,
+          "Static": true,
           "Surface": null,
           "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Sandbox.Rigidbody",
-          "__guid": "c804068a-fb88-45e7-80ca-0953c435be12",
-          "__enabled": true,
-          "AngularDamping": 0,
-          "Gravity": true,
-          "GravityScale": 1,
-          "LinearDamping": 0,
-          "Locking": {
-            "X": false,
-            "Y": false,
-            "Z": false,
-            "Pitch": false,
-            "Yaw": false,
-            "Roll": false
-          },
-          "MassCenterOverride": "0,0,0",
-          "MassOverride": 0,
-          "MotionEnabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OverrideMassCenter": false,
-          "RigidbodyFlags": 0,
-          "StartAsleep": false
         }
       ],
       "Children": []
@@ -1447,10 +1313,10 @@
       "__guid": "466c1441-bc74-44f9-89d1-416f02331103",
       "__version": 1,
       "Flags": 0,
-      "Name": "dnd_bomb",
-      "Position": "-0.9599628,-62.95924,36.70414",
+      "Name": "Bomb",
+      "Position": "0,-62.96059,36.11673",
       "Rotation": "-0.000000003056649,0.00000000305665,0.7071068,0.7071066",
-      "Scale": "0.3920574,0.3920574,0.3920574",
+      "Scale": "0.1,0.1,0.1",
       "Tags": "",
       "Enabled": true,
       "NetworkMode": 2,
@@ -1480,8 +1346,140 @@
           "Tint": "1,1,1,1"
         },
         {
+          "__type": "Bomb",
+          "__guid": "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63",
+          "__enabled": true,
+          "ExplodeSound": {
+            "_type": "component",
+            "component_id": "bd299fc9-fb5a-4f8e-a260-e08f00f1bcd8",
+            "go": "466c1441-bc74-44f9-89d1-416f02331103",
+            "component_type": "SoundPointComponent"
+          },
+          "ExplosionRef": {
+            "_type": "gameobject",
+            "go": "e3b44851-3f5e-47db-87d3-d5a6426fc842"
+          },
+          "GetTime": 20,
+          "JingleSound": {
+            "_type": "component",
+            "component_id": "5cc0c61e-0317-409f-9c57-f6356d405b98",
+            "go": "466c1441-bc74-44f9-89d1-416f02331103",
+            "component_type": "SoundPointComponent"
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "TickSound": {
+            "_type": "component",
+            "component_id": "318a61b8-3aa9-494f-8c1d-ef55abfac68d",
+            "go": "466c1441-bc74-44f9-89d1-416f02331103",
+            "component_type": "SoundPointComponent"
+          }
+        },
+        {
+          "__type": "Sandbox.SoundPointComponent",
+          "__guid": "318a61b8-3aa9-494f-8c1d-ef55abfac68d",
+          "__enabled": true,
+          "Distance": 512,
+          "DistanceAttenuation": false,
+          "DistanceAttenuationOverride": false,
+          "Falloff": [
+            {
+              "x": 0,
+              "y": 1,
+              "in": 3.1415927,
+              "out": -3.1415927,
+              "mode": "Mirrored"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "in": 0,
+              "out": 0,
+              "mode": "Mirrored"
+            }
+          ],
+          "Force2d": false,
+          "MaxRepeatTime": 1,
+          "MinRepeatTime": 1,
+          "Occlusion": false,
+          "OcclusionOverride": false,
+          "OcclusionRadius": 32,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Pitch": 1,
+          "PlayOnStart": false,
+          "ReflectionOverride": false,
+          "Reflections": false,
+          "Repeat": false,
+          "SoundEvent": "sound/click2.sound",
+          "SoundOverride": false,
+          "StopOnNew": false,
+          "TargetMixer": {
+            "Name": "game",
+            "Id": "42d1e274-2b3c-4fdc-b466-dd034aeb2a61"
+          },
+          "Volume": 1
+        },
+        {
+          "__type": "Sandbox.SoundPointComponent",
+          "__guid": "5cc0c61e-0317-409f-9c57-f6356d405b98",
+          "__enabled": true,
+          "Distance": 512,
+          "DistanceAttenuation": false,
+          "DistanceAttenuationOverride": false,
+          "Falloff": [
+            {
+              "x": 0,
+              "y": 1,
+              "in": 3.1415927,
+              "out": -3.1415927,
+              "mode": "Mirrored"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "in": 0,
+              "out": 0,
+              "mode": "Mirrored"
+            }
+          ],
+          "Force2d": false,
+          "MaxRepeatTime": 1,
+          "MinRepeatTime": 1,
+          "Occlusion": false,
+          "OcclusionOverride": false,
+          "OcclusionRadius": 32,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Pitch": 1,
+          "PlayOnStart": false,
+          "ReflectionOverride": false,
+          "Reflections": false,
+          "Repeat": false,
+          "SoundEvent": "sound/click6.sound",
+          "SoundOverride": false,
+          "StopOnNew": false,
+          "TargetMixer": {
+            "Name": "game",
+            "Id": "42d1e274-2b3c-4fdc-b466-dd034aeb2a61"
+          },
+          "Volume": 1
+        },
+        {
           "__type": "Sandbox.ModelRenderer",
-          "__guid": "0d54f7c1-01ae-4395-a383-722fc3ca7092",
+          "__guid": "335d5820-82e0-401b-957a-ec58c7b7daad",
           "__enabled": true,
           "BodyGroups": 18446744073709551615,
           "CreateAttachments": false,
@@ -1506,60 +1504,1280 @@
           "Tint": "1,1,1,1"
         },
         {
-          "__type": "Sandbox.ModelCollider",
-          "__guid": "b77803cf-7c9c-4a5f-9ac7-b74114b08d7f",
+          "__type": "Sandbox.SoundPointComponent",
+          "__guid": "bd299fc9-fb5a-4f8e-a260-e08f00f1bcd8",
           "__enabled": true,
-          "ColliderFlags": 0,
-          "Elasticity": null,
-          "Friction": null,
-          "IsTrigger": false,
-          "Model": "models/mysterypowerups/dnd_bomb.vmdl",
+          "Distance": 512,
+          "DistanceAttenuation": false,
+          "DistanceAttenuationOverride": false,
+          "Falloff": [
+            {
+              "x": 0,
+              "y": 1,
+              "in": 3.1415927,
+              "out": -3.1415927,
+              "mode": "Mirrored"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "in": 0,
+              "out": 0,
+              "mode": "Mirrored"
+            }
+          ],
+          "Force2d": false,
+          "MaxRepeatTime": 1,
+          "MinRepeatTime": 1,
+          "Occlusion": false,
+          "OcclusionOverride": false,
+          "OcclusionRadius": 32,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "OnObjectTriggerEnter": null,
-          "OnObjectTriggerExit": null,
-          "OnTriggerEnter": null,
-          "OnTriggerExit": null,
-          "RollingResistance": null,
-          "Static": false,
-          "Surface": null,
-          "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Sandbox.Rigidbody",
-          "__guid": "678b3eef-c429-4a99-a18f-bcd493d2e595",
-          "__enabled": true,
-          "AngularDamping": 0,
-          "Gravity": true,
-          "GravityScale": 1,
-          "LinearDamping": 0,
-          "Locking": {
-            "X": false,
-            "Y": false,
-            "Z": false,
-            "Pitch": false,
-            "Yaw": false,
-            "Roll": false
+          "Pitch": 1,
+          "PlayOnStart": false,
+          "ReflectionOverride": false,
+          "Reflections": false,
+          "Repeat": false,
+          "SoundEvent": "sound/explosion2.sound",
+          "SoundOverride": false,
+          "StopOnNew": false,
+          "TargetMixer": {
+            "Name": "game",
+            "Id": "42d1e274-2b3c-4fdc-b466-dd034aeb2a61"
           },
-          "MassCenterOverride": "0,0,0",
-          "MassOverride": 0,
-          "MotionEnabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OverrideMassCenter": false,
-          "RigidbodyFlags": 0,
-          "StartAsleep": false
+          "Volume": 1
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "e3b44851-3f5e-47db-87d3-d5a6426fc842",
+      "__version": 1,
+      "__Prefab": "particles/explosion/explosion.medium.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "46dd51b8-74cd-4aec-90d9-9717388c25fe"
+            },
+            "Property": "Name",
+            "Value": "BombExplosion"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "46dd51b8-74cd-4aec-90d9-9717388c25fe"
+            },
+            "Property": "Position",
+            "Value": "-1.340234,-62.40947,37.95711"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "46dd51b8-74cd-4aec-90d9-9717388c25fe"
+            },
+            "Property": "Rotation",
+            "Value": "0.00000000000000009306469,0.000000004322755,1,0"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "46dd51b8-74cd-4aec-90d9-9717388c25fe"
+            },
+            "Property": "Enabled",
+            "Value": false
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "9a9600ba-a53e-4ca0-baa5-9c5b0c5dd888"
+            },
+            "Property": "Position",
+            "Value": "-9.574371,0.00001141496,25.35286"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "9a9600ba-a53e-4ca0-baa5-9c5b0c5dd888"
+            },
+            "Property": "Rotation",
+            "Value": "0.9659259,-0.000000002374778,0.00000009276341,0.2588192"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "103554f3-78fa-4c2b-b898-3e0758c27694"
+            },
+            "Property": "Position",
+            "Value": "-0.1219609,0.00001144093,0.0000009536744"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "46dd51b8-74cd-4aec-90d9-9717388c25fe": "e3b44851-3f5e-47db-87d3-d5a6426fc842",
+        "6fd26423-d712-4027-a867-4041b7d0a179": "f2f2d64e-e458-4ec5-8b63-37f8886fd5c8",
+        "49a3e038-4f24-473a-adf2-e8838d253405": "84374d5e-7fdb-4805-b58b-4bd73d808035",
+        "80b92221-5334-44be-9b85-14fab86ec3d1": "5189ab92-e1d9-4412-aaf4-c08f7b85bbf2",
+        "160a3827-0835-4973-a7ab-e1220e701005": "e9b5d6ce-2a1a-4d20-adbf-0c828c561933",
+        "9a9600ba-a53e-4ca0-baa5-9c5b0c5dd888": "524047c7-7575-493d-b114-f7bac8fe99f2",
+        "882e9e5f-cf80-4321-a63d-967fef63bd9a": "b00e64fd-f5d9-4e76-a4eb-d3fb51f93c08",
+        "c73c446e-8acb-41fe-b787-3adbe6abb75d": "e7874a20-0c5b-410c-bd38-cc3160c4b320",
+        "de2625a6-b4f9-4cd8-b085-1a6bc77e79ec": "de9743b6-f91c-4cb0-a201-7742b73b4004",
+        "f1deac4e-6669-406f-a601-a07655a64cd5": "dae43935-8b2a-45f6-a7b3-700240182c24",
+        "beb383b0-418a-49b1-86ad-9d2fcb7548ae": "8884808c-c7b7-415d-a565-d8dea81ebbac",
+        "d500726c-c1a5-44ad-891a-11b23c5044f7": "13838457-ca0e-4a97-8e61-e8059332684f",
+        "145f7533-b3f0-43d5-86b2-b8490d5a1251": "e88f63cf-c71a-4afc-be7e-7b25372f1ebc",
+        "70f0d4f9-efbd-4a38-9d36-c9899b5d4e7e": "87265cb4-81c8-4cc3-97f7-7e65851b2d00",
+        "103554f3-78fa-4c2b-b898-3e0758c27694": "0c3b642d-c911-4175-bffc-3d3f8d64b9c6",
+        "98bd4786-2151-4d74-a6ec-bde17334b09f": "df1e622f-f02f-48c5-9b8c-34c2c2d4b652",
+        "7e5e27e3-fd2e-4505-99d1-8aed36b6f36e": "ba9a7c1b-184e-47dc-99bd-f2ab5f458398",
+        "3c506a5c-f30a-4978-9244-53b05084e409": "897c1e6e-6f33-4f4c-a9cb-54e67556001e",
+        "70e67ed3-4eda-4c12-93cd-8e2a5d7659ef": "e4cb8312-5c92-4aaf-a0c5-9ba6a008259a",
+        "da773c3d-18a0-4828-a9a7-e1d9b63d4ce2": "39807140-7096-406a-bdd4-33deef1fe689",
+        "cda0305d-cf31-429f-a958-cafbb0afd155": "38fb5b9d-27ff-44fa-94df-01d218b9d4db",
+        "42c40f53-1b67-4ea1-ad4a-84c0e7afef8f": "d9574fa6-ff19-48c2-9d8c-af09e6301106",
+        "77db0f27-720c-445b-a434-00ae1c135ff8": "cb5bf16d-ea2a-4685-8ef0-a8366ba40acf",
+        "f5492ff1-9cc1-41b9-917b-34cca9256a05": "cde72214-9e98-443b-bd74-302538309824",
+        "2f7bda90-3691-46bc-8a70-57dc12a1230e": "889d3cbf-4950-4b38-aa1d-27865102fa92",
+        "c63c1178-a19e-4812-baae-913c70f6537f": "60be94bd-fed6-4a96-88a2-dbc412a442e4",
+        "9b2d8663-88f6-45b8-83c2-fdd44fae9370": "1629c22b-9ef5-484a-9e7a-3389a9347ce2",
+        "654354a6-aaaf-4012-9082-b9920a2e632f": "df0851ba-ae8e-4082-8f85-eb63893f88ec",
+        "2ef5d023-8fda-4783-9484-e58513cc91ba": "b99cf1a2-6a77-4c05-805d-69fea9eece4d",
+        "5bf581d4-0359-4503-bf8a-e401f8cb2e82": "d0f772df-a9a0-4c35-aefb-c6104f164e87"
+      }
+    },
+    {
+      "__guid": "00f9e4ed-b579-40e0-b035-f692be32203d",
+      "__version": 1,
+      "Flags": 0,
+      "Name": "Player2",
+      "Position": "0,-91.89281,9.234249",
+      "Rotation": "-0.0008301997,0.0008780372,0.686963,0.7266914",
+      "Scale": "1,1,1",
+      "Tags": "player2",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "5ad5c5f7-501f-4d5f-a2fe-9edb4a8d9a81",
+          "__enabled": true,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/characters/crackhead_01/master_rig/crackhead_rick.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.SkinnedModelRenderer",
+          "__guid": "50bc347f-93a6-4074-8153-6aa6dc2e9eb5",
+          "__enabled": true,
+          "AnimationGraph": null,
+          "BodyGroups": 18446744073709551615,
+          "BoneMergeTarget": null,
+          "CreateAttachments": false,
+          "CreateBoneObjects": true,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/characters/crackhead_01/master_rig/crackhead_rick.vmdl",
+          "Morphs": {},
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Parameters": {
+            "bools": {},
+            "ints": {},
+            "floats": {},
+            "vectors": {},
+            "rotations": {}
+          },
+          "PlaybackRate": 0,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Sequence": {
+            "Name": null,
+            "Looping": false,
+            "Blending": false
+          },
+          "Tint": "1,1,1,1",
+          "UseAnimGraph": false
+        },
+        {
+          "__type": "Player",
+          "__guid": "be406133-672a-48f7-a07c-e1b2cbaf56bd",
+          "__enabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PlayerCamera": {
+            "_type": "component",
+            "component_id": "d9f42703-4034-4438-b17a-973cd0db47e7",
+            "go": "17a4c6d0-fd72-44c5-b055-26ee2ba0f7d5",
+            "component_type": "CameraComponent"
+          },
+          "RenderExclusionList": "player2"
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "3e1038a7-1cac-4371-ae82-defb47d6eaed",
+          "__version": 1,
+          "Flags": 1028,
+          "Name": "QuickRigCharacter1_Hips",
+          "Position": "-3.454606,-0.2997732,18.39797",
+          "Rotation": "0.4988248,0.5011727,0.5011567,-0.4988405",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkInterpolation": true,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": [
+            {
+              "__guid": "50bceeeb-31f8-4385-8956-5959ad532129",
+              "__version": 1,
+              "Flags": 1028,
+              "Name": "QuickRigCharacter1_LeftUpLeg",
+              "Position": "0.01231384,-0.0352869,3.940056",
+              "Rotation": "0.1606432,-0.1171734,0.6804282,0.7053239",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": [
+                {
+                  "__guid": "ec2a33e5-a70d-4b51-9b30-464c31dbbb2b",
+                  "__version": 1,
+                  "Flags": 1028,
+                  "Name": "QuickRigCharacter1_LeftLeg",
+                  "Position": "13.52766,-0.0000667572,0.000004768372",
+                  "Rotation": "0.05258044,0.04895273,0.7780278,0.6241089",
+                  "Scale": "1,1,1",
+                  "Tags": "",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkInterpolation": true,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [],
+                  "Children": [
+                    {
+                      "__guid": "c5160c70-4ae4-4855-89db-db3dc3fc3d1f",
+                      "__version": 1,
+                      "Flags": 4,
+                      "Name": "QuickRigCharacter1_LeftFoot",
+                      "Position": "0,0,0",
+                      "Rotation": "0,0,0,1",
+                      "Scale": "1,1,1",
+                      "Tags": "",
+                      "Enabled": true,
+                      "NetworkMode": 2,
+                      "NetworkInterpolation": true,
+                      "NetworkOrphaned": 0,
+                      "NetworkTransmit": true,
+                      "OwnerTransfer": 1,
+                      "Components": [],
+                      "Children": [
+                        {
+                          "__guid": "20e0e853-17a8-48fc-9760-3d880f67c66c",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_LeftToeBase",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "__guid": "79df1e9a-cd7d-43fa-8c52-005d6c6381a5",
+              "__version": 1,
+              "Flags": 1028,
+              "Name": "QuickRigCharacter1_RightUpLeg",
+              "Position": "0.01232147,-0.03528798,-3.940046",
+              "Rotation": "-0.119421,-0.08201369,-0.715588,0.6833346",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": [
+                {
+                  "__guid": "60c62d52-abeb-4ef4-af39-68e5173a307a",
+                  "__version": 1,
+                  "Flags": 1028,
+                  "Name": "QuickRigCharacter1_RightLeg",
+                  "Position": "-13.52767,0.0001213551,-0.00003051758",
+                  "Rotation": "0.04205739,-0.0232923,0.6904465,0.7217839",
+                  "Scale": "1,1,1",
+                  "Tags": "",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkInterpolation": true,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [],
+                  "Children": [
+                    {
+                      "__guid": "8fbea45d-e2c7-4236-88bd-b53a2f1781c0",
+                      "__version": 1,
+                      "Flags": 4,
+                      "Name": "QuickRigCharacter1_RightFoot",
+                      "Position": "0,0,0",
+                      "Rotation": "0,0,0,1",
+                      "Scale": "1,1,1",
+                      "Tags": "",
+                      "Enabled": true,
+                      "NetworkMode": 2,
+                      "NetworkInterpolation": true,
+                      "NetworkOrphaned": 0,
+                      "NetworkTransmit": true,
+                      "OwnerTransfer": 1,
+                      "Components": [],
+                      "Children": [
+                        {
+                          "__guid": "71e7e8b1-fb25-4914-9f74-a34dbef024ba",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_RightToeBase",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "__guid": "70d02b80-4926-4235-8a59-048edeb4ec49",
+              "__version": 1,
+              "Flags": 1028,
+              "Name": "QuickRigCharacter1_Spine",
+              "Position": "5.579227,0.00000500679,0.000005594011",
+              "Rotation": "0.0002710409,-0.02147874,0.3724829,0.9277906",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": [
+                {
+                  "__guid": "506c7126-7b84-4c42-b0ff-df9d1379a89c",
+                  "__version": 1,
+                  "Flags": 4,
+                  "Name": "QuickRigCharacter1_Spine1",
+                  "Position": "0,0,0",
+                  "Rotation": "0,0,0,1",
+                  "Scale": "1,1,1",
+                  "Tags": "",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkInterpolation": true,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [],
+                  "Children": [
+                    {
+                      "__guid": "654f49ac-938d-480b-8713-17b2c5beb23c",
+                      "__version": 1,
+                      "Flags": 4,
+                      "Name": "QuickRigCharacter1_Spine2",
+                      "Position": "0,0,0",
+                      "Rotation": "0,0,0,1",
+                      "Scale": "1,1,1",
+                      "Tags": "",
+                      "Enabled": true,
+                      "NetworkMode": 2,
+                      "NetworkInterpolation": true,
+                      "NetworkOrphaned": 0,
+                      "NetworkTransmit": true,
+                      "OwnerTransfer": 1,
+                      "Components": [],
+                      "Children": [
+                        {
+                          "__guid": "2c337d07-69a9-4172-8f55-67ed41cfa619",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_LeftShoulder",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": [
+                            {
+                              "__guid": "04e9faf0-66cf-4647-9b8e-14d730dd9e4c",
+                              "__version": 1,
+                              "Flags": 1028,
+                              "Name": "QuickRigCharacter1_LeftArm",
+                              "Position": "4.80162,0.000007629395,-0.00002586842",
+                              "Rotation": "0.02224547,-0.5592384,0.002111822,0.828706",
+                              "Scale": "1,1,1",
+                              "Tags": "",
+                              "Enabled": true,
+                              "NetworkMode": 2,
+                              "NetworkInterpolation": true,
+                              "NetworkOrphaned": 0,
+                              "NetworkTransmit": true,
+                              "OwnerTransfer": 1,
+                              "Components": [],
+                              "Children": [
+                                {
+                                  "__guid": "0df72377-7c67-4a8c-aa7f-036146085e68",
+                                  "__version": 1,
+                                  "Flags": 1028,
+                                  "Name": "QuickRigCharacter1_LeftForeArm",
+                                  "Position": "10.21778,0.0003670454,-0.0005722046",
+                                  "Rotation": "0.2493771,-0.3603934,0.5624105,0.7011574",
+                                  "Scale": "1,1,1",
+                                  "Tags": "",
+                                  "Enabled": true,
+                                  "NetworkMode": 2,
+                                  "NetworkInterpolation": true,
+                                  "NetworkOrphaned": 0,
+                                  "NetworkTransmit": true,
+                                  "OwnerTransfer": 1,
+                                  "Components": [],
+                                  "Children": [
+                                    {
+                                      "__guid": "8e876881-0783-4578-809c-0d079cf66644",
+                                      "__version": 1,
+                                      "Flags": 1028,
+                                      "Name": "QuickRigCharacter1_LeftHand",
+                                      "Position": "10.85958,-0.0000538826,-0.0002117157",
+                                      "Rotation": "-0.01026481,-0.133906,-0.2212473,0.9659259",
+                                      "Scale": "1,1,1",
+                                      "Tags": "",
+                                      "Enabled": true,
+                                      "NetworkMode": 2,
+                                      "NetworkInterpolation": true,
+                                      "NetworkOrphaned": 0,
+                                      "NetworkTransmit": true,
+                                      "OwnerTransfer": 1,
+                                      "Components": [],
+                                      "Children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "__guid": "a39f8141-26bf-4eef-995b-cfad7ed16182",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_RightShoulder",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": [
+                            {
+                              "__guid": "359311dd-9646-4dc9-9c27-020672e498ef",
+                              "__version": 1,
+                              "Flags": 1028,
+                              "Name": "QuickRigCharacter1_RightArm",
+                              "Position": "-4.801623,-0.00003051758,-0.00007915497",
+                              "Rotation": "-0.02284175,-0.6044266,-0.03389671,0.7956116",
+                              "Scale": "1,1,1",
+                              "Tags": "",
+                              "Enabled": true,
+                              "NetworkMode": 2,
+                              "NetworkInterpolation": true,
+                              "NetworkOrphaned": 0,
+                              "NetworkTransmit": true,
+                              "OwnerTransfer": 1,
+                              "Components": [],
+                              "Children": [
+                                {
+                                  "__guid": "e2cccfc0-09fd-4f30-993a-86e839981c03",
+                                  "__version": 1,
+                                  "Flags": 1028,
+                                  "Name": "QuickRigCharacter1_RightForeArm",
+                                  "Position": "-10.21777,-0.0003572702,0.0004653931",
+                                  "Rotation": "0.2926166,-0.3962035,0.5155995,0.7011101",
+                                  "Scale": "1,1,1",
+                                  "Tags": "",
+                                  "Enabled": true,
+                                  "NetworkMode": 2,
+                                  "NetworkInterpolation": true,
+                                  "NetworkOrphaned": 0,
+                                  "NetworkTransmit": true,
+                                  "OwnerTransfer": 1,
+                                  "Components": [],
+                                  "Children": [
+                                    {
+                                      "__guid": "06ba520c-283c-402f-aac2-2a35bf9cce45",
+                                      "__version": 1,
+                                      "Flags": 1028,
+                                      "Name": "QuickRigCharacter1_RightHand",
+                                      "Position": "-10.85957,0.00006246567,0.0001029968",
+                                      "Rotation": "-0.005586624,-0.1268355,-0.2255394,0.9659263",
+                                      "Scale": "1,1,1",
+                                      "Tags": "",
+                                      "Enabled": true,
+                                      "NetworkMode": 2,
+                                      "NetworkInterpolation": true,
+                                      "NetworkOrphaned": 0,
+                                      "NetworkTransmit": true,
+                                      "OwnerTransfer": 1,
+                                      "Components": [],
+                                      "Children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "__guid": "9f35bc1e-8d81-4166-9c00-e39020532f7e",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_Neck",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": [
+                            {
+                              "__guid": "5295fcd0-f4b4-4b15-9c20-d93a1fcaaf28",
+                              "__version": 1,
+                              "Flags": 1028,
+                              "Name": "QuickRigCharacter1_Head",
+                              "Position": "6.685223,-0.00000667572,-0.00004060776",
+                              "Rotation": "-0.003985144,-0.01397046,0.2584109,0.9659258",
+                              "Scale": "1,1,1",
+                              "Tags": "",
+                              "Enabled": true,
+                              "NetworkMode": 2,
+                              "NetworkInterpolation": true,
+                              "NetworkOrphaned": 0,
+                              "NetworkTransmit": true,
+                              "OwnerTransfer": 1,
+                              "Components": [],
+                              "Children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "__guid": "17a4c6d0-fd72-44c5-b055-26ee2ba0f7d5",
+          "__version": 1,
+          "Flags": 0,
+          "Name": "Player2Camera",
+          "Position": "-8.012816,-0.4456117,37.70879",
+          "Rotation": "-0.0007691653,0.02495868,0.02808166,0.9992938",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": false,
+          "NetworkMode": 2,
+          "NetworkInterpolation": true,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.CameraComponent",
+              "__guid": "d9f42703-4034-4438-b17a-973cd0db47e7",
+              "__enabled": true,
+              "BackgroundColor": "0.33333,0.46275,0.52157,1",
+              "ClearFlags": "All",
+              "EnablePostProcessing": true,
+              "FieldOfView": 60,
+              "FovAxis": "Horizontal",
+              "IsMainCamera": false,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Orthographic": false,
+              "OrthographicHeight": 1204,
+              "PostProcessAnchor": null,
+              "Priority": 1,
+              "RenderExcludeTags": "",
+              "RenderTags": "",
+              "RenderTexture": null,
+              "TargetEye": "None",
+              "Viewport": "0,0,1,1",
+              "ZFar": 10000,
+              "ZNear": 25
+            }
+          ],
+          "Children": []
+        }
+      ]
+    },
+    {
+      "__guid": "9fc4e073-1e10-460d-ae6f-754d9bd0a602",
+      "__version": 1,
+      "Flags": 0,
+      "Name": "Player1",
+      "Position": "0,-33.53226,9.234249",
+      "Rotation": "-0.0008780374,-0.0008301996,0.7266915,-0.6869628",
+      "Scale": "1,1,1",
+      "Tags": "player1",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "7051ce67-d644-4459-82be-e327c727deaf",
+          "__enabled": true,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/characters/crackhead_01/master_rig/crackhead_rick.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.SkinnedModelRenderer",
+          "__guid": "de802d87-b03c-4fd2-8afa-57cf979dceef",
+          "__enabled": true,
+          "AnimationGraph": null,
+          "BodyGroups": 18446744073709551615,
+          "BoneMergeTarget": null,
+          "CreateAttachments": false,
+          "CreateBoneObjects": true,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/characters/crackhead_01/master_rig/crackhead_rick.vmdl",
+          "Morphs": {},
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Parameters": {
+            "bools": {},
+            "ints": {},
+            "floats": {},
+            "vectors": {},
+            "rotations": {}
+          },
+          "PlaybackRate": 0,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Sequence": {
+            "Name": null,
+            "Looping": false,
+            "Blending": false
+          },
+          "Tint": "1,1,1,1",
+          "UseAnimGraph": false
+        },
+        {
+          "__type": "Player",
+          "__guid": "3d17c74d-d3a1-4613-9405-8f98d8a64cb2",
+          "__enabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PlayerCamera": {
+            "_type": "component",
+            "component_id": "fbd817c6-61b9-4c8c-83b1-626cbd45f69f",
+            "go": "75d26ce5-5e51-4ab4-8d80-827a8e40fd8c",
+            "component_type": "CameraComponent"
+          },
+          "RenderExclusionList": "player1"
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "d34a346b-d0e3-41ec-8fc1-d9aec661d68e",
+          "__version": 1,
+          "Flags": 1028,
+          "Name": "QuickRigCharacter1_Hips",
+          "Position": "-3.454606,-0.2997732,18.39797",
+          "Rotation": "0.4988248,0.5011727,0.5011567,-0.4988405",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkInterpolation": true,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": [
+            {
+              "__guid": "f5bf7447-5131-4663-90b4-cee830bee9e5",
+              "__version": 1,
+              "Flags": 1028,
+              "Name": "QuickRigCharacter1_LeftUpLeg",
+              "Position": "0.01231384,-0.0352869,3.940056",
+              "Rotation": "0.1606432,-0.1171734,0.6804282,0.7053239",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": [
+                {
+                  "__guid": "c46cb1a3-2e1d-49da-9bcd-368d36d3133e",
+                  "__version": 1,
+                  "Flags": 1028,
+                  "Name": "QuickRigCharacter1_LeftLeg",
+                  "Position": "13.52766,-0.0000667572,0.000004768372",
+                  "Rotation": "0.05258044,0.04895273,0.7780278,0.6241089",
+                  "Scale": "1,1,1",
+                  "Tags": "",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkInterpolation": true,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [],
+                  "Children": [
+                    {
+                      "__guid": "f686d294-f144-4e11-b0cb-9b3161d39062",
+                      "__version": 1,
+                      "Flags": 4,
+                      "Name": "QuickRigCharacter1_LeftFoot",
+                      "Position": "0,0,0",
+                      "Rotation": "0,0,0,1",
+                      "Scale": "1,1,1",
+                      "Tags": "",
+                      "Enabled": true,
+                      "NetworkMode": 2,
+                      "NetworkInterpolation": true,
+                      "NetworkOrphaned": 0,
+                      "NetworkTransmit": true,
+                      "OwnerTransfer": 1,
+                      "Components": [],
+                      "Children": [
+                        {
+                          "__guid": "78d9aadb-197c-4d47-9934-d44a8b581249",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_LeftToeBase",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "__guid": "c5961562-3917-48a0-9d9f-7183d3c38290",
+              "__version": 1,
+              "Flags": 1028,
+              "Name": "QuickRigCharacter1_RightUpLeg",
+              "Position": "0.01232147,-0.03528798,-3.940046",
+              "Rotation": "-0.119421,-0.08201369,-0.715588,0.6833346",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": [
+                {
+                  "__guid": "6455ed28-cc69-4602-abaa-ac9cd5dbcf82",
+                  "__version": 1,
+                  "Flags": 1028,
+                  "Name": "QuickRigCharacter1_RightLeg",
+                  "Position": "-13.52767,0.0001213551,-0.00003051758",
+                  "Rotation": "0.04205739,-0.0232923,0.6904465,0.7217839",
+                  "Scale": "1,1,1",
+                  "Tags": "",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkInterpolation": true,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [],
+                  "Children": [
+                    {
+                      "__guid": "fdb46a96-25bd-4a94-9d6f-dbaf9d759d2e",
+                      "__version": 1,
+                      "Flags": 4,
+                      "Name": "QuickRigCharacter1_RightFoot",
+                      "Position": "0,0,0",
+                      "Rotation": "0,0,0,1",
+                      "Scale": "1,1,1",
+                      "Tags": "",
+                      "Enabled": true,
+                      "NetworkMode": 2,
+                      "NetworkInterpolation": true,
+                      "NetworkOrphaned": 0,
+                      "NetworkTransmit": true,
+                      "OwnerTransfer": 1,
+                      "Components": [],
+                      "Children": [
+                        {
+                          "__guid": "928c658c-58c8-4157-a16e-bc81e8915265",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_RightToeBase",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "__guid": "161dc6f9-d77e-401c-b2d8-a06508a4456e",
+              "__version": 1,
+              "Flags": 1028,
+              "Name": "QuickRigCharacter1_Spine",
+              "Position": "5.579227,0.00000500679,0.000005594011",
+              "Rotation": "0.0002710409,-0.02147874,0.3724829,0.9277906",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkInterpolation": true,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": [
+                {
+                  "__guid": "38a94635-7ee0-46be-b4fe-4c8682e6e064",
+                  "__version": 1,
+                  "Flags": 4,
+                  "Name": "QuickRigCharacter1_Spine1",
+                  "Position": "0,0,0",
+                  "Rotation": "0,0,0,1",
+                  "Scale": "1,1,1",
+                  "Tags": "",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkInterpolation": true,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [],
+                  "Children": [
+                    {
+                      "__guid": "ec2e357a-8b0d-4158-9c55-38a75ac934f7",
+                      "__version": 1,
+                      "Flags": 4,
+                      "Name": "QuickRigCharacter1_Spine2",
+                      "Position": "0,0,0",
+                      "Rotation": "0,0,0,1",
+                      "Scale": "1,1,1",
+                      "Tags": "",
+                      "Enabled": true,
+                      "NetworkMode": 2,
+                      "NetworkInterpolation": true,
+                      "NetworkOrphaned": 0,
+                      "NetworkTransmit": true,
+                      "OwnerTransfer": 1,
+                      "Components": [],
+                      "Children": [
+                        {
+                          "__guid": "eb35e49e-6d02-427b-a12d-0eda960145f4",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_LeftShoulder",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": [
+                            {
+                              "__guid": "4d53e03f-f155-4752-9c90-cff9567f5a51",
+                              "__version": 1,
+                              "Flags": 1028,
+                              "Name": "QuickRigCharacter1_LeftArm",
+                              "Position": "4.80162,0.000007629395,-0.00002586842",
+                              "Rotation": "0.02224547,-0.5592384,0.002111822,0.828706",
+                              "Scale": "1,1,1",
+                              "Tags": "",
+                              "Enabled": true,
+                              "NetworkMode": 2,
+                              "NetworkInterpolation": true,
+                              "NetworkOrphaned": 0,
+                              "NetworkTransmit": true,
+                              "OwnerTransfer": 1,
+                              "Components": [],
+                              "Children": [
+                                {
+                                  "__guid": "012963af-d91a-47ce-91ab-85787ac45357",
+                                  "__version": 1,
+                                  "Flags": 1028,
+                                  "Name": "QuickRigCharacter1_LeftForeArm",
+                                  "Position": "10.21778,0.0003670454,-0.0005722046",
+                                  "Rotation": "0.2493771,-0.3603934,0.5624106,0.7011573",
+                                  "Scale": "1,1,1",
+                                  "Tags": "",
+                                  "Enabled": true,
+                                  "NetworkMode": 2,
+                                  "NetworkInterpolation": true,
+                                  "NetworkOrphaned": 0,
+                                  "NetworkTransmit": true,
+                                  "OwnerTransfer": 1,
+                                  "Components": [],
+                                  "Children": [
+                                    {
+                                      "__guid": "4ab5d027-da53-43a0-9994-027513bbd206",
+                                      "__version": 1,
+                                      "Flags": 1028,
+                                      "Name": "QuickRigCharacter1_LeftHand",
+                                      "Position": "10.85958,-0.0000538826,-0.0002117157",
+                                      "Rotation": "-0.01517347,-0.1979936,-0.3271299,0.9238801",
+                                      "Scale": "1,1,1",
+                                      "Tags": "",
+                                      "Enabled": true,
+                                      "NetworkMode": 2,
+                                      "NetworkInterpolation": true,
+                                      "NetworkOrphaned": 0,
+                                      "NetworkTransmit": true,
+                                      "OwnerTransfer": 1,
+                                      "Components": [],
+                                      "Children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "__guid": "4c579667-ef0b-498f-8a3b-9e0c76a11f90",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_RightShoulder",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": [
+                            {
+                              "__guid": "a3b3f74d-ca1b-4b95-9524-27b041725760",
+                              "__version": 1,
+                              "Flags": 1028,
+                              "Name": "QuickRigCharacter1_RightArm",
+                              "Position": "-4.801623,-0.00003051758,-0.00007915497",
+                              "Rotation": "-0.02284175,-0.6044266,-0.03389671,0.7956116",
+                              "Scale": "1,1,1",
+                              "Tags": "",
+                              "Enabled": true,
+                              "NetworkMode": 2,
+                              "NetworkInterpolation": true,
+                              "NetworkOrphaned": 0,
+                              "NetworkTransmit": true,
+                              "OwnerTransfer": 1,
+                              "Components": [],
+                              "Children": [
+                                {
+                                  "__guid": "0e30741c-5cee-4476-a646-ef7462c76890",
+                                  "__version": 1,
+                                  "Flags": 1028,
+                                  "Name": "QuickRigCharacter1_RightForeArm",
+                                  "Position": "-10.21777,-0.0003572702,0.0004653931",
+                                  "Rotation": "0.2926166,-0.3962036,0.5155995,0.7011101",
+                                  "Scale": "1,1,1",
+                                  "Tags": "",
+                                  "Enabled": true,
+                                  "NetworkMode": 2,
+                                  "NetworkInterpolation": true,
+                                  "NetworkOrphaned": 0,
+                                  "NetworkTransmit": true,
+                                  "OwnerTransfer": 1,
+                                  "Components": [],
+                                  "Children": [
+                                    {
+                                      "__guid": "a70808b4-fa4c-4286-8b72-98a15155c510",
+                                      "__version": 1,
+                                      "Flags": 1028,
+                                      "Name": "QuickRigCharacter1_RightHand",
+                                      "Position": "-10.85957,0.00006246567,0.0001029968",
+                                      "Rotation": "-0.005586594,-0.1268355,-0.2255394,0.9659263",
+                                      "Scale": "1,1,1",
+                                      "Tags": "",
+                                      "Enabled": true,
+                                      "NetworkMode": 2,
+                                      "NetworkInterpolation": true,
+                                      "NetworkOrphaned": 0,
+                                      "NetworkTransmit": true,
+                                      "OwnerTransfer": 1,
+                                      "Components": [],
+                                      "Children": []
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "__guid": "55f3ff36-9b25-4730-b77b-05adc6b4c3d6",
+                          "__version": 1,
+                          "Flags": 4,
+                          "Name": "QuickRigCharacter1_Neck",
+                          "Position": "0,0,0",
+                          "Rotation": "0,0,0,1",
+                          "Scale": "1,1,1",
+                          "Tags": "",
+                          "Enabled": true,
+                          "NetworkMode": 2,
+                          "NetworkInterpolation": true,
+                          "NetworkOrphaned": 0,
+                          "NetworkTransmit": true,
+                          "OwnerTransfer": 1,
+                          "Components": [],
+                          "Children": [
+                            {
+                              "__guid": "2114227f-091f-4ef3-a5c4-aa8ed29a7a3d",
+                              "__version": 1,
+                              "Flags": 1028,
+                              "Name": "QuickRigCharacter1_Head",
+                              "Position": "6.685223,-0.00000667572,-0.00004060776",
+                              "Rotation": "-0.003985144,-0.01397046,0.2584109,0.9659258",
+                              "Scale": "1,1,1",
+                              "Tags": "",
+                              "Enabled": true,
+                              "NetworkMode": 2,
+                              "NetworkInterpolation": true,
+                              "NetworkOrphaned": 0,
+                              "NetworkTransmit": true,
+                              "OwnerTransfer": 1,
+                              "Components": [],
+                              "Children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "__guid": "75d26ce5-5e51-4ab4-8d80-827a8e40fd8c",
+          "__version": 1,
+          "Flags": 0,
+          "Name": "Player1Camera",
+          "Position": "-8.071602,-0.4489214,37.70865",
+          "Rotation": "0.0007691756,-0.02495867,-0.02808201,-0.9992937",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": false,
+          "NetworkMode": 2,
+          "NetworkInterpolation": true,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.CameraComponent",
+              "__guid": "fbd817c6-61b9-4c8c-83b1-626cbd45f69f",
+              "__enabled": true,
+              "BackgroundColor": "0.33333,0.46275,0.52157,1",
+              "ClearFlags": "All",
+              "EnablePostProcessing": true,
+              "FieldOfView": 60,
+              "FovAxis": "Horizontal",
+              "IsMainCamera": false,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Orthographic": false,
+              "OrthographicHeight": 1204,
+              "PostProcessAnchor": null,
+              "Priority": 1,
+              "RenderExcludeTags": "",
+              "RenderTags": "",
+              "RenderTexture": null,
+              "TargetEye": "None",
+              "Viewport": "0,0,1,1",
+              "ZFar": 10000,
+              "ZNear": 25
+            }
+          ],
+          "Children": []
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -1584,8 +2802,13 @@
   "Title": null,
   "Description": null,
   "__references": [
+    "facepunch.explosionmedium#110500",
     "facepunch.tablerounda#83538",
     "facepunch.wooden_chair_a#43573",
+    "fpopium.crackhead_02#123566",
+    "igrotronika.click2#51269",
+    "igrotronika.click6#51273",
+    "igrotronika.explosion2#50756",
     "luke.dnd_bomb#59851"
   ],
   "__version": 3

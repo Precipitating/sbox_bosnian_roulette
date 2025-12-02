@@ -1,5 +1,6 @@
 using Sandbox;
 using Sandbox.Utility;
+using System.Threading;
 using System.Threading.Tasks;
 
 public sealed class Bomb : Component
@@ -16,6 +17,14 @@ public sealed class Bomb : Component
 		} 
 	}
 
+
+	[Property] public SoundPointComponent TickSound { get; set; }
+	[Property] public SoundPointComponent ExplodeSound { get; set; }
+	[Property] public SoundPointComponent JingleSound { get; set; }
+	[Property] public GameObject ExplosionRef { get; set; }
+
+
+
 	public bool IsActive
 	{
 		get
@@ -27,6 +36,7 @@ public sealed class Bomb : Component
 			_isActive = value;
 		}
 	}
+
 
 	async Task LerpSize( float seconds, Vector3 to, Easing.Function easer )
 	{
@@ -40,7 +50,8 @@ public sealed class Bomb : Component
 			WorldScale = size;
 			await Task.Frame(); // wait one frame
 		}
-
+		TickSound.StopSound();
+		TickSound.StartSound();
 		timeSince = 0;
 		while ( timeSince < half )
 		{
@@ -52,25 +63,49 @@ public sealed class Bomb : Component
 		_finishedTick = true;
 	}
 
-	async public Task BombTick( float waitTime )
+	async public Task Explode()
+	{
+
+		_isActive = false;
+		JingleSound.StartSound();
+		await Task.DelaySeconds( 1 );
+
+		GameObject.Destroy();
+		JingleSound.StopSound();
+		ExplosionRef.Enabled = true;
+		ExplodeSound.StartSound();
+
+
+
+
+
+	}
+
+	async public Task BombTick()
 	{
 		_finishedTick = false;
-		await Task.DelaySeconds( waitTime );
+		await Task.DelaySeconds( _time / _originalTime);
 		if ( _time > 0 )
 		{
-			await BombTickScaleLerp(waitTime);
+			await BombTickScaleLerp();
 			_time -= 1;
+			
 			Log.Info( _time );
 
 		}
 		else
 		{
-			_isActive = false;
+			await Explode();
+
+
+
+			
 
 		}
 
 	}
-	async private Task BombTickScaleLerp(float seconds)
+
+	async private Task BombTickScaleLerp()
 	{
 		float lerpTime = _time / _originalTime;
 		float tickTime =  (1f - lerpTime )* _lerpScale;
@@ -80,9 +115,8 @@ public sealed class Bomb : Component
 		await LerpSize( lerpTime, _tickSize, Easing.BounceInOut );
 
 
-
-
 	}
+
 
 
 	private float _originalTime = 0f;
@@ -108,6 +142,7 @@ public sealed class Bomb : Component
 		_originalSize = LocalScale;
 		_tickSize = _originalSize * _lerpScale;
 		_isActive = true;
+		
 
 	}
 
@@ -115,7 +150,7 @@ public sealed class Bomb : Component
 	{
 		if ( _isActive && _finishedTick )
 		{
-			await BombTick( 1 );
+			await BombTick();
 		}
 		
 		
