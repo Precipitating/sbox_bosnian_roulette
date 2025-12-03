@@ -1,0 +1,99 @@
+BombTimerInput {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	font-family: Poppins;
+	font-size: 30px;
+	flex-direction: column;
+	color: white;
+
+	> .reduce-text-bg {
+		position: absolute;
+		width: 100px;
+		height: 100px;
+		background-color: darkcyan;
+		border-radius: 10px;
+		left: 50%;
+		top: 53%;
+		transform: translate(-50%, -50%);
+		padding: 8px;
+
+		> .reduce-text {
+			position: relative;
+			width: 100px;
+			height: 85px;
+			background-color: darkslategray;
+			border-radius: 10px;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+
+
+	> .background {
+		position: absolute;
+		top: 61%;
+		border-radius: 25px;
+		left: 50%;
+		width: 500px;
+		height: 100px;
+		transform: translate(-50%, -50%);
+		background-color: darkcyan;
+		padding: 8px;
+
+		> .background-inner {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			height: 100%;
+			background-color: darkslategray;
+			border-radius: 20px;
+
+
+			> .reduce-button {
+				position: absolute;
+				justify-content: center;
+				align-items: center;
+				width: 10%;
+				height: 50%;
+				border-radius: 10px;
+				background-color: dimgray;
+				left: 5%;
+			}
+
+			> .increase-button {
+				position: absolute;
+				justify-content: center;
+				align-items: center;
+				width: 10%;
+				height: 50%;
+				border-radius: 10px;
+				background-color: dimgray;
+				left: 85%;
+			}
+		}
+	}
+
+
+	> .enter-label-bg {
+		position: absolute;
+		width: 200px;
+		height: 70px;
+		background-color: darkslategray;
+		border-radius: 20px;
+		left: 50%;
+		top: 69.5%;
+		transform: translate(-50%, -50%);
+		border: 7px solid darkcyan;
+		justify-content: center;
+		align-items: center;
+
+
+		> .enter-label {
+			position: relative;
+		}
+	}
+}

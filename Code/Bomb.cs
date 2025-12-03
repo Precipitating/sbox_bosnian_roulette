@@ -17,14 +17,6 @@ public sealed class Bomb : Component
 		} 
 	}
 
-
-	[Property] public SoundPointComponent TickSound { get; set; }
-	[Property] public SoundPointComponent ExplodeSound { get; set; }
-	[Property] public SoundPointComponent JingleSound { get; set; }
-	[Property] public GameObject ExplosionRef { get; set; }
-
-
-
 	public bool IsActive
 	{
 		get
@@ -35,6 +27,11 @@ public sealed class Bomb : Component
 		{
 			_isActive = value;
 		}
+	}
+
+	public void ReduceBombTime(float reductionTime)
+	{
+		_time = float.Max( 0, _time - reductionTime );
 	}
 
 
@@ -105,6 +102,7 @@ public sealed class Bomb : Component
 
 	}
 
+
 	async private Task BombTickScaleLerp()
 	{
 		float lerpTime = _time / _originalTime;
@@ -119,6 +117,38 @@ public sealed class Bomb : Component
 
 
 
+
+	protected override void OnStart()
+	{
+		if ( !IsValid )
+		{
+			Log.Info( "Can't find bomb reference" );
+			return;
+		}
+		_originalTime = _time;
+		_originalSize = LocalScale;
+		_tickSize = _originalSize * _lerpScale;
+		_isActive = true;
+
+
+	}
+
+	async protected override void OnUpdate()
+	{
+		if ( _isActive && _finishedTick )
+		{
+			await BombTick();
+		}
+
+
+	}
+
+
+	[Property] public SoundPointComponent TickSound { get; set; }
+	[Property] public SoundPointComponent ExplodeSound { get; set; }
+	[Property] public SoundPointComponent JingleSound { get; set; }
+	[Property] public GameObject ExplosionRef { get; set; }
+
 	private float _originalTime = 0f;
 	private float _time = 0f;
 	private bool _isActive = false;
@@ -131,30 +161,6 @@ public sealed class Bomb : Component
 
 
 
-	protected override void OnStart()
-	{
-		if (!IsValid)
-		{
-			Log.Info( "Can't find bomb reference" );
-			return;
-		}
-		_originalTime = _time;
-		_originalSize = LocalScale;
-		_tickSize = _originalSize * _lerpScale;
-		_isActive = true;
-		
-
-	}
-
-	async protected override void OnUpdate()
-	{
-		if ( _isActive && _finishedTick )
-		{
-			await BombTick();
-		}
-		
-		
-	}
 
 
 

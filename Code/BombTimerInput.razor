@@ -1,0 +1,63 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+    <div class="reduce-text-bg">
+        <div class="reduce-text">@_reductionTime s</div>
+    </div>
+
+	<div class="background">
+        <div class="background-inner">
+            <div class="reduce-button">Q</div>
+            <div class="description">Reduce Time</div>
+            <div class="increase-button">E</div>
+        </div>
+    </div>
+
+     <div class="enter-label-bg">
+        <div class="enter-label">PRESS ENTER</div>
+     </div>
+    
+</root>
+
+@code
+{
+
+    protected override void OnUpdate()
+    {
+        if (!_gameManager.CurrentTurn) { return; }
+
+
+        if (Input.Pressed("IncreaseBombTime"))
+        {
+            _reductionTime = float.Min(100, _reductionTime + 1f);
+
+        }
+        else if (Input.Pressed("DecreaseBombTime") )
+        {
+            _reductionTime = float.Max(1, _reductionTime - 1f);
+        }
+        else if (Input.Pressed("SubmitReductionTime"))
+        {
+            Sound.Play("cloud.stnkybo.vineboom");
+            bombRef.ReduceBombTime(_reductionTime);
+            _reductionTime = 1f;
+            _gameManager.NextTurn(this);
+        }
+
+    }
+
+
+
+    [Property] public Bomb bombRef {get; set;}
+    private float _reductionTime = 1f;
+    private GameManager _gameManager = GameManager.Instance;
+
+
+    protected override int BuildHash()
+    {
+        return System.HashCode.Combine(_reductionTime);
+    }
+}

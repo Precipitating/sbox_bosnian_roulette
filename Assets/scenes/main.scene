@@ -1551,6 +1551,59 @@
             "Id": "42d1e274-2b3c-4fdc-b466-dd034aeb2a61"
           },
           "Volume": 1
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "98200476-a0e1-4d1f-8084-57ae6828151c",
+          "__enabled": true,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/mysterypowerups/dnd_bomb.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "Sandbox.Rigidbody",
+          "__guid": "80f0c0ef-6d0e-40c6-b695-5ce37ff3683e",
+          "__enabled": true,
+          "AngularDamping": 0,
+          "Gravity": true,
+          "GravityScale": 1,
+          "LinearDamping": 0,
+          "Locking": {
+            "X": false,
+            "Y": false,
+            "Z": false,
+            "Pitch": false,
+            "Yaw": false,
+            "Roll": false
+          },
+          "MassCenterOverride": "0,0,0",
+          "MassOverride": 0,
+          "MotionEnabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OverrideMassCenter": false,
+          "RigidbodyFlags": 0,
+          "StartAsleep": false
         }
       ],
       "Children": []
@@ -1734,24 +1787,6 @@
           },
           "Tint": "1,1,1,1",
           "UseAnimGraph": false
-        },
-        {
-          "__type": "Player",
-          "__guid": "be406133-672a-48f7-a07c-e1b2cbaf56bd",
-          "__enabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PlayerCamera": {
-            "_type": "component",
-            "component_id": "d9f42703-4034-4438-b17a-973cd0db47e7",
-            "go": "17a4c6d0-fd72-44c5-b055-26ee2ba0f7d5",
-            "component_type": "CameraComponent"
-          },
-          "RenderExclusionList": "player2"
         }
       ],
       "Children": [
@@ -2296,24 +2331,6 @@
           },
           "Tint": "1,1,1,1",
           "UseAnimGraph": false
-        },
-        {
-          "__type": "Player",
-          "__guid": "3d17c74d-d3a1-4613-9405-8f98d8a64cb2",
-          "__enabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PlayerCamera": {
-            "_type": "component",
-            "component_id": "fbd817c6-61b9-4c8c-83b1-626cbd45f69f",
-            "go": "75d26ce5-5e51-4ab4-8d80-827a8e40fd8c",
-            "component_type": "CameraComponent"
-          },
-          "RenderExclusionList": "player1"
         }
       ],
       "Children": [
@@ -2778,6 +2795,97 @@
           "Children": []
         }
       ]
+    },
+    {
+      "__guid": "6a8bc114-4c37-49d7-bd62-467f6b1a0bea",
+      "__version": 1,
+      "Flags": 0,
+      "Name": "GameManager",
+      "Position": "-201.1564,-240.3919,19.31665",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "GameManager",
+          "__guid": "a1a9b27b-27c1-4a65-92f2-5e27bdd7164b",
+          "__enabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Player1Camera": {
+            "_type": "gameobject",
+            "go": "75d26ce5-5e51-4ab4-8d80-827a8e40fd8c"
+          },
+          "Player2Camera": {
+            "_type": "gameobject",
+            "go": "17a4c6d0-fd72-44c5-b055-26ee2ba0f7d5"
+          }
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "7c90c5f6-f756-4c82-a050-12cd659062dc",
+      "__version": 1,
+      "Flags": 0,
+      "Name": "BombInputUI",
+      "Position": "70.57014,-232.4209,-270.4288",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.BombTimerInput",
+          "__guid": "8c6e6e20-9892-4e4d-ab3b-4013ed1c0b08",
+          "__enabled": true,
+          "bombRef": {
+            "_type": "component",
+            "component_id": "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63",
+            "go": "466c1441-bc74-44f9-89d1-416f02331103",
+            "component_type": "Bomb"
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.ScreenPanel",
+          "__guid": "5bfa5935-da44-4da6-b15e-403d9bdd005a",
+          "__enabled": true,
+          "AutoScreenScale": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Opacity": 1,
+          "Scale": 1,
+          "ScaleStrategy": "ConsistentHeight",
+          "TargetCamera": null,
+          "ZIndex": 100
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {

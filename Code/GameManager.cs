@@ -1,15 +1,8 @@
 using Sandbox;
+using Sandbox.UI;
 
 public sealed class GameManager : Component
 {
-
-	public static GameManager Instance { get; private set; }
-
-	[Property] public GameObject Player1Camera { get; private set; }
-	[Property] public GameObject Player2Camera { get; private set; }
-
-
-
 	public void SetCamera(GameObject cameraGameObject, string excludeName, ref bool assignVar)
 	{
 		cameraGameObject.Enabled = true;
@@ -37,6 +30,14 @@ public sealed class GameManager : Component
 		}
 	}
 
+	public void NextTurn( PanelComponent bombUI)
+	{
+		CurrentTurn = !CurrentTurn;
+		bombUI.Enabled = !bombUI.Enabled;
+
+		Log.Info( CurrentTurn );
+
+	}
 
 	protected override void OnStart()
 	{
@@ -44,7 +45,16 @@ public sealed class GameManager : Component
 		AssignPlayer();
 	}
 
+
+	public static GameManager Instance { get; private set; }
+	[Property] public GameObject Player1Camera { get; private set; }
+	[Property] public GameObject Player2Camera { get; private set; }
+	public bool CurrentTurn { get; private set; } = true;
+
 	private bool Player1Assigned = false;
 	private bool Player2Assigned = false;
+
+
+
 
 }
