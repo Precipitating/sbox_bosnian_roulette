@@ -11,11 +11,18 @@ public sealed class Bomb : Component
 		{
 			return _time;
 		}
-		set 
+		private set 
 		{
 			_time = value;
 		} 
 	}
+
+	public float GetTickRate()
+	{
+		return _tickRate;
+	}
+
+
 
 	public bool IsActive
 	{
@@ -49,6 +56,10 @@ public sealed class Bomb : Component
 		}
 		TickSound.StopSound();
 		TickSound.StartSound();
+		_tickRate = _sinceLastTick;
+		Log.Info($"tick rate: {_tickRate}");
+		_sinceLastTick = 0;
+
 		timeSince = 0;
 		while ( timeSince < half )
 		{
@@ -70,7 +81,7 @@ public sealed class Bomb : Component
 		GameObject.Destroy();
 		JingleSound.StopSound();
 		ExplosionRef.Enabled = true;
-		ExplodeSound.StartSound();
+		Sound.Play( ExplodeSound );
 
 
 
@@ -94,10 +105,6 @@ public sealed class Bomb : Component
 		{
 			await Explode();
 
-
-
-			
-
 		}
 
 	}
@@ -106,7 +113,7 @@ public sealed class Bomb : Component
 	async private Task BombTickScaleLerp()
 	{
 		float lerpTime = _time / _originalTime;
-		float tickTime =  (1f - lerpTime )* _lerpScale;
+		float tickTime =  (1f - lerpTime ) * _lerpScaleMultiplier;
 		_tickSize = _originalSize + (_originalSize * tickTime);
 		Log.Info( tickTime );
 
@@ -127,7 +134,7 @@ public sealed class Bomb : Component
 		}
 		_originalTime = _time;
 		_originalSize = LocalScale;
-		_tickSize = _originalSize * _lerpScale;
+		_tickSize = _originalSize * _lerpScaleMultiplier;
 		_isActive = true;
 
 
@@ -145,17 +152,21 @@ public sealed class Bomb : Component
 
 
 	[Property] public SoundPointComponent TickSound { get; set; }
-	[Property] public SoundPointComponent ExplodeSound { get; set; }
+	[Property] public SoundEvent ExplodeSound { get; set; }
 	[Property] public SoundPointComponent JingleSound { get; set; }
 	[Property] public GameObject ExplosionRef { get; set; }
 
 	private float _originalTime = 0f;
 	private float _time = 0f;
 	private bool _isActive = false;
-	private float _lerpScale = 4f;
+	private const float _lerpScaleMultiplier = 4f;
 	private Vector3 _originalSize;
 	private Vector3 _tickSize;
 	private bool _finishedTick = true;
+
+
+	private float _tickRate = 0f;
+	private TimeSince _sinceLastTick = 0;
 
 
 

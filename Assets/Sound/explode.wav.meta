@@ -1,0 +1,27 @@
+{
+  "loop": false,
+  "start": 0,
+  "end": 0,
+  "rate": 44100,
+  "compress": false,
+  "bitrate": 256,
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "Explode",
+      "Type": "vsnd",
+      "Org": "local",
+      "Ident": "explode",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": null,
+      "EditorReferences": null,
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "sound/explode.wav"
+      }
+    }
+  }
+}

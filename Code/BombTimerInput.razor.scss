@@ -12,9 +12,9 @@ BombTimerInput {
 	> .reduce-text-bg {
 		position: absolute;
 		width: 100px;
-		height: 100px;
+		height: 90px;
 		background-color: darkcyan;
-		border-radius: 10px;
+		border-radius: 5px;
 		left: 50%;
 		top: 53%;
 		transform: translate(-50%, -50%);
@@ -23,15 +23,18 @@ BombTimerInput {
 		> .reduce-text {
 			position: relative;
 			width: 100px;
-			height: 85px;
+			height: 100px;
 			background-color: darkslategray;
-			border-radius: 10px;
+			border-radius: 5px;
 			justify-content: center;
 			align-items: center;
 		}
 	}
 
+	 &.hide {
+		opacity: 0;
 
+	 }
 	> .background {
 		position: absolute;
 		top: 61%;
@@ -78,16 +81,12 @@ BombTimerInput {
 	}
 
 
-	> .enter-label-bg {
+	> .enter-label {
 		position: absolute;
-		width: 200px;
-		height: 70px;
-		background-color: darkslategray;
-		border-radius: 20px;
 		left: 50%;
-		top: 69.5%;
+		top: 63.5%;
+		font-size: 20px;
 		transform: translate(-50%, -50%);
-		border: 7px solid darkcyan;
 		justify-content: center;
 		align-items: center;
 
@@ -95,5 +94,14 @@ BombTimerInput {
 		> .enter-label {
 			position: relative;
 		}
+	}
+
+	> .timeout-bar {
+		position: absolute;
+		left: 41%;
+		top: 65%;
+		height: 5px;
+		background-color: red;
+
 	}
 }

@@ -1,6 +1,6 @@
 using Sandbox;
 using Sandbox.UI;
-
+using System.Threading.Tasks;
 public sealed class GameManager : Component
 {
 	public void SetCamera(GameObject cameraGameObject, string excludeName, ref bool assignVar)
@@ -30,12 +30,18 @@ public sealed class GameManager : Component
 		}
 	}
 
-	public void NextTurn( PanelComponent bombUI)
+	public void NextTurn()
 	{
 		CurrentTurn = !CurrentTurn;
-		bombUI.Enabled = !bombUI.Enabled;
+		Log.Info( $"Is it your turn: {CurrentTurn}" );
 
-		Log.Info( CurrentTurn );
+		if ( !CurrentTurn && AIMode )
+		{
+			_ = AIComponent.SimulateTurn();
+			
+		}
+
+
 
 	}
 
@@ -45,14 +51,18 @@ public sealed class GameManager : Component
 		AssignPlayer();
 	}
 
-
 	public static GameManager Instance { get; private set; }
 	[Property] public GameObject Player1Camera { get; private set; }
 	[Property] public GameObject Player2Camera { get; private set; }
-	public bool CurrentTurn { get; private set; } = true;
+	[Property] public AiMode AIComponent;
+	[Property] public BombTimerInput BombUI;
+	public bool AIMode = true;
+	public bool CurrentTurn { get; set; } = true;
+
 
 	private bool Player1Assigned = false;
 	private bool Player2Assigned = false;
+
 
 
 

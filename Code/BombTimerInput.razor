@@ -3,12 +3,9 @@
 @inherits PanelComponent
 @namespace Sandbox
 
-<root>
-    <div class="reduce-text-bg">
-        <div class="reduce-text">@_reductionTime s</div>
-    </div>
+<root class="@(_gameManager.CurrentTurn ? "" : "hide")">
 
-	<div class="background">
+    <div class="background">
         <div class="background-inner">
             <div class="reduce-button">Q</div>
             <div class="description">Reduce Time</div>
@@ -16,10 +13,16 @@
         </div>
     </div>
 
-     <div class="enter-label-bg">
-        <div class="enter-label">PRESS ENTER</div>
-     </div>
-    
+    <div class="reduce-text-bg">
+        <div class="reduce-text">@_reductionTime s</div>
+    </div>
+    <div class="enter-label">
+        <div class="enter-label">PRESS ENTER TO SUBMIT</div>
+    </div>
+
+    <div class="timeout-bar" style="width:@_currentTimeoutWidth"></div>
+
+
 </root>
 
 @code
@@ -27,37 +30,52 @@
 
     protected override void OnUpdate()
     {
+
         if (!_gameManager.CurrentTurn) { return; }
+
+        _currentTimeoutWidth = (1f - (_timeSinceInput / _maxInputTime)) * 400f;
 
 
         if (Input.Pressed("IncreaseBombTime"))
         {
-            _reductionTime = float.Min(100, _reductionTime + 1f);
+            _reductionTime = float.Min(_maxVal, _reductionTime + 1f);
 
         }
         else if (Input.Pressed("DecreaseBombTime") )
         {
             _reductionTime = float.Max(1, _reductionTime - 1f);
         }
-        else if (Input.Pressed("SubmitReductionTime"))
+        else if (Input.Pressed("SubmitReductionTime") || _timeSinceInput >= _maxInputTime)
         {
-            Sound.Play("cloud.stnkybo.vineboom");
+            Sound.Play(InputSound);
             bombRef.ReduceBombTime(_reductionTime);
             _reductionTime = 1f;
-            _gameManager.NextTurn(this);
+            _timeSinceInput = 0;
+            _currentTimeoutWidth = 0f;
+            _gameManager.NextTurn();
+
+
         }
+
 
     }
 
 
 
     [Property] public Bomb bombRef {get; set;}
+
+    [Property] public SoundEvent InputSound {get; set;}
     private float _reductionTime = 1f;
     private GameManager _gameManager = GameManager.Instance;
+    private TimeSince _timeSinceInput = 0;
+    private int _maxVal = 50;
+    private const float _maxInputTime = 5f;
+    private float _currentTimeoutWidth = 0f;
+
 
 
     protected override int BuildHash()
     {
-        return System.HashCode.Combine(_reductionTime);
+        return System.HashCode.Combine(_reductionTime, _currentTimeoutWidth, _gameManager.CurrentTurn);
     }
 }
