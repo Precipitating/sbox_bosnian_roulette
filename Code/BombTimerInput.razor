@@ -28,31 +28,54 @@
 @code
 {
 
-    protected override void OnUpdate()
+    public void ResetTimer()
+    {
+        Log.Info("Reset Timer");
+        _reductionTime = 1f;
+        _currentTimeoutWidth = 0f;
+
+    }
+    protected override void OnStart()
+    {
+        base.OnStart();
+        _bombRef = Scene.Directory.FindByName("BombModel").First().GetComponent<Bomb>();
+        Log.Warning($"BOMBTIMERINPUT BombRef instance: {_bombRef?.GetHashCode()}");
+    }
+    async protected override void OnUpdate()
     {
 
-        if (!_gameManager.CurrentTurn) { return; }
+        if (!_gameManager.CurrentTurn) {
+            _timeSinceInput = 0f;
+            return; 
+        }
 
         _currentTimeoutWidth = (1f - (_timeSinceInput / _maxInputTime)) * 400f;
 
 
-        if (Input.Pressed("IncreaseBombTime"))
+        if (Input.Down("IncreaseBombTime") && _inputFireRate > 0.05f)
         {
             _reductionTime = float.Min(_maxVal, _reductionTime + 1f);
+            _inputFireRate = 0f;
 
         }
-        else if (Input.Pressed("DecreaseBombTime") )
+        else if (Input.Down("DecreaseBombTime") && _inputFireRate > 0.05f)
         {
             _reductionTime = float.Max(1, _reductionTime - 1f);
+            _inputFireRate = 0f;
         }
         else if (Input.Pressed("SubmitReductionTime") || _timeSinceInput >= _maxInputTime)
         {
             Sound.Play(InputSound);
-            bombRef.ReduceBombTime(_reductionTime);
-            _reductionTime = 1f;
-            _timeSinceInput = 0;
-            _currentTimeoutWidth = 0f;
-            _gameManager.NextTurn();
+            _bombRef.ReduceBombTime(_reductionTime);
+            ResetTimer();
+
+            float enemyVal = await _gameManager.NextTurn();
+            if ( enemyVal != -1 )
+                _bombRef.ReduceBombTime(enemyVal);
+            else
+                _bombRef.ReduceBombTime(1);
+
+            await _gameManager.NextTurn();
 
 
         }
@@ -60,17 +83,15 @@
 
     }
 
-
-
-    [Property] public Bomb bombRef {get; set;}
-
     [Property] public SoundEvent InputSound {get; set;}
     private float _reductionTime = 1f;
     private GameManager _gameManager = GameManager.Instance;
     private TimeSince _timeSinceInput = 0;
+    private TimeSince _inputFireRate = 0;
     private int _maxVal = 50;
     private const float _maxInputTime = 5f;
     private float _currentTimeoutWidth = 0f;
+    private Bomb _bombRef = null;
 
 
 

@@ -24,21 +24,18 @@ public sealed class Bomb : Component
 
 
 
-	public bool IsActive
-	{
-		get
-		{
-			return _isActive;
-		}
-		set
-		{
-			_isActive = value;
-		}
-	}
+
 
 	public void ReduceBombTime(float reductionTime)
 	{
 		_time = float.Max( 0, _time - reductionTime );
+		Log.Warning( $"Bomb time has reduced by {reductionTime}" );
+		Log.Warning(_time);
+		if (_time <= 0)
+		{
+			_gameManager.DetermineWinner();
+		}
+
 	}
 
 
@@ -74,28 +71,24 @@ public sealed class Bomb : Component
 	async public Task Explode()
 	{
 
-		_isActive = false;
+		IsActive = false;
+		_gameManager.DetermineWinner();
 		JingleSound.StartSound();
-		await Task.DelaySeconds( 1 );
-
+		await GameTask.DelaySeconds( 1 );
 		GameObject.Destroy();
 		JingleSound.StopSound();
 		ExplosionRef.Enabled = true;
 		Sound.Play( ExplodeSound );
-
-
-
-
 
 	}
 
 	async public Task BombTick()
 	{
 		_finishedTick = false;
-		await Task.DelaySeconds( _time / _originalTime);
+		await GameTask.DelaySeconds( _time / _originalTime);
 		if ( _time > 0 )
 		{
-			await BombTickScaleLerp();
+			_ = BombTickScaleLerp();
 			_time -= 1;
 			
 			Log.Info( _time );
@@ -103,7 +96,7 @@ public sealed class Bomb : Component
 		}
 		else
 		{
-			await Explode();
+			_= Explode();
 
 		}
 
@@ -115,9 +108,8 @@ public sealed class Bomb : Component
 		float lerpTime = _time / _originalTime;
 		float tickTime =  (1f - lerpTime ) * _lerpScaleMultiplier;
 		_tickSize = _originalSize + (_originalSize * tickTime);
-		Log.Info( tickTime );
 
-		await LerpSize( lerpTime, _tickSize, Easing.BounceInOut );
+		_ = LerpSize( lerpTime, _tickSize, Easing.BounceInOut );
 
 
 	}
@@ -127,6 +119,8 @@ public sealed class Bomb : Component
 
 	protected override void OnStart()
 	{
+
+		Log.Warning( $"BOMB BombRef instance: {this?.GetHashCode()}" );
 		if ( !IsValid )
 		{
 			Log.Info( "Can't find bomb reference" );
@@ -135,16 +129,16 @@ public sealed class Bomb : Component
 		_originalTime = _time;
 		_originalSize = LocalScale;
 		_tickSize = _originalSize * _lerpScaleMultiplier;
-		_isActive = true;
 
 
 	}
 
-	async protected override void OnUpdate()
+	protected override void OnUpdate()
 	{
-		if ( _isActive && _finishedTick )
+
+		if ( IsActive && _finishedTick )
 		{
-			await BombTick();
+			_ =  BombTick();
 		}
 
 
@@ -155,14 +149,14 @@ public sealed class Bomb : Component
 	[Property] public SoundEvent ExplodeSound { get; set; }
 	[Property] public SoundPointComponent JingleSound { get; set; }
 	[Property] public GameObject ExplosionRef { get; set; }
-
+	public bool IsActive { get; set; } = true;
 	private float _originalTime = 0f;
 	private float _time = 0f;
-	private bool _isActive = false;
 	private const float _lerpScaleMultiplier = 4f;
 	private Vector3 _originalSize;
 	private Vector3 _tickSize;
 	private bool _finishedTick = true;
+	private GameManager _gameManager = GameManager.Instance;
 
 
 	private float _tickRate = 0f;

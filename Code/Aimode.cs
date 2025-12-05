@@ -5,53 +5,54 @@ using System.Threading.Tasks;
 
 public sealed class AiMode : Component
 {
-	async public Task SimulateTurn()
+	async public Task<float> SimulateTurn()
 	{
-		Log.Info( "AI simulate turn:" );
+		Log.Warning( "AI simulate turn:" );
+
 		await GameTask.DelaySeconds( Game.Random.Int( 1, 5 ) );
 
-		
-		if (!BombRef.IsActive ) return;
+		float timeSinceLastTick = _bombRef.GetTickRate();
 
-		float timeSinceLastTick = BombRef.GetTickRate();
-
-
+		if ( !_bombRef.IsActive )
+		{
+			Log.Info( "Bomb is not active" );
+			return -1f;
+		}
 		foreach (var entry in reductionTable)
 		{
-			Log.Info( $"{entry.Key} >= {timeSinceLastTick}" );
+
+			Log.Info( $"Tick rate: {timeSinceLastTick}" );
 			if ( timeSinceLastTick >= entry.Key)
 			{
-				Log.Info( "KEY" );
+				Log.Info( $"{entry.Key} decrease setup selected for AI." );
 				if (lastKeyExecuted == entry.Key)
 				{
-					comboCount += 1;
+					comboCount = Math.Min( comboCount + 1, 3);
 				}
 				else
 				{
 					comboCount = 1;
+					lastKeyExecuted = -1;
 				}
 				lastKeyExecuted = entry.Key;
-				entry.Value();
-				_gameManager.NextTurn();
-				Log.Info( $"AI reduced time! no. {entry.Key}" );
-				break;
+				Log.Info( $"AI reduced time! no. {entry.Key}, combo: {comboCount}" );
+				return entry.Value() * comboCount;
 			}
 		}
 
-
-
+		return -1f;
 	}
 
 	private void BuildReductionTable()
 	{
 		reductionTable = new()
 		{
-			{1.8f,() => BombRef.ReduceBombTime( Game.Random.Int( 30 * comboCount, 50 * comboCount ))},
-			{1.4f,() => BombRef.ReduceBombTime( Game.Random.Int( 25 * comboCount, 35 * comboCount ))},
-			{1.2f,() => BombRef.ReduceBombTime( Game.Random.Int( 20 * comboCount, 30 * comboCount ))},
-			{1f,() => BombRef.ReduceBombTime( Game.Random.Int( 15 * comboCount, 25 * comboCount ))},
-			{0.5f,() => BombRef.ReduceBombTime( Game.Random.Int( 10 * comboCount, 20 * comboCount ))},
-			{0.1f,() => BombRef.ReduceBombTime( 1 )},
+			{1.8f,() => Game.Random.Int( 30, 50)},
+			{1.4f,() => Game.Random.Int( 25, 35)},
+			{1.2f,() => Game.Random.Int( 20, 30)},
+			{1f,() => Game.Random.Int( 15, 25)},
+			{0.5f,() => Game.Random.Int( 10, 20)},
+			{0.1f,() => Game.Random.Int( 1, 2)},
 		};
 	}
 
@@ -59,17 +60,15 @@ public sealed class AiMode : Component
 	{
 		base.OnStart();
 		BuildReductionTable();
-
-
-	}
-	protected override void OnUpdate()
-	{
+		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
+		Log.Warning( $"AIMODE BombRef instance: {_bombRef?.GetHashCode()}" );
 
 	}
 
-	[Property] public Bomb BombRef;
+
 	private int comboCount = 1;
 	private float lastKeyExecuted = -1;
 	private GameManager _gameManager = GameManager.Instance;
-	private Dictionary<float, Action> reductionTable;
+	private Dictionary<float, Func<float>> reductionTable;
+	Bomb _bombRef = null;
 }

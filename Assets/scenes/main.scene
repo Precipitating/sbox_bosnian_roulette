@@ -1354,7 +1354,7 @@
             "_type": "gameobject",
             "go": "e3b44851-3f5e-47db-87d3-d5a6426fc842"
           },
-          "GetTime": 900,
+          "GetTime": 100,
           "JingleSound": {
             "_type": "component",
             "component_id": "5cc0c61e-0317-409f-9c57-f6356d405b98",
@@ -1576,8 +1576,10 @@
           "__guid": "80f0c0ef-6d0e-40c6-b695-5ce37ff3683e",
           "__enabled": true,
           "AngularDamping": 0,
+          "EnableImpactDamage": true,
           "Gravity": true,
           "GravityScale": 1,
+          "ImpactDamage": 0,
           "LinearDamping": 0,
           "Locking": {
             "X": false,
@@ -1589,6 +1591,7 @@
           },
           "MassCenterOverride": "0,0,0",
           "MassOverride": 0,
+          "MinImpactDamageSpeed": 500,
           "MotionEnabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -2865,11 +2868,11 @@
             "go": "6a8bc114-4c37-49d7-bd62-467f6b1a0bea",
             "component_type": "AiMode"
           },
-          "BombUI": {
+          "BombRef": {
             "_type": "component",
-            "component_id": "8c6e6e20-9892-4e4d-ab3b-4013ed1c0b08",
-            "go": "7c90c5f6-f756-4c82-a050-12cd659062dc",
-            "component_type": "BombTimerInput"
+            "component_id": "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63",
+            "go": "466c1441-bc74-44f9-89d1-416f02331103",
+            "component_type": "Bomb"
           },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -2884,18 +2887,13 @@
           "Player2Camera": {
             "_type": "gameobject",
             "go": "17a4c6d0-fd72-44c5-b055-26ee2ba0f7d5"
-          }
+          },
+          "YouWon": false
         },
         {
           "__type": "AiMode",
           "__guid": "0684f319-631a-4ead-84a5-41213a1e27d0",
           "__enabled": true,
-          "BombRef": {
-            "_type": "component",
-            "component_id": "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63",
-            "go": "466c1441-bc74-44f9-89d1-416f02331103",
-            "component_type": "Bomb"
-          },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -2926,12 +2924,6 @@
           "__type": "Sandbox.BombTimerInput",
           "__guid": "8c6e6e20-9892-4e4d-ab3b-4013ed1c0b08",
           "__enabled": true,
-          "bombRef": {
-            "_type": "component",
-            "component_id": "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63",
-            "go": "466c1441-bc74-44f9-89d1-416f02331103",
-            "component_type": "Bomb"
-          },
           "InputSound": "sound/inputsound.sound",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
