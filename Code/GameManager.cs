@@ -40,7 +40,7 @@ public sealed class GameManager : Component
 
 			if ( !CurrentTurn && AIMode )
 			{
-				float enemyVal = await AIComponent.SimulateTurn();
+				float enemyVal = await _aiComponent.SimulateTurn();
 				if ( GameComplete ) { return -1; }
 				return enemyVal;
 			}
@@ -66,15 +66,16 @@ public sealed class GameManager : Component
 	{
 		Instance = this;
 		AssignPlayer();
-		BombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
-		Log.Warning( $"MANAGER BombRef instance: {BombRef?.GetHashCode()}" );
+		_bombRef = Scene.Directory.FindComponentByGuid( new System.Guid( "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63" ) ) as Bomb;
+		_aiComponent = Scene.Directory.FindComponentByGuid( new System.Guid( "0684f319-631a-4ead-84a5-41213a1e27d0" ) ) as AiMode;
+		Log.Warning( $"MANAGER BombRef instance: {_bombRef?.GetHashCode()}" );
 	}
 
 	public static GameManager Instance { get; private set; }
 	[Property] public GameObject Player1Camera { get; private set; }
 	[Property] public GameObject Player2Camera { get; private set; }
-	[Property] public AiMode AIComponent;
-	[Property] public Bomb BombRef { get; private set; }
+	private AiMode _aiComponent;
+	private Bomb _bombRef { get; set; }
 	[Property] public bool YouWon { get; set; } = false;
 	public bool AIMode = true;
 	public bool CurrentTurn { get; set; } = true;

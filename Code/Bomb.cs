@@ -31,6 +31,7 @@ public sealed class Bomb : Component
 		_time = float.Max( 0, _time - reductionTime );
 		Log.Warning( $"Bomb time has reduced by {reductionTime}" );
 		Log.Warning(_time);
+
 		if (_time <= 0)
 		{
 			_gameManager.DetermineWinner();
@@ -129,7 +130,6 @@ public sealed class Bomb : Component
 		_originalTime = _time;
 		_originalSize = LocalScale;
 		_tickSize = _originalSize * _lerpScaleMultiplier;
-
 
 	}
 

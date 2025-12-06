@@ -1320,7 +1320,7 @@
       "Tags": "",
       "Enabled": true,
       "NetworkMode": 2,
-      "NetworkInterpolation": true,
+      "NetworkInterpolation": false,
       "NetworkOrphaned": 0,
       "NetworkTransmit": true,
       "OwnerTransfer": 1,
@@ -2862,18 +2862,6 @@
           "__type": "GameManager",
           "__guid": "a1a9b27b-27c1-4a65-92f2-5e27bdd7164b",
           "__enabled": true,
-          "AIComponent": {
-            "_type": "component",
-            "component_id": "0684f319-631a-4ead-84a5-41213a1e27d0",
-            "go": "6a8bc114-4c37-49d7-bd62-467f6b1a0bea",
-            "component_type": "AiMode"
-          },
-          "BombRef": {
-            "_type": "component",
-            "component_id": "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63",
-            "go": "466c1441-bc74-44f9-89d1-416f02331103",
-            "component_type": "Bomb"
-          },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -2914,7 +2902,7 @@
       "Scale": "1,1,1",
       "Tags": "bombui",
       "Enabled": true,
-      "NetworkMode": 2,
+      "NetworkMode": 0,
       "NetworkInterpolation": true,
       "NetworkOrphaned": 0,
       "NetworkTransmit": true,

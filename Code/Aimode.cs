@@ -7,13 +7,15 @@ public sealed class AiMode : Component
 {
 	async public Task<float> SimulateTurn()
 	{
-		Log.Warning( "AI simulate turn:" );
+		Log.Warning( $"AI simulate turn, current time = {_bombRef.GetTime}, active: {_bombRef.IsActive}" );
 
 		await GameTask.DelaySeconds( Game.Random.Int( 1, 5 ) );
-
 		float timeSinceLastTick = _bombRef.GetTickRate();
+		bool isActiveAtStart = _bombRef.IsActive;
 
-		if ( !_bombRef.IsActive )
+
+
+		if ( !isActiveAtStart )
 		{
 			Log.Info( "Bomb is not active" );
 			return -1f;
@@ -60,8 +62,10 @@ public sealed class AiMode : Component
 	{
 		base.OnStart();
 		BuildReductionTable();
-		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
+		_bombRef = Scene.Directory.FindComponentByGuid( new System.Guid( "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63" ) ) as Bomb;
 		Log.Warning( $"AIMODE BombRef instance: {_bombRef?.GetHashCode()}" );
+
+		Log.Info( Id );
 
 	}
 

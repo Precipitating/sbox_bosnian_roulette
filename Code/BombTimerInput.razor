@@ -34,11 +34,12 @@
         _reductionTime = 1f;
         _currentTimeoutWidth = 0f;
 
+
     }
     protected override void OnStart()
     {
         base.OnStart();
-        _bombRef = Scene.Directory.FindByName("BombModel").First().GetComponent<Bomb>();
+        _bombRef = Scene.Directory.FindComponentByGuid(new System.Guid("ad824361-8cfc-4f59-bfe5-0fae8b2a0b63")) as Bomb;
         Log.Warning($"BOMBTIMERINPUT BombRef instance: {_bombRef?.GetHashCode()}");
     }
     async protected override void OnUpdate()
@@ -67,6 +68,7 @@
         {
             Sound.Play(InputSound);
             _bombRef.ReduceBombTime(_reductionTime);
+
             ResetTimer();
 
             float enemyVal = await _gameManager.NextTurn();
@@ -75,7 +77,7 @@
             else
                 _bombRef.ReduceBombTime(1);
 
-            await _gameManager.NextTurn();
+            _=  _gameManager.NextTurn();
 
 
         }
