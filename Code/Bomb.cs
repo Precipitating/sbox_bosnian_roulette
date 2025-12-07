@@ -73,14 +73,13 @@ public sealed class Bomb : Component
 	{
 
 		IsActive = false;
-		_gameManager.DetermineWinner();
 		JingleSound.StartSound();
 		await GameTask.DelaySeconds( 1 );
 		GameObject.Destroy();
 		JingleSound.StopSound();
 		ExplosionRef.Enabled = true;
 		Sound.Play( ExplodeSound );
-
+		_gameManager.DetermineWinner();
 	}
 
 	async public Task BombTick()
@@ -89,7 +88,7 @@ public sealed class Bomb : Component
 		await GameTask.DelaySeconds( _time / _originalTime);
 		if ( _time > 0 )
 		{
-			_ = BombTickScaleLerp();
+			await BombTickScaleLerp();
 			_time -= 1;
 			
 			Log.Info( _time );
@@ -97,7 +96,7 @@ public sealed class Bomb : Component
 		}
 		else
 		{
-			_= Explode();
+			await Explode();
 
 		}
 
@@ -110,7 +109,7 @@ public sealed class Bomb : Component
 		float tickTime =  (1f - lerpTime ) * _lerpScaleMultiplier;
 		_tickSize = _originalSize + (_originalSize * tickTime);
 
-		_ = LerpSize( lerpTime, _tickSize, Easing.BounceInOut );
+		await LerpSize( lerpTime, _tickSize, Easing.BounceInOut );
 
 
 	}
@@ -127,18 +126,19 @@ public sealed class Bomb : Component
 			Log.Info( "Can't find bomb reference" );
 			return;
 		}
+		_gameManager = GameManager.Instance;
 		_originalTime = _time;
 		_originalSize = LocalScale;
 		_tickSize = _originalSize * _lerpScaleMultiplier;
 
 	}
 
-	protected override void OnUpdate()
+	async protected override void OnUpdate()
 	{
 
 		if ( IsActive && _finishedTick )
 		{
-			_ =  BombTick();
+			await BombTick();
 		}
 
 
@@ -156,16 +156,10 @@ public sealed class Bomb : Component
 	private Vector3 _originalSize;
 	private Vector3 _tickSize;
 	private bool _finishedTick = true;
-	private GameManager _gameManager = GameManager.Instance;
-
+	private GameManager _gameManager = null;
 
 	private float _tickRate = 0f;
 	private TimeSince _sinceLastTick = 0;
-
-
-
-
-
 
 
 

@@ -1,5 +1,6 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using Sandbox.Events;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -28,6 +29,8 @@
 @code
 {
 
+
+
     public void ResetTimer()
     {
         Log.Info("Reset Timer");
@@ -39,6 +42,7 @@
     protected override void OnStart()
     {
         base.OnStart();
+        _gameManager = GameManager.Instance;
         _bombRef = Scene.Directory.FindComponentByGuid(new System.Guid("ad824361-8cfc-4f59-bfe5-0fae8b2a0b63")) as Bomb;
         Log.Warning($"BOMBTIMERINPUT BombRef instance: {_bombRef?.GetHashCode()}");
     }
@@ -67,19 +71,11 @@
         else if (Input.Pressed("SubmitReductionTime") || _timeSinceInput >= _maxInputTime)
         {
             Sound.Play(InputSound);
-            _bombRef.ReduceBombTime(_reductionTime);
+
+             _bombRef.ReduceBombTime(_reductionTime);
 
             ResetTimer();
-
-            float enemyVal = await _gameManager.NextTurn();
-            if ( enemyVal != -1 )
-                _bombRef.ReduceBombTime(enemyVal);
-            else
-                _bombRef.ReduceBombTime(1);
-
-            _=  _gameManager.NextTurn();
-
-
+            await _gameManager.NextTurn();
         }
 
 
@@ -87,7 +83,7 @@
 
     [Property] public SoundEvent InputSound {get; set;}
     private float _reductionTime = 1f;
-    private GameManager _gameManager = GameManager.Instance;
+    private GameManager _gameManager = null;
     private TimeSince _timeSinceInput = 0;
     private TimeSince _inputFireRate = 0;
     private int _maxVal = 50;

@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 
 public sealed class AiMode : Component
 {
-	async public Task<float> SimulateTurn()
+	async public Task SimulateTurn()
 	{
 		Log.Warning( $"AI simulate turn, current time = {_bombRef.GetTime}, active: {_bombRef.IsActive}" );
 
 		await GameTask.DelaySeconds( Game.Random.Int( 1, 5 ) );
 		float timeSinceLastTick = _bombRef.GetTickRate();
+		Log.Warning( $"AI's detected tick rate: {timeSinceLastTick}" );
 		bool isActiveAtStart = _bombRef.IsActive;
 
 
@@ -18,12 +19,12 @@ public sealed class AiMode : Component
 		if ( !isActiveAtStart )
 		{
 			Log.Info( "Bomb is not active" );
-			return -1f;
+			return;
 		}
 		foreach (var entry in reductionTable)
 		{
 
-			Log.Info( $"Tick rate: {timeSinceLastTick}" );
+
 			if ( timeSinceLastTick >= entry.Key)
 			{
 				Log.Info( $"{entry.Key} decrease setup selected for AI." );
@@ -37,12 +38,17 @@ public sealed class AiMode : Component
 					lastKeyExecuted = -1;
 				}
 				lastKeyExecuted = entry.Key;
+
+				float result = entry.Value() * comboCount;
+				if ( result != -1 )
+					_bombRef.ReduceBombTime( result );
+				else
+					_bombRef.ReduceBombTime( 1 );
+
 				Log.Info( $"AI reduced time! no. {entry.Key}, combo: {comboCount}" );
-				return entry.Value() * comboCount;
+				return;
 			}
 		}
-
-		return -1f;
 	}
 
 	private void BuildReductionTable()
@@ -61,18 +67,17 @@ public sealed class AiMode : Component
 	protected override void OnStart()
 	{
 		base.OnStart();
+		_gameManager = GameManager.Instance;
 		BuildReductionTable();
 		_bombRef = Scene.Directory.FindComponentByGuid( new System.Guid( "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63" ) ) as Bomb;
 		Log.Warning( $"AIMODE BombRef instance: {_bombRef?.GetHashCode()}" );
-
-		Log.Info( Id );
 
 	}
 
 
 	private int comboCount = 1;
 	private float lastKeyExecuted = -1;
-	private GameManager _gameManager = GameManager.Instance;
+	private GameManager _gameManager = null;
 	private Dictionary<float, Func<float>> reductionTable;
 	Bomb _bombRef = null;
 }
