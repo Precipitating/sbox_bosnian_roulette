@@ -1,0 +1,41 @@
+MainMenuUI {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: all;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+
+	.title {
+		position: relative;
+		left: -1.6%;
+		top: 2%;
+		font-size: 5vw;
+		font-family: Poppins;
+		color: white;
+	}
+
+	> .ai {
+		position: relative;
+		top: 30%;
+		left: -4.5%;
+		color: green;
+		font-size: 2vw;
+		font-family: Poppins;
+	}
+
+	> .human {
+		position: relative;
+		top: -25%;
+		color: red;
+		font-size: 2vw;
+		flex-direction: row;
+	}
+
+	&.hide {
+		opacity: 0;
+	}
+}

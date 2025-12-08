@@ -1,10 +1,13 @@
 @using Sandbox;
 @using Sandbox.UI;
-@using Sandbox.Events;
 @inherits PanelComponent
 @namespace Sandbox
 
-<root class="@(_gameManager.CurrentTurn ? "" : "hide")">
+<root class="@((_gameManager?.GameStarted ?? false)
+      && (_gameManager?.CurrentTurn ?? false)
+      && (_bombRef?.IsActive ?? false)
+         ? ""
+         : "hide")">
 
     <div class="background">
         <div class="background-inner">
@@ -48,6 +51,7 @@
     }
     async protected override void OnUpdate()
     {
+        if (!_gameManager.GameStarted) return;
 
         if (!_gameManager.CurrentTurn) {
             _timeSinceInput = 0f;

@@ -34,7 +34,7 @@ public sealed class Bomb : Component
 
 		if (_time <= 0)
 		{
-			_gameManager.DetermineWinner();
+			_ = Explode();
 		}
 
 	}
@@ -71,15 +71,16 @@ public sealed class Bomb : Component
 
 	async public Task Explode()
 	{
-
 		IsActive = false;
+		_gameManager.SetCamera( _gameManager.OverheadCamera );
 		JingleSound.StartSound();
 		await GameTask.DelaySeconds( 1 );
-		GameObject.Destroy();
 		JingleSound.StopSound();
 		ExplosionRef.Enabled = true;
-		Sound.Play( ExplodeSound );
-		_gameManager.DetermineWinner();
+		var explodeSound = Sound.Play( ExplodeSound );
+		await GameTask.Delay( 100 );
+		_= _gameManager.DetermineWinner();
+
 	}
 
 	async public Task BombTick()
@@ -96,7 +97,7 @@ public sealed class Bomb : Component
 		}
 		else
 		{
-			await Explode();
+			_= Explode();
 
 		}
 
@@ -127,9 +128,11 @@ public sealed class Bomb : Component
 			return;
 		}
 		_gameManager = GameManager.Instance;
+		_time = Game.Random.Int( 60, 1000 );
 		_originalTime = _time;
 		_originalSize = LocalScale;
 		_tickSize = _originalSize * _lerpScaleMultiplier;
+		
 
 	}
 
@@ -149,7 +152,7 @@ public sealed class Bomb : Component
 	[Property] public SoundEvent ExplodeSound { get; set; }
 	[Property] public SoundPointComponent JingleSound { get; set; }
 	[Property] public GameObject ExplosionRef { get; set; }
-	public bool IsActive { get; set; } = true;
+	public bool IsActive { get; set; } = false;
 	private float _originalTime = 0f;
 	private float _time = 0f;
 	private const float _lerpScaleMultiplier = 4f;

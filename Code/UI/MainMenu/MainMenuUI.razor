@@ -1,0 +1,35 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="@(!_gameManager.GameStarted ? "" : "hide")">
+    <div class="human">Play HUMAN</div>
+    <div class="title">@Title</div>
+    <div class="ai" onclick=@PlayAI>Play AI</div>
+</root>
+
+@code
+{
+    protected override int BuildHash() => System.HashCode.Combine( Title );
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+        _gameManager = GameManager.Instance;
+    }
+    protected override void OnUpdate()
+    {
+        Scene.TimeScale = !_gameManager.GameStarted ? 0 : 1;
+
+    }
+    private void PlayAI()
+    {
+        _gameManager.PlayAI();
+    }
+
+
+    private string Title { get; set; } = "BOMBA";
+
+    private GameManager _gameManager = null;
+}
