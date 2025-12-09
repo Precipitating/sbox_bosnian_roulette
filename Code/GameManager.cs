@@ -29,17 +29,6 @@ public sealed class GameManager : Component
 	}
 
 
-	//public void ResetGame()
-	//{
-	//	Reset();
-	//	//GameStarted = false;
-	//	//GameComplete = false;
-	//	//CurrentTurn = true;
-	//	//MainMenu();
-
-
-	//}
-
 	// set camera and player refs
 	public void AssignPlayer()
 	{
@@ -99,8 +88,6 @@ public sealed class GameManager : Component
 		{
 			var loserPlayer = !_player1Occupied ? Player1Model.GetComponent<Prop>() : Player2Model.GetComponent<Prop>();
 			loserPlayer.IsStatic = false;
-			bombRadiusDmg.Enabled = true;
-			_bombRef.GameObject.Enabled = false;
 
 		}
 		else
@@ -108,16 +95,26 @@ public sealed class GameManager : Component
 
 			_currentPlayer.GetComponent<Prop>().IsStatic = false;
 			Player1Camera.Enabled = false;
-			bombRadiusDmg.Enabled = true;
-			_bombRef.GameObject.Enabled = false;
-
 
 		}
 
+		BombRadiusDmg.Enabled = true;
+		_bombRef.GameObject.Destroy();
+
 		Log.Warning( $"Did you win? {_youWon}" );
 		await GameTask.DelaySeconds( 5 );
-		Scene.LoadFromFile( "scenes/main.scene" );
+		ReloadGame();
 
+	}
+
+
+
+	public void ReloadGame()
+	{
+		SceneLoadOptions currScene = new SceneLoadOptions();
+		currScene.SetScene("scenes/main.scene");
+		currScene.DeleteEverything = true;
+		Game.ChangeScene(currScene);
 	}
 
 
@@ -139,15 +136,27 @@ public sealed class GameManager : Component
 		BombUI.Enabled = true;
 
 		Log.Info( $"IsActive: {_bombRef.IsActive}. GameStarted: {GameStarted}" );
+
+	}
+
+	public void PlayCoop()
+	{
+		
 	}
 	protected override void OnStart()
 	{
 		_bombRef = Scene.Directory.FindComponentByGuid( new System.Guid( "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63" ) ) as Bomb;
-		bombRadiusDmg = _bombRef.GameObject.GetComponent<RadiusDamage>();
-		bombRadiusDmg.Enabled = false;
+		if (BombRadiusDmg == null)
+		{
+			BombRadiusDmg = _bombRef.GetComponent<RadiusDamage>();
+		}
+		BombRadiusDmg.Enabled = false;
 		_aiComponent = Scene.Directory.FindComponentByGuid( new System.Guid( "0684f319-631a-4ead-84a5-41213a1e27d0" ) ) as AiMode;
 		Log.Warning( $"MANAGER BombRef instance: {_bombRef?.GetHashCode()}" );
 		MainMenu();
+
+		Log.Warning( $"Is gamemanager owner" );
+
 	}
 
 	// public
@@ -155,7 +164,7 @@ public sealed class GameManager : Component
 	[Property] public GameObject Player1Camera { get; private set; } = null;
 	[Property] public GameObject Player2Camera { get; private set; } = null;
 	[Property] public GameObject OverheadCamera { get; private set; } = null;
-
+	[Property] public RadiusDamage BombRadiusDmg { get; set; }
 	[Property] public GameObject Player1Model { get; set; }
 	[Property] public GameObject Player2Model { get; set; }
 	[Property] public GameObject BombUI { get; set; }
@@ -172,7 +181,7 @@ public sealed class GameManager : Component
 	private bool _player2Occupied = false;
 
 	private GameObject _currentPlayer = null;
-	private RadiusDamage bombRadiusDmg { get; set; }
+	
 	private AiMode _aiComponent;
 	private Bomb _bombRef { get; set; }
 	private GameObject _activeCamera = null;

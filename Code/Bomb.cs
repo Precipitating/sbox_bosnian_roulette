@@ -26,7 +26,7 @@ public sealed class Bomb : Component
 
 
 
-	public void ReduceBombTime(float reductionTime)
+	public bool ReduceBombTime(float reductionTime)
 	{
 		_time = float.Max( 0, _time - reductionTime );
 		Log.Warning( $"Bomb time has reduced by {reductionTime}" );
@@ -35,7 +35,10 @@ public sealed class Bomb : Component
 		if (_time <= 0)
 		{
 			_ = Explode();
+			return true;
 		}
+
+		return false;
 
 	}
 
@@ -71,15 +74,20 @@ public sealed class Bomb : Component
 
 	async public Task Explode()
 	{
-		IsActive = false;
-		_gameManager.SetCamera( _gameManager.OverheadCamera );
-		JingleSound.StartSound();
-		await GameTask.DelaySeconds( 1 );
-		JingleSound.StopSound();
-		ExplosionRef.Enabled = true;
-		var explodeSound = Sound.Play( ExplodeSound );
-		await GameTask.Delay( 100 );
-		_= _gameManager.DetermineWinner();
+		if (IsActive)
+		{
+			Log.Info( "Explode" );
+			IsActive = false;
+			_gameManager.SetCamera( _gameManager.OverheadCamera );
+			JingleSound.StartSound();
+			await GameTask.DelaySeconds( 1 );
+			JingleSound.StopSound();
+			ExplosionRef.Enabled = true;
+			var explodeSound = Sound.Play( ExplodeSound );
+			await GameTask.Delay( 100 );
+			_ = _gameManager.DetermineWinner();
+		}
+
 
 	}
 
@@ -97,7 +105,7 @@ public sealed class Bomb : Component
 		}
 		else
 		{
-			_= Explode();
+			await Explode();
 
 		}
 
@@ -128,7 +136,8 @@ public sealed class Bomb : Component
 			return;
 		}
 		_gameManager = GameManager.Instance;
-		_time = Game.Random.Int( 60, 1000 );
+		//_time = Game.Random.Int( 60, 500 );
+		_time = 30;
 		_originalTime = _time;
 		_originalSize = LocalScale;
 		_tickSize = _originalSize * _lerpScaleMultiplier;

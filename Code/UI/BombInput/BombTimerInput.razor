@@ -42,6 +42,7 @@
 
 
     }
+
     protected override void OnStart()
     {
         base.OnStart();
@@ -74,12 +75,17 @@
         }
         else if (Input.Pressed("SubmitReductionTime") || _timeSinceInput >= _maxInputTime)
         {
+            if (!_bombRef.IsActive) { return; }
             Sound.Play(InputSound);
 
-             _bombRef.ReduceBombTime(_reductionTime);
+            bool finished = _bombRef.ReduceBombTime(_reductionTime);
 
-            ResetTimer();
-            await _gameManager.NextTurn();
+            if (!finished)
+            {
+                ResetTimer();
+                await _gameManager.NextTurn();
+            }
+
         }
 
 
@@ -99,6 +105,6 @@
 
     protected override int BuildHash()
     {
-        return System.HashCode.Combine(_reductionTime, _currentTimeoutWidth, _gameManager.CurrentTurn);
+        return System.HashCode.Combine(_reductionTime, _currentTimeoutWidth, _gameManager.CurrentTurn );
     }
 }

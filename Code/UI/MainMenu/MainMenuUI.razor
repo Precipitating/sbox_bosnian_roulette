@@ -3,7 +3,7 @@
 @inherits PanelComponent
 @namespace Sandbox
 
-<root class="@(!_gameManager.GameStarted ? "" : "hide")">
+<root class="@((!_gameManager.GameStarted) ? "" : "hide")">
     <div class="human">Play HUMAN</div>
     <div class="title">@Title</div>
     <div class="ai" onclick=@PlayAI>Play AI</div>
@@ -17,6 +17,8 @@
     {
         base.OnStart();
         _gameManager = GameManager.Instance;
+        Log.Info("Main menu UI valid");
+
     }
     protected override void OnUpdate()
     {
@@ -25,7 +27,11 @@
     }
     private void PlayAI()
     {
+
+        Log.Info("Play AI");
         _gameManager.PlayAI();
+
+       
     }
 
 
