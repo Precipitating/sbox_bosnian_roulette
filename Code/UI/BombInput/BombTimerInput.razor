@@ -48,6 +48,8 @@
         base.OnStart();
         _gameManager = GameManager.Instance;
         _bombRef = Scene.Directory.FindComponentByGuid(new System.Guid("ad824361-8cfc-4f59-bfe5-0fae8b2a0b63")) as Bomb;
+        InputSound = Cloud.SoundEvent("igrotronika.click8");
+
         Log.Warning($"BOMBTIMERINPUT BombRef instance: {_bombRef?.GetHashCode()}");
     }
     async protected override void OnUpdate()
@@ -91,7 +93,7 @@
 
     }
 
-    [Property] public SoundEvent InputSound {get; set;}
+    public SoundEvent InputSound {get; set;}
     private float _reductionTime = 1f;
     private GameManager _gameManager = null;
     private TimeSince _timeSinceInput = 0;

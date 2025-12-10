@@ -1,6 +1,7 @@
 using Sandbox;
 using Sandbox.Html;
 using Sandbox.UI;
+using System;
 using System.Threading.Tasks;
 
 
@@ -139,10 +140,68 @@ public sealed class GameManager : Component
 
 	}
 
-	public void PlayCoop()
+
+	[Rpc.Broadcast]
+	public void UpdateMatchmakingCount(bool join)
 	{
+		if (join)
+		{
+			MatchmakingPlayers = Math.Max( 0, MatchmakingPlayers + 1 );
+		}
+		else
+		{
+			MatchmakingPlayers = Math.Max( 0, MatchmakingPlayers - 1 );
+		}
 		
 	}
+
+	public void PlayCoop()
+	{
+		if (MatchmakingPlayers == 2)
+		{
+			AssignPlayer();
+
+		}
+		else
+		{
+			GameObject MatchmakeUI = Scene.Directory.FindByName( "MatchMakeUI" ).FirstOrDefault();
+			if (MatchmakeUI == null)
+			{
+				MatchmakeUI = Scene.CreateObject();
+				MatchmakeUI.Name = "MatchmakeUI";
+				MatchmakeUI.Parent = UIParent;
+				MatchmakeUI.AddComponent<MatchmakeUI>();
+				MatchmakeUI.AddComponent<ScreenPanel>();
+				MatchmakeUI.NetworkMode = NetworkMode.Never;
+			}
+
+			IsMatchmaking = true;
+			//MatchmakeUI.GetComponent<MatchmakeUI>().IsMatchmaking = true;
+			UpdateMatchmakingCount(true);
+		}
+
+	}
+
+	public void CreateUI()
+	{
+		UIParent = Scene.CreateObject();
+		UIParent.Name = "UI";
+		BombUI = Scene.CreateObject();
+		BombUI.Name = "BombUI";
+		BombUI.Parent = UIParent;
+		BombUI.Enabled = false;
+		BombUI.AddComponent<BombTimerInput>();
+		BombUI.AddComponent<ScreenPanel>();
+
+
+		GameObject MainMenu = Scene.CreateObject();
+		MainMenu.Name = "MainMenuUI";
+		MainMenu.Parent = UIParent;
+		MainMenu.AddComponent<MainMenuUI>();
+		MainMenu.AddComponent<ScreenPanel>();
+
+	}
+
 	protected override void OnStart()
 	{
 		_bombRef = Scene.Directory.FindComponentByGuid( new System.Guid( "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63" ) ) as Bomb;
@@ -153,9 +212,12 @@ public sealed class GameManager : Component
 		BombRadiusDmg.Enabled = false;
 		_aiComponent = Scene.Directory.FindComponentByGuid( new System.Guid( "0684f319-631a-4ead-84a5-41213a1e27d0" ) ) as AiMode;
 		Log.Warning( $"MANAGER BombRef instance: {_bombRef?.GetHashCode()}" );
+
+		// Create UI dynamically.
+		CreateUI();
+
 		MainMenu();
 
-		Log.Warning( $"Is gamemanager owner" );
 
 	}
 
@@ -170,21 +232,25 @@ public sealed class GameManager : Component
 	[Property] public GameObject BombUI { get; set; }
 	public bool GameStarted { get; set; } = false;
 
+	[Sync] public int MatchmakingPlayers { get; set; } = 0;
+
 	public bool AIMode = true;
 	public bool CurrentTurn { get; set; } = true;
 	public bool GameComplete { get; private set; } = false;
 
-
+	public bool IsMatchmaking { get; set; } = false;
 	// private
 	private bool _youWon { get; set; } = false;
-	private bool _player1Occupied = false;
-	private bool _player2Occupied = false;
+	[Sync] private bool _player1Occupied { get; set; } = false;
+	private bool _player2Occupied { get; set; } = false;
 
 	private GameObject _currentPlayer = null;
 	
 	private AiMode _aiComponent;
 	private Bomb _bombRef { get; set; }
 	private GameObject _activeCamera = null;
+
+	private GameObject UIParent{ get; set; } = null;
 
 
 

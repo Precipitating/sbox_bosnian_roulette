@@ -1,0 +1,69 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="@(_gameManager?.IsMatchmaking ?? false ? "" : "hide")">
+    <div class="title">@MatchmakingText</div>
+    <div class="connected-players">@(_gameManager?.MatchmakingPlayers ?? 0) / 2 Connected</div>
+    <div class="leave" onclick=@LeaveMatchmaking>Leave</div>
+</root>
+
+@code
+{
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+        _gameManager = GameManager.Instance;
+    }
+
+
+    private void LeaveMatchmaking()
+    {
+        _gameManager.UpdateMatchmakingCount(false);
+        _gameManager.IsMatchmaking = false;
+        Log.Info(_gameManager.MatchmakingPlayers);
+    }
+
+    async protected override void OnUpdate()
+    {
+        base.OnUpdate();
+
+        Scene.TimeScale = _gameManager.IsMatchmaking ? 1 : 0;
+
+        if (_timeSince >= 0.5f)
+        {
+            if (_dotCount >= 3)
+            {
+
+                MatchmakingText = MatchmakingText.Substring(0, MatchmakingText.Length - 3);
+                _dotCount = 0;
+                _timeSince = 0f;
+                return;
+            }
+
+
+            if (_dotCount < 3)
+            {
+                MatchmakingText += '.';
+                ++_dotCount;
+            }
+
+            _timeSince = 0f;
+
+        }
+
+    }
+
+    /// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(MatchmakingText, _gameManager?.IsMatchmaking ??false, _gameManager?.MatchmakingPlayers ?? 0);
+   // public bool IsMatchmaking { get; set; } = false;
+    private string MatchmakingText { get; set; } = "Matchmaking";
+
+    private GameManager _gameManager = null;
+    private int _dotCount = 0;
+    private TimeSince _timeSince = 0;
+}

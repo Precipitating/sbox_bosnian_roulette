@@ -3,15 +3,15 @@
 @inherits PanelComponent
 @namespace Sandbox
 
-<root class="@((!_gameManager.GameStarted) ? "" : "hide")">
-    <div class="human">Play HUMAN</div>
+<root class="@( (_gameManager.GameStarted || _gameManager.IsMatchmaking) ? "hide" : "" )">
+    <div class="human" onclick="@PlayCoop">Play HUMAN</div>
     <div class="title">@Title</div>
     <div class="ai" onclick=@PlayAI>Play AI</div>
 </root>
 
 @code
 {
-    protected override int BuildHash() => System.HashCode.Combine( Title );
+    protected override int BuildHash() => System.HashCode.Combine(Title, _gameManager.IsMatchmaking);
 
     protected override void OnStart()
     {
@@ -27,11 +27,16 @@
     }
     private void PlayAI()
     {
-
         Log.Info("Play AI");
         _gameManager.PlayAI();
-
        
+    }
+
+    private void PlayCoop()
+    {
+        Log.Info("Play Coop");
+        _gameManager.PlayCoop();
+
     }
 
 

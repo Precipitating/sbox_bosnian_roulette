@@ -2786,10 +2786,7 @@
             "go": "466c1441-bc74-44f9-89d1-416f02331103",
             "component_type": "RadiusDamage"
           },
-          "BombUI": {
-            "_type": "gameobject",
-            "go": "7c90c5f6-f756-4c82-a050-12cd659062dc"
-          },
+          "BombUI": null,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -2877,120 +2874,6 @@
         }
       ],
       "Children": []
-    },
-    {
-      "__guid": "1d5fc36e-c14f-4f09-9649-130a3d4110fb",
-      "__version": 1,
-      "Flags": 0,
-      "Name": "UI",
-      "Position": "0,0,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [],
-      "Children": [
-        {
-          "__guid": "7c90c5f6-f756-4c82-a050-12cd659062dc",
-          "__version": 1,
-          "Flags": 0,
-          "Name": "BombInputUI",
-          "Position": "0,0,0",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "bombui",
-          "Enabled": false,
-          "NetworkMode": 2,
-          "NetworkInterpolation": true,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.BombTimerInput",
-              "__guid": "8c6e6e20-9892-4e4d-ab3b-4013ed1c0b08",
-              "__enabled": true,
-              "InputSound": "sound/inputsound.sound",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null
-            },
-            {
-              "__type": "Sandbox.ScreenPanel",
-              "__guid": "5bfa5935-da44-4da6-b15e-403d9bdd005a",
-              "__enabled": true,
-              "AutoScreenScale": true,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "Opacity": 1,
-              "Scale": 1,
-              "ScaleStrategy": "ConsistentHeight",
-              "TargetCamera": null,
-              "ZIndex": 100
-            }
-          ],
-          "Children": []
-        },
-        {
-          "__guid": "4e69e605-78c9-40a6-9b02-5788cda10a25",
-          "__version": 1,
-          "Flags": 0,
-          "Name": "MainMenu",
-          "Position": "0,0,0",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkInterpolation": true,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.MainMenuUI",
-              "__guid": "ec748ee7-6b39-4e3b-a4d5-bfadc56c7cb8",
-              "__enabled": true,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null
-            },
-            {
-              "__type": "Sandbox.ScreenPanel",
-              "__guid": "2b05dcc6-9de1-40fc-810c-395a0c883920",
-              "__enabled": true,
-              "AutoScreenScale": true,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "Opacity": 1,
-              "Scale": 1,
-              "ScaleStrategy": "ConsistentHeight",
-              "TargetCamera": null,
-              "ZIndex": 100
-            }
-          ],
-          "Children": []
-        }
-      ]
     },
     {
       "__guid": "e3b44851-3f5e-47db-87d3-d5a6426fc842",

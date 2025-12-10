@@ -1,0 +1,44 @@
+MatchmakeUI {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	pointer-events: all;
+	flex-direction: column;
+
+	.title {
+		position: absolute;
+		top: 42%;
+		font-size: 7rem;
+		font-family: Poppins;
+		color: #fff;
+	}
+
+	.connected-players {
+		position: absolute;
+		top: 52%;
+		font-size: 3rem;
+		color: white;
+	}
+
+	.leave {
+		position: absolute;
+		top: 91%;
+		left: 45.5%;
+		font-size: 3rem;
+		width: 13rem;
+		border-radius: 10px;
+		background-color: black;
+		border: 3px solid white;
+		color: white;
+		padding-left: 2.7rem;
+	}
+
+	&.hide {
+		opacity: 0;
+	}
+}
