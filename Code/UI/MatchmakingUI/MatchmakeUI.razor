@@ -1,5 +1,6 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System.Threading.Tasks
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -19,18 +20,18 @@
     }
 
 
-    private void LeaveMatchmaking()
+    private async Task LeaveMatchmaking()
     {
         _gameManager.UpdateMatchmakingCount(false);
         _gameManager.IsMatchmaking = false;
-        Log.Info(_gameManager.MatchmakingPlayers);
+        _gameManager.MenuUI.Enabled = true;
+        _gameManager.MatchmakeUI.Enabled = false;
+        Scene.TimeScale = 0;
     }
 
     async protected override void OnUpdate()
     {
         base.OnUpdate();
-
-        Scene.TimeScale = _gameManager.IsMatchmaking ? 1 : 0;
 
         if (_timeSince >= 0.5f)
         {
@@ -56,14 +57,11 @@
 
     }
 
-    /// <summary>
-    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-    /// </summary>
-    protected override int BuildHash() => System.HashCode.Combine(MatchmakingText, _gameManager?.IsMatchmaking ??false, _gameManager?.MatchmakingPlayers ?? 0);
-   // public bool IsMatchmaking { get; set; } = false;
+
+    protected override int BuildHash() => System.HashCode.Combine(MatchmakingText);
     private string MatchmakingText { get; set; } = "Matchmaking";
 
     private GameManager _gameManager = null;
     private int _dotCount = 0;
-    private TimeSince _timeSince = 0;
+    private RealTimeSince _timeSince = 0;
 }

@@ -1,10 +1,11 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System.Threading.Tasks
 @inherits PanelComponent
 @namespace Sandbox
 
 <root class="@( (_gameManager.GameStarted || _gameManager.IsMatchmaking) ? "hide" : "" )">
-    <div class="human" onclick="@PlayCoop">Play HUMAN</div>
+    <div class="human" onclick="@MatchmakeCoop">Play HUMAN</div>
     <div class="title">@Title</div>
     <div class="ai" onclick=@PlayAI>Play AI</div>
 </root>
@@ -20,22 +21,22 @@
         Log.Info("Main menu UI valid");
 
     }
-    protected override void OnUpdate()
-    {
-        Scene.TimeScale = !_gameManager.GameStarted ? 0 : 1;
 
-    }
     private void PlayAI()
     {
         Log.Info("Play AI");
         _gameManager.PlayAI();
-       
+
+        
+
     }
 
-    private void PlayCoop()
+    private void MatchmakeCoop()
     {
-        Log.Info("Play Coop");
-        _gameManager.PlayCoop();
+        Log.Info("MatchmakeCoop");
+
+        _gameManager.MatchmakeCoop();
+        _gameManager.StartCoop();
 
     }
 

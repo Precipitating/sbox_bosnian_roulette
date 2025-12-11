@@ -1319,9 +1319,9 @@
       "Scale": "0.1,0.1,0.1",
       "Tags": "",
       "Enabled": true,
-      "NetworkMode": 2,
+      "NetworkMode": 1,
       "NetworkInterpolation": false,
-      "NetworkOrphaned": 0,
+      "NetworkOrphaned": 2,
       "NetworkTransmit": true,
       "OwnerTransfer": 1,
       "Components": [
@@ -1354,7 +1354,6 @@
             "_type": "gameobject",
             "go": "e3b44851-3f5e-47db-87d3-d5a6426fc842"
           },
-          "GetTime": 0,
           "JingleSound": {
             "_type": "component",
             "component_id": "5cc0c61e-0317-409f-9c57-f6356d405b98",
@@ -2772,7 +2771,7 @@
       "Enabled": true,
       "NetworkMode": 1,
       "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
+      "NetworkOrphaned": 2,
       "NetworkTransmit": true,
       "OwnerTransfer": 1,
       "Components": [
@@ -2787,6 +2786,8 @@
             "component_type": "RadiusDamage"
           },
           "BombUI": null,
+          "MatchmakeUI": null,
+          "MenuUI": null,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,

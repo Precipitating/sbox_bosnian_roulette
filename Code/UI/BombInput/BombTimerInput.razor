@@ -52,8 +52,17 @@
 
         Log.Warning($"BOMBTIMERINPUT BombRef instance: {_bombRef?.GetHashCode()}");
     }
+
+
+    [Button]
+    private void DebugCheck()
+    {
+        Log.Warning($"Game started: {_gameManager.GameStarted} CurrentTurn: {_gameManager.CurrentTurn} IsBombActive: {_bombRef.IsActive}");
+    }
     async protected override void OnUpdate()
     {
+
+        if (!Networking.IsHost) { return; }
         if (!_gameManager.GameStarted) return;
 
         if (!_gameManager.CurrentTurn) {
