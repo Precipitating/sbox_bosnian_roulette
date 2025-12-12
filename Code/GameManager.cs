@@ -52,13 +52,39 @@ public sealed class GameManager : Component
 		if ( _currentPlayer == Player1Model || AIMode  )
 		{
 			SetCamera( Player1Camera );
+			Log.Info( "Player 1 selected (red)" );
 
 
 		}
 		else if (_currentPlayer == Player2Model )
 		{
 			SetCamera( Player2Camera );
+			Log.Info( "Player 2 selected (green)" );
 		}
+
+		IsMatchmaking = false;
+
+		// start ticking bomb
+		_bombRef.IsActive = true;
+
+		CreateBombUI();
+		BombUI.Enabled = true;
+
+		Scene.TimeScale = 1;
+
+
+
+		if (!IsProxy )
+		{
+			CurrentTurn = true;
+		}
+		else
+		{
+			CurrentTurn = false;
+		}
+
+		Log.Info( $"Your turn? {CurrentTurn}" );
+		GameStarted = true;
 
 	}
 
@@ -78,7 +104,15 @@ public sealed class GameManager : Component
 
 	}
 
-	async public Task NextTurn()
+	[Rpc.Broadcast]
+	public void NextTurn()
+	{
+		if ( _bombRef.Time <= 0 ) { return; }
+		_ = NextTurnAsync();
+
+	}
+
+	async public Task NextTurnAsync()
 	{
 		if ( _bombRef.IsActive )
 		{
@@ -92,50 +126,74 @@ public sealed class GameManager : Component
 
 				if ( !_bombRef.IsActive ) { return; }
 
-				await NextTurn();
+				NextTurn();
 			}
 
 
 
 		}
+	}
 
+	public void DetermineWinner()
+	{
+
+		_ = GameEnd();
 	}
 
 
-	[Button]
-	public async Task DetermineWinner()
+	// host determines the winner 
+	[Rpc.Host]
+	public void GetWinner()
 	{
-		if ( GameComplete ) { return; }
-		Log.Warning( "Determining Winner..." );
-		GameComplete = true;
-		_youWon = CurrentTurn ? false : true;
-		CurrentTurn = false;
-		BombUI.Enabled = false;
-
-
-		if ( _youWon )
+		_youWon = !CurrentTurn;	
+		if (_youWon)
 		{
-			var loserPlayer = (_currentPlayer == Player1Model) ? Player1Model.GetComponent<Prop>() : Player2Model.GetComponent<Prop>();
-			loserPlayer.IsStatic = false;
 
+			LoserProp = (_currentPlayer == Player1Model) ? Player2Model.GetComponent<Prop>() : Player1Model.GetComponent<Prop>();
+			
 		}
 		else
 		{
+			LoserProp = _currentPlayer.GetComponent<Prop>();
+		}
 
-			_currentPlayer.GetComponent<Prop>().IsStatic = false;
+		Log.Info( $"Loser Detected: {LoserProp}" );
+
+	}
+	public async Task GameEnd()
+	{
+		if ( GameComplete ) { return; }
+		GameComplete = true;
+		Log.Warning( "Determining Winner..." );
+
+
+		CurrentTurn = false;
+		BombUI.Enabled = false;
+		LoserProp.IsStatic = false;
+
+		if (Player1Camera != null)
+		{
 			Player1Camera.Enabled = false;
+		}
 
+		if ( Player2Camera != null )
+		{
+			Player2Camera.Enabled = false;
 		}
 
 		BombRadiusDmg.Enabled = true;
-		_bombRef.GameObject.Destroy();
+		if (_bombRef != null && _bombRef.IsValid)
+		{
+			_bombRef.GameObject.Destroy();
+
+
+		}
+
 
 		Log.Warning( $"Did you win? {_youWon}" );
 		await GameTask.DelaySeconds( 5 );
 		ReloadGame();
-
 	}
-
 
 
 	public void ReloadGame()
@@ -143,6 +201,7 @@ public sealed class GameManager : Component
 		SceneLoadOptions currScene = new SceneLoadOptions();
 		currScene.SetScene("scenes/main.scene");
 		currScene.IsAdditive = false;
+		currScene.DeleteEverything = true;
 		Game.ChangeScene(currScene);
 	}
 
@@ -181,7 +240,7 @@ public sealed class GameManager : Component
 	}
 
 
-	[Rpc.Broadcast]
+	[Rpc.Host]
 	public void StartCoop()
 	{
 		if ( MatchmakingPlayers == 2 )
@@ -190,33 +249,10 @@ public sealed class GameManager : Component
 			// set cameras
 			InitPlayerCoop();
 
-			// start ticking bomb
-			_bombRef.IsActive = true;
-
-			CreateBombUI();
-			BombUI.Enabled = true;
-			Scene.TimeScale = 1;
-
-			IsMatchmaking = false;
-			MatchmakeUI.Enabled = false;
-
-			if (!IsProxy)
-			{
-				CurrentTurn = true;
-			}
-			else
-			{
-				CurrentTurn = false;
-			}
-
-			GameStarted = true;
 
 
 
-
-
-
-			Log.Warning( $"Game started: {GameStarted} CurrentTurn: {CurrentTurn} IsBombActive: {_bombRef.IsActive}" );
+			Log.Warning( $"Game started: {GameStarted} CurrentTurn: {CurrentTurn} IsBombActive: {_bombRef.IsActive} IsMatchmaking: {IsMatchmaking}" );
 		}
 	}
 
@@ -248,12 +284,13 @@ public sealed class GameManager : Component
 		if ( BombUI == null )
 		{
 			BombUI = Scene.CreateObject();
+			BombUI.NetworkMode = NetworkMode.Never;
 			BombUI.Name = "BombUI";
 			BombUI.Parent = UIParent;
 			BombUI.Enabled = false;
 			BombUI.AddComponent<BombTimerInput>();
 			BombUI.AddComponent<ScreenPanel>();
-			BombUI.NetworkMode = NetworkMode.Never;
+
 
 		}
 
@@ -317,6 +354,7 @@ public sealed class GameManager : Component
 		MenuUI.Enabled = true;
 
 
+
 	}
 
 	// public
@@ -331,18 +369,19 @@ public sealed class GameManager : Component
 	[Property] public GameObject BombUI { get; set; }
 	[Property] public GameObject MatchmakeUI { get; set; }
 	[Property] public GameObject MenuUI { get; set; }
+	[Sync] public Prop LoserProp { get; set; }
 
 	public bool GameStarted { get; set; } = false;
 
 	public int MatchmakingPlayers { get; set; } = 0;
 
 	public bool AIMode = false;
-	[Sync] public bool CurrentTurn { get; set; } = false;
+	public bool CurrentTurn { get; set; } = false;
 	public bool GameComplete { get; private set; } = false;
 
 	public bool IsMatchmaking { get; set; } = false;
 	// private
-	[Sync] private bool _youWon { get; set; } = false;
+	private bool _youWon { get; set; } = false;
 
 
 	private GameObject _currentPlayer = null;

@@ -1,10 +1,12 @@
 @using Sandbox;
+@using Sandbox.Network
 @using Sandbox.UI;
 @using System.Threading.Tasks
 @inherits PanelComponent
 @namespace Sandbox
 
-<root class="@( (_gameManager.GameStarted || _gameManager.IsMatchmaking) ? "hide" : "" )">
+<root class="@((_gameManager?.GameStarted ?? false)|| (_gameManager?.IsMatchmaking ?? false)? "hide": "")">
+
     <div class="human" onclick="@MatchmakeCoop">Play HUMAN</div>
     <div class="title">@Title</div>
     <div class="ai" onclick=@PlayAI>Play AI</div>
@@ -25,9 +27,24 @@
     private void PlayAI()
     {
         Log.Info("Play AI");
-        _gameManager.PlayAI();
 
-        
+
+        // single player lobby to prevent any networking issues from other players joining
+        if (Networking.MaxPlayers != 1)
+        {
+            Networking.CreateLobby(new LobbyConfig()
+            {
+                MaxPlayers = 1,
+                Privacy = LobbyPrivacy.Private,
+                DestroyWhenHostLeaves = true,
+                Name = "Singleplayer"
+            });
+            return;
+
+        }
+
+
+        _gameManager.PlayAI();
 
     }
 
@@ -35,8 +52,23 @@
     {
         Log.Info("MatchmakeCoop");
 
+        if (Networking.MaxPlayers != 2)
+        {
+            Networking.CreateLobby(new LobbyConfig()
+            {
+                MaxPlayers = 2,
+                DestroyWhenHostLeaves = true,
+                Privacy = LobbyPrivacy.Public,
+                Name = "Coop"
+            });
+            return;
+
+        }
+
         _gameManager.MatchmakeCoop();
         _gameManager.StartCoop();
+
+       
 
     }
 
@@ -44,4 +76,5 @@
     private string Title { get; set; } = "BOMBA";
 
     private GameManager _gameManager = null;
+
 }

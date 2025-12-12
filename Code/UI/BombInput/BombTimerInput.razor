@@ -59,10 +59,10 @@
     {
         Log.Warning($"Game started: {_gameManager.GameStarted} CurrentTurn: {_gameManager.CurrentTurn} IsBombActive: {_bombRef.IsActive}");
     }
+
+
     async protected override void OnUpdate()
     {
-
-        if (!Networking.IsHost) { return; }
         if (!_gameManager.GameStarted) return;
 
         if (!_gameManager.CurrentTurn) {
@@ -89,13 +89,10 @@
             if (!_bombRef.IsActive) { return; }
             Sound.Play(InputSound);
 
-            bool finished = _bombRef.ReduceBombTime(_reductionTime);
+            _bombRef.ReduceBombTime(_reductionTime);
+            ResetTimer();
+            _gameManager.NextTurn();
 
-            if (!finished)
-            {
-                ResetTimer();
-                await _gameManager.NextTurn();
-            }
 
         }
 
