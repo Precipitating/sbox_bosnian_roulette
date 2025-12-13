@@ -1,0 +1,28 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+    <div class="title">@WinOrNotText</div>
+</root>
+
+
+@code
+{
+    protected override void OnStart()
+    {
+        _gameManager = GameManager.Instance;
+
+        WinOrNotText = (_gameManager.PlayerIndex == _gameManager.WinningPlayerIndex) ? "You Win!" : "You Lose!";
+
+    }
+
+    /// <summary>
+    /// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+    /// </summary>
+    protected override int BuildHash() => System.HashCode.Combine(WinOrNotText);
+
+    private string WinOrNotText = "";
+    private GameManager _gameManager = null;
+}

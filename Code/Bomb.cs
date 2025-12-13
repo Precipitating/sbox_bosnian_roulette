@@ -16,15 +16,17 @@ public sealed class Bomb : Component
 	[Rpc.Host]
     public void ReduceBombTime( float reductionTime )
     {
-        Time = float.Max( 0, Time - reductionTime );
+
+		if ( Time <= 0 )
+		{
+			Explode();
+			return;
+
+		}
+		Time = float.Max( 0, Time - reductionTime );
         Log.Warning( $"Bomb time has reduced by {reductionTime}" );
         Log.Warning( Time );
 
-        if ( Time <= 0 )
-        {
-            Explode();
-
-        }
 
 
     }
@@ -150,9 +152,6 @@ public sealed class Bomb : Component
 
     }
 
-
-
-
     protected override void OnStart()
     {
 
@@ -188,6 +187,7 @@ public sealed class Bomb : Component
     [Property] public SoundEvent ExplodeSound { get; set; }
     [Property] public SoundPointComponent JingleSound { get; set; }
     [Property] public GameObject ExplosionRef { get; set; }
+    [Property] public SoundPointComponent InputSoundRef { get; set; }
 
     [Sync] public float Time { get; set; } = 0f;
 

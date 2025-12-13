@@ -8,6 +8,22 @@ using System.Threading.Tasks;
 
 public sealed class GameManager : Component
 {
+	public static async Task<SoundFile> DownloadSound( string packageIdent )
+	{
+		var package = await Package.Fetch( packageIdent, false );
+		if ( package == null || package.Revision == null )
+		{
+			// Package not found
+			return null;
+		}
+		// If the package was found, mount it (download the content)
+		await package.MountAsync();
+
+		// Get the path to the primary asset (vmdl for Model, vsnd for Sound, ect.)
+		var primaryAsset = package.GetMeta( "PrimaryAsset", "" );
+		return SoundFile.Load( primaryAsset );
+	}
+
 	public void SetCamera(GameObject cameraGameObject, string excludeName = null )
 	{
 		cameraGameObject.Enabled = true;
@@ -34,14 +50,14 @@ public sealed class GameManager : Component
 	// set camera
 	public void AssignPlayer()
 	{
-		if (!IsProxy)
+		if (Networking.IsHost)
 		{
-			_currentPlayer = Player1Model;
+			CurrentPlayer = Player1Model;
 			Log.Warning( $"Player1 slot chosen" );
 		}
 		else
 		{
-			_currentPlayer = Player2Model;
+			CurrentPlayer = Player2Model;
 			Log.Warning( $"Player2 slot chosen" );
 		}
 	}
@@ -49,16 +65,20 @@ public sealed class GameManager : Component
 	[Rpc.Broadcast]
 	public void InitPlayerCoop()
 	{
-		if ( _currentPlayer == Player1Model || AIMode  )
+		// host
+		if ( CurrentPlayer == Player1Model || AIMode  )
 		{
 			SetCamera( Player1Camera );
+			PlayerIndex = 1;
 			Log.Info( "Player 1 selected (red)" );
 
 
 		}
-		else if (_currentPlayer == Player2Model )
+		// AI or non host
+		else if ( CurrentPlayer == Player2Model )
 		{
 			SetCamera( Player2Camera );
+			PlayerIndex = 2;
 			Log.Info( "Player 2 selected (green)" );
 		}
 
@@ -91,13 +111,13 @@ public sealed class GameManager : Component
 
 	public void InitPlayerAI()
 	{
-		if ( _currentPlayer == Player1Model || AIMode )
+		if ( CurrentPlayer == Player1Model || AIMode )
 		{
 			SetCamera( Player1Camera );
 
 
 		}
-		else if ( _currentPlayer == Player2Model )
+		else if ( CurrentPlayer == Player2Model )
 		{
 			SetCamera( Player2Camera );
 		}
@@ -108,6 +128,7 @@ public sealed class GameManager : Component
 	public void NextTurn()
 	{
 		if ( _bombRef.Time <= 0 ) { return; }
+		_bombRef.InputSoundRef.StartSound();
 		_ = NextTurnAsync();
 
 	}
@@ -142,30 +163,25 @@ public sealed class GameManager : Component
 
 
 	// host determines the winner 
-	[Rpc.Host]
+	// host is always player 1
 	public void GetWinner()
 	{
-		_youWon = !CurrentTurn;	
-		if (_youWon)
-		{
+		if (!Networking.IsHost) { return; }
+		Log.Warning( "Determining Winner..." );
+		WinningPlayerIndex = CurrentTurn ? 2 : 1;	
 
-			LoserProp = (_currentPlayer == Player1Model) ? Player2Model.GetComponent<Prop>() : Player1Model.GetComponent<Prop>();
-			
-		}
-		else
-		{
-			LoserProp = _currentPlayer.GetComponent<Prop>();
-		}
+		LoserProp = (WinningPlayerIndex == 1) ? Player2Model.GetComponent<Prop>() : Player1Model.GetComponent<Prop>();
+		
 
-		Log.Info( $"Loser Detected: {LoserProp}" );
+		Log.Info( $"Loser Detected: Player {WinningPlayerIndex}" );
 
 	}
 	public async Task GameEnd()
 	{
 		if ( GameComplete ) { return; }
 		GameComplete = true;
-		Log.Warning( "Determining Winner..." );
 
+		CreateWinnerUI();
 
 		CurrentTurn = false;
 		BombUI.Enabled = false;
@@ -189,8 +205,6 @@ public sealed class GameManager : Component
 
 		}
 
-
-		Log.Warning( $"Did you win? {_youWon}" );
 		await GameTask.DelaySeconds( 5 );
 		ReloadGame();
 	}
@@ -203,6 +217,7 @@ public sealed class GameManager : Component
 		currScene.IsAdditive = false;
 		currScene.DeleteEverything = true;
 		Game.ChangeScene(currScene);
+
 	}
 
 
@@ -313,6 +328,23 @@ public sealed class GameManager : Component
 		}
 
 	}
+
+	public void CreateWinnerUI()
+	{
+		MatchmakeUI = Scene.Directory.FindByName( "WinnerUI" ).FirstOrDefault();
+		if ( MatchmakeUI == null )
+		{
+			MatchmakeUI = Scene.CreateObject();
+			MatchmakeUI.Name = "WinnerUI";
+			MatchmakeUI.Parent = UIParent;
+			MatchmakeUI.AddComponent<ShowWinnerUI>();
+			MatchmakeUI.AddComponent<ScreenPanel>();
+			MatchmakeUI.NetworkMode = NetworkMode.Never;
+			MenuUI.Enabled = true;
+
+		}
+
+	}
 	public void CreateMainMenuUI()
 	{
 		UIParent = Scene.CreateObject();
@@ -339,19 +371,22 @@ public sealed class GameManager : Component
 
 	protected override void OnStart()
 	{
-		_bombRef = Scene.Directory.FindComponentByGuid( new System.Guid( "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63" ) ) as Bomb;
+		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
 		if (BombRadiusDmg == null)
 		{
 			BombRadiusDmg = _bombRef.GetComponent<RadiusDamage>();
 		}
 		BombRadiusDmg.Enabled = false;
-		_aiComponent = Scene.Directory.FindComponentByGuid( new System.Guid( "0684f319-631a-4ead-84a5-41213a1e27d0" ) ) as AiMode;
+		_aiComponent = GetComponent<AiMode>() as AiMode;
 		Log.Warning( $"MANAGER BombRef instance: {_bombRef?.GetHashCode()}" );
 
 		// Create UI dynamically.
 		
 		MainMenu();
 		MenuUI.Enabled = true;
+
+
+
 
 
 
@@ -371,6 +406,12 @@ public sealed class GameManager : Component
 	[Property] public GameObject MenuUI { get; set; }
 	[Sync] public Prop LoserProp { get; set; }
 
+	public GameObject CurrentPlayer = null;
+	//public bool YouWon { get; set; } = false;
+
+	[Sync] public int WinningPlayerIndex { get; set; }
+	public int PlayerIndex { get; set; }
+
 	public bool GameStarted { get; set; } = false;
 
 	public int MatchmakingPlayers { get; set; } = 0;
@@ -381,10 +422,9 @@ public sealed class GameManager : Component
 
 	public bool IsMatchmaking { get; set; } = false;
 	// private
-	private bool _youWon { get; set; } = false;
 
 
-	private GameObject _currentPlayer = null;
+
 	
 	private AiMode _aiComponent;
 	private Bomb _bombRef { get; set; }

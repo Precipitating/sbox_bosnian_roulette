@@ -69,7 +69,7 @@ public sealed class AiMode : Component
 		base.OnStart();
 		_gameManager = GameManager.Instance;
 		BuildReductionTable();
-		_bombRef = Scene.Directory.FindComponentByGuid( new System.Guid( "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63" ) ) as Bomb;
+		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
 		Log.Warning( $"AIMODE BombRef instance: {_bombRef?.GetHashCode()}" );
 
 	}

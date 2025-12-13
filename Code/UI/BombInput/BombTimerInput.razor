@@ -43,14 +43,25 @@
 
     }
 
+    private void PlayInputSound()
+    {
+        if (InputSound == null)
+        {
+            InputSound = Cloud.SoundEvent("igrotronika.click8");
+        }
+
+        Sound.Play(InputSound);
+
+    }
     protected override void OnStart()
     {
         base.OnStart();
         _gameManager = GameManager.Instance;
-        _bombRef = Scene.Directory.FindComponentByGuid(new System.Guid("ad824361-8cfc-4f59-bfe5-0fae8b2a0b63")) as Bomb;
-        InputSound = Cloud.SoundEvent("igrotronika.click8");
+        _bombRef = Scene.Directory.FindByName("BombModel").First().GetComponent<Bomb>();
 
         Log.Warning($"BOMBTIMERINPUT BombRef instance: {_bombRef?.GetHashCode()}");
+
+
     }
 
 
@@ -73,24 +84,23 @@
         _currentTimeoutWidth = (1f - (_timeSinceInput / _maxInputTime)) * 400f;
 
 
-        if (Input.Down("IncreaseBombTime") && _inputFireRate > 0.05f)
+        if (Input.Down("IncreaseBombTime") && _inputFireRate > _increaseSpeed)
         {
             _reductionTime = float.Min(_maxVal, _reductionTime + 1f);
             _inputFireRate = 0f;
 
         }
-        else if (Input.Down("DecreaseBombTime") && _inputFireRate > 0.05f)
-        {
+        else if (Input.Down("DecreaseBombTime") && _inputFireRate > _decreaseSpeed)
+    {
             _reductionTime = float.Max(1, _reductionTime - 1f);
             _inputFireRate = 0f;
         }
         else if (Input.Pressed("SubmitReductionTime") || _timeSinceInput >= _maxInputTime)
         {
             if (!_bombRef.IsActive) { return; }
-            Sound.Play(InputSound);
-
             _bombRef.ReduceBombTime(_reductionTime);
             ResetTimer();
+
             _gameManager.NextTurn();
 
 
@@ -104,10 +114,12 @@
     private GameManager _gameManager = null;
     private TimeSince _timeSinceInput = 0;
     private TimeSince _inputFireRate = 0;
-    private int _maxVal = 50;
-    private const float _maxInputTime = 5f;
+    private int _maxVal = 100;
+    private const float _maxInputTime = 10f;
     private float _currentTimeoutWidth = 0f;
     private Bomb _bombRef = null;
+    private float _increaseSpeed = 0.03f;
+    private float _decreaseSpeed = 0.07f;
 
 
 

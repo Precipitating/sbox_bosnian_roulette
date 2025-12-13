@@ -1326,33 +1326,19 @@
       "OwnerTransfer": 1,
       "Components": [
         {
-          "__type": "Sandbox.Prop",
-          "__guid": "c2906094-495e-4638-bd71-ff4f87e0e3ae",
-          "__enabled": true,
-          "BodyGroups": 18446744073709551615,
-          "Health": 0,
-          "IsStatic": false,
-          "MaterialGroup": null,
-          "Model": "models/mysterypowerups/dnd_bomb.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnPropBreak": null,
-          "OnPropTakeDamage": null,
-          "StartAsleep": false,
-          "Tint": "1,1,1,1"
-        },
-        {
           "__type": "Bomb",
-          "__guid": "ad824361-8cfc-4f59-bfe5-0fae8b2a0b63",
+          "__guid": "a284ee30-e49f-4bf2-8859-78460062e08f",
           "__enabled": true,
           "ExplodeSound": "sound/explosion.sound",
           "ExplosionRef": {
             "_type": "gameobject",
             "go": "e3b44851-3f5e-47db-87d3-d5a6426fc842"
+          },
+          "InputSoundRef": {
+            "_type": "component",
+            "component_id": "35088221-a09a-4b56-a09a-19a763f40d2d",
+            "go": "466c1441-bc74-44f9-89d1-416f02331103",
+            "component_type": "SoundPointComponent"
           },
           "JingleSound": {
             "_type": "component",
@@ -1619,6 +1605,55 @@
           "OverrideMassCenter": false,
           "RigidbodyFlags": 0,
           "StartAsleep": false
+        },
+        {
+          "__type": "Sandbox.SoundPointComponent",
+          "__guid": "35088221-a09a-4b56-a09a-19a763f40d2d",
+          "__enabled": true,
+          "Distance": 512,
+          "DistanceAttenuation": false,
+          "DistanceAttenuationOverride": false,
+          "Falloff": [
+            {
+              "x": 0,
+              "y": 1,
+              "in": 3.1415927,
+              "out": -3.1415927,
+              "mode": "Mirrored"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "in": 0,
+              "out": 0,
+              "mode": "Mirrored"
+            }
+          ],
+          "Force2d": false,
+          "MaxRepeatTime": 1,
+          "MinRepeatTime": 1,
+          "Occlusion": false,
+          "OcclusionOverride": false,
+          "OcclusionRadius": 32,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Pitch": 1,
+          "PlayOnStart": false,
+          "ReflectionOverride": false,
+          "Reflections": false,
+          "Repeat": false,
+          "SoundEvent": "sound/click8.sound",
+          "SoundOverride": false,
+          "StopOnNew": false,
+          "TargetMixer": {
+            "Name": "game",
+            "Id": "2ad8d663-c1e1-4655-8907-1a827331586c"
+          },
+          "Volume": 1
         }
       ],
       "Children": []
@@ -2777,7 +2812,7 @@
       "Components": [
         {
           "__type": "GameManager",
-          "__guid": "a1a9b27b-27c1-4a65-92f2-5e27bdd7164b",
+          "__guid": "6dad05e4-ead5-4436-bbc9-d5a12195ae6c",
           "__enabled": true,
           "BombRadiusDmg": {
             "_type": "component",
@@ -2817,7 +2852,7 @@
         },
         {
           "__type": "AiMode",
-          "__guid": "0684f319-631a-4ead-84a5-41213a1e27d0",
+          "__guid": "c5b118dc-be95-4977-b66b-55766e432a8f",
           "__enabled": true,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
@@ -3005,6 +3040,7 @@
     "fpopium.crackhead_02#123566",
     "igrotronika.click2#51269",
     "igrotronika.click6#51273",
+    "igrotronika.click8#51275",
     "luke.dnd_bomb#59851"
   ],
   "__version": 3

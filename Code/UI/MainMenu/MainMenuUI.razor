@@ -16,11 +16,15 @@
 {
     protected override int BuildHash() => System.HashCode.Combine(Title, _gameManager.IsMatchmaking);
 
-    protected override void OnStart()
+    async protected override void OnStart()
     {
         base.OnStart();
         _gameManager = GameManager.Instance;
         Log.Info("Main menu UI valid");
+
+         _mainMenuMusic = await GameManager.DownloadSound("dopamine.lobby_music");
+         Sound.PlayFile(_mainMenuMusic);
+
 
     }
 
@@ -36,7 +40,6 @@
             {
                 MaxPlayers = 1,
                 Privacy = LobbyPrivacy.Private,
-                DestroyWhenHostLeaves = true,
                 Name = "Singleplayer"
             });
             return;
@@ -50,21 +53,20 @@
 
     private void MatchmakeCoop()
     {
+
+        // if (Networking.MaxPlayers != 2)
+        // {
+        //     Networking.CreateLobby(new LobbyConfig()
+        //     {
+        //         MaxPlayers = 2,
+        //         DestroyWhenHostLeaves = true,
+        //         Privacy = LobbyPrivacy.Public,
+        //         Name = "Coop"
+        //     });
+        //     return;
+
+        // }
         Log.Info("MatchmakeCoop");
-
-        if (Networking.MaxPlayers != 2)
-        {
-            Networking.CreateLobby(new LobbyConfig()
-            {
-                MaxPlayers = 2,
-                DestroyWhenHostLeaves = true,
-                Privacy = LobbyPrivacy.Public,
-                Name = "Coop"
-            });
-            return;
-
-        }
-
         _gameManager.MatchmakeCoop();
         _gameManager.StartCoop();
 
@@ -76,5 +78,7 @@
     private string Title { get; set; } = "BOMBA";
 
     private GameManager _gameManager = null;
+
+    private SoundFile _mainMenuMusic = null;
 
 }
