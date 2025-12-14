@@ -22,8 +22,7 @@
         _gameManager = GameManager.Instance;
         Log.Info("Main menu UI valid");
 
-         _mainMenuMusic = await GameManager.DownloadSound("dopamine.lobby_music");
-         Sound.PlayFile(_mainMenuMusic);
+        Sound.Play("sound/ambience.sound");
 
 
     }
@@ -33,7 +32,7 @@
         Log.Info("Play AI");
 
 
-        // single player lobby to prevent any networking issues from other players joining
+        // single player lobby to prevent any ownership issues if both playing AI mode
         if (Networking.MaxPlayers != 1)
         {
             Networking.CreateLobby(new LobbyConfig()
@@ -79,6 +78,5 @@
 
     private GameManager _gameManager = null;
 
-    private SoundFile _mainMenuMusic = null;
 
 }

@@ -2870,7 +2870,7 @@
       "Flags": 0,
       "Name": "OverheadCamera",
       "Position": "1.181915,-60.36569,208.9725",
-      "Rotation": "-0.5,0.4999999,0.4999999,0.5",
+      "Rotation": "-0.5,0.5,0.5,0.5",
       "Scale": "1,1,1",
       "Tags": "",
       "Enabled": false,

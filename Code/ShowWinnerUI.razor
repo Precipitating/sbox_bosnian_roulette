@@ -13,8 +13,8 @@
     protected override void OnStart()
     {
         _gameManager = GameManager.Instance;
-
-        WinOrNotText = (_gameManager.PlayerIndex == _gameManager.WinningPlayerIndex) ? "You Win!" : "You Lose!";
+        Log.Info(_gameManager.PlayerIndex);
+        WinOrNotText = (_gameManager.PlayerIndex != _gameManager.LoserPlayerIndex) ? "You Win!" : "You Lose!";
 
     }
 

@@ -10,7 +10,9 @@
       "IncludeSourceFiles": false,
       "Resources": null,
       "PackageReferences": null,
-      "EditorReferences": [],
+      "EditorReferences": [
+        "baik.simplepixel#121539"
+      ],
       "Mounts": null,
       "IsStandaloneOnly": false,
       "Metadata": {

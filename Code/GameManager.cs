@@ -164,16 +164,18 @@ public sealed class GameManager : Component
 
 	// host determines the winner 
 	// host is always player 1
+	// when detonation occurs, current turn is not swapped
 	public void GetWinner()
 	{
 		if (!Networking.IsHost) { return; }
 		Log.Warning( "Determining Winner..." );
-		WinningPlayerIndex = CurrentTurn ? 2 : 1;	
+		LoserPlayerIndex = CurrentTurn ? 1 : 2;	
 
-		LoserProp = (WinningPlayerIndex == 1) ? Player2Model.GetComponent<Prop>() : Player1Model.GetComponent<Prop>();
+
+		LoserProp = (LoserPlayerIndex == 1) ? Player1Model.GetComponent<Prop>() : Player2Model.GetComponent<Prop>();
 		
 
-		Log.Info( $"Loser Detected: Player {WinningPlayerIndex}" );
+		Log.Info( $"Loser Detected: Player {LoserPlayerIndex}" );
 
 	}
 	public async Task GameEnd()
@@ -234,7 +236,8 @@ public sealed class GameManager : Component
 
 	public void PlayAI()
 	{
-
+		Sound.StopAll(1);
+		PlayerIndex = 1;
 		AIMode = true;
 
 		AssignPlayer();
@@ -260,7 +263,9 @@ public sealed class GameManager : Component
 	{
 		if ( MatchmakingPlayers == 2 )
 		{
+			Sound.StopAll( 0.5f );
 			Log.Info( "2 Players detected, initiating game!" );
+
 			// set cameras
 			InitPlayerCoop();
 
@@ -407,10 +412,9 @@ public sealed class GameManager : Component
 	[Sync] public Prop LoserProp { get; set; }
 
 	public GameObject CurrentPlayer = null;
-	//public bool YouWon { get; set; } = false;
 
-	[Sync] public int WinningPlayerIndex { get; set; }
-	public int PlayerIndex { get; set; }
+	[Sync] public int LoserPlayerIndex { get; set; } = -1;
+	public int PlayerIndex { get; set; } = -1;
 
 	public bool GameStarted { get; set; } = false;
 
@@ -421,11 +425,9 @@ public sealed class GameManager : Component
 	public bool GameComplete { get; private set; } = false;
 
 	public bool IsMatchmaking { get; set; } = false;
+
+
 	// private
-
-
-
-	
 	private AiMode _aiComponent;
 	private Bomb _bombRef { get; set; }
 	private GameObject _activeCamera = null;
