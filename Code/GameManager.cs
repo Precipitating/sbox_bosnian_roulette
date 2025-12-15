@@ -65,21 +65,36 @@ public sealed class GameManager : Component
 	[Rpc.Broadcast]
 	public void InitPlayerCoop()
 	{
+
 		// host
-		if ( CurrentPlayer == Player1Model || AIMode  )
+		if ( CurrentPlayer == Player1Model || AIMode )
 		{
-			SetCamera( Player1Camera );
-			PlayerIndex = 1;
-			Log.Info( "Player 1 selected (red)" );
+			GameStarted = true;
+			LerpCameraTo(Player1Camera, "player1").ContinueWith( async task =>
+			{
+				await GameTask.MainThread();
+				SetCamera( Player1Camera );
+				PlayerIndex = 1;
+				Log.Info( "Player 1 selected (red)" );
+
+			} );
+
 
 
 		}
-		// AI or non host
+		// non host
 		else if ( CurrentPlayer == Player2Model )
 		{
-			SetCamera( Player2Camera );
-			PlayerIndex = 2;
-			Log.Info( "Player 2 selected (green)" );
+			GameStarted = true;
+			LerpCameraTo(Player2Camera, "player2").ContinueWith(async task =>
+			{
+				await GameTask.MainThread();
+				SetCamera( Player2Camera );
+				PlayerIndex = 2;
+				Log.Info( "Player 2 selected (green)" );
+
+			} );
+
 		}
 
 		IsMatchmaking = false;
@@ -104,7 +119,7 @@ public sealed class GameManager : Component
 		}
 
 		Log.Info( $"Your turn? {CurrentTurn}" );
-		GameStarted = true;
+
 
 	}
 
@@ -239,21 +254,25 @@ public sealed class GameManager : Component
 		Sound.StopAll(1);
 		PlayerIndex = 1;
 		AIMode = true;
-
 		AssignPlayer();
-		InitPlayerAI();
-
-		CreateBombUI();
-		BombUI.Enabled = true;
-		Scene.TimeScale = 1;
-
-		_bombRef.IsActive = true;
-
-		CurrentTurn = true;
-
 		GameStarted = true;
+		LerpCameraTo( Player1Camera, "player1" ).ContinueWith( async task =>
+		{
+			await Task.MainThread();
 
-		Log.Info( $"IsActive: {_bombRef.IsActive}. GameStarted: {GameStarted}" );
+			CreateBombUI();
+			InitPlayerAI();
+
+			CurrentTurn = true;
+
+			_bombRef.IsActive = true;
+			BombUI.Enabled = true;
+
+			Log.Info( $"IsActive: {_bombRef.IsActive}. GameStarted: {GameStarted}" );
+
+		} );
+
+
 
 	}
 
@@ -374,6 +393,25 @@ public sealed class GameManager : Component
 
 	}
 
+	async Task LerpCameraTo( GameObject target, string excludeTag = null)
+	{
+		SetCamera( TransitionCamera );
+		if (!string.IsNullOrEmpty(excludeTag))
+		{
+			TransitionCamera.GetComponent<CameraComponent>().RenderExcludeTags.Add(excludeTag );
+		}
+
+		Scene.TimeScale = 1;
+		while ( !(TransitionCamera.WorldPosition.Distance( target.WorldPosition ) < 0.10f))
+		{
+			Log.Info( "Lerpin'" );
+			TransitionCamera.WorldTransform = TransitionCamera.WorldTransform.LerpTo( target.WorldTransform, Time.Delta * 2f);
+			
+			await Task.Frame();
+		}
+
+	}
+
 	protected override void OnStart()
 	{
 		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
@@ -391,16 +429,13 @@ public sealed class GameManager : Component
 		MenuUI.Enabled = true;
 
 
-
-
-
-
 	}
 
 	// public
 	public static GameManager Instance { get; private set; } = null;
 	[Property] public GameObject Player1Camera { get; private set; } = null;
 	[Property] public GameObject Player2Camera { get; private set; } = null;
+	[Property] public GameObject TransitionCamera{ get; private set; } = null;
 	[Property] public GameObject OverheadCamera { get; private set; } = null;
 	[Property] public RadiusDamage BombRadiusDmg { get; set; }
 
@@ -425,6 +460,7 @@ public sealed class GameManager : Component
 	public bool GameComplete { get; private set; } = false;
 
 	public bool IsMatchmaking { get; set; } = false;
+
 
 
 	// private

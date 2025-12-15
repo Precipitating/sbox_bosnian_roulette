@@ -1,7 +1,7 @@
 {
   "Title": "BOMBA",
   "Type": "game",
-  "Org": "local",
+  "Org": "rebelinc",
   "Ident": "bosnian_roulette",
   "Schema": 1,
   "IncludeSourceFiles": false,

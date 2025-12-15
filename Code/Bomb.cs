@@ -25,7 +25,7 @@ public sealed class Bomb : Component
 		}
 		Time = float.Max( 0, Time - reductionTime );
         Log.Warning( $"Bomb time has reduced by {reductionTime}" );
-        Log.Warning( Time );
+        //Log.Warning( Time );
 
 
 
@@ -129,7 +129,7 @@ public sealed class Bomb : Component
 			await BombTickScaleLerp();
 			Time -= 1;
 
-			Log.Info( Time );
+			//Log.Info( Time );
 
 		}
 		else

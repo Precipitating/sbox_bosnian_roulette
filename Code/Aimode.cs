@@ -7,7 +7,7 @@ public sealed class AiMode : Component
 {
 	async public Task SimulateTurn()
 	{
-		Log.Warning( $"AI simulate turn, current time = {_bombRef.Time}, active: {_bombRef.IsActive}" );
+		//Log.Warning( $"AI simulate turn, current time = {_bombRef.Time}, active: {_bombRef.IsActive}" );
 
 		await GameTask.DelaySeconds( Game.Random.Int( 1, 4 ) );
 		float timeSinceLastTick = _bombRef.GetTickRate();
