@@ -9,28 +9,58 @@
 
     <div class="human" onclick="@MatchmakeCoop">Play HUMAN</div>
     <div class="title">@Title</div>
-    <div class="ai" onclick=@PlayAI>Play AI</div>
+    <div class="ai" onclick=@AIModeClicked>Play AI
+        <div class="difficulty @(!_choosingDifficulty ? "hide" : "" )">
+            <div class="easy" onclick=@EasyMode>&#x2192; Easy</div>
+            <div class="normal" onclick=@NormalMode>&#x2192; Normal</div>
+            <div class="hard" onclick=@HardMode>&#x2192; Hard</div>
+        </div>
+
+    </div>
+
+
 </root>
 
 @code
 {
-    protected override int BuildHash() => System.HashCode.Combine(Title, _gameManager.IsMatchmaking);
+    protected override int BuildHash() => System.HashCode.Combine(Title, _gameManager.IsMatchmaking, _choosingDifficulty);
 
-    async protected override void OnStart()
+    protected override void OnStart()
     {
         base.OnStart();
         _gameManager = GameManager.Instance;
         Log.Info("Main menu UI valid");
-
         Sound.Play("sound/ambience.sound");
 
 
     }
+    private void AIModeClicked()
+    {
+        _choosingDifficulty = !_choosingDifficulty;
 
+    }
+
+    private void EasyMode()
+    {
+        _gameManager.SetAIDifficulty("Easy");
+        PlayAI();
+    }
+
+    private void NormalMode()
+    {
+        _gameManager.SetAIDifficulty("Normal");
+        PlayAI();
+    }
+
+
+    private void HardMode()
+    {
+        _gameManager.SetAIDifficulty("Hard");
+        PlayAI();
+    }
     private void PlayAI()
     {
         Log.Info("Play AI");
-
 
         // single player lobby to prevent any ownership issues if both playing AI mode
         if (Networking.MaxPlayers != 1)
@@ -44,9 +74,9 @@
             return;
 
         }
-
-
         _gameManager.PlayAI();
+        _choosingDifficulty = false;
+
 
     }
 
@@ -69,14 +99,15 @@
         _gameManager.MatchmakeCoop();
         _gameManager.StartCoop();
 
-       
+
 
     }
 
 
     private string Title { get; set; } = "BOMBA";
-
+    private bool _choosingDifficulty = false;
     private GameManager _gameManager = null;
+    private string Difficulty { get; set; } = "Normal";
 
 
 }

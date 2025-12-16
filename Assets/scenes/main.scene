@@ -3018,7 +3018,7 @@
           "__type": "CCSVHSD",
           "__guid": "4f3b3910-0f1d-4c14-babc-da7ce8ec9a47",
           "__enabled": true,
-          "ca": -0.02,
+          "ca": 0.01,
           "dSkew": 1,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,

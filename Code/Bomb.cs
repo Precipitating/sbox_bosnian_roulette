@@ -1,5 +1,6 @@
 using Sandbox;
 using Sandbox.Utility;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,33 +38,36 @@ public sealed class Bomb : Component
     }
 
 
-	async Task LerpSizeAsync( float seconds, Vector3 to, Easing.Function easer )
+	async Task LerpSizeAsync( float seconds,Vector3 to, Easing.Function easer )
 	{
-		TimeSince timeSince = 0;
+		TimeSince timeSince = 0f;
 		Vector3 from = WorldScale;
-		float half = seconds * 0.5f;
+		bool ticked = false;
 
-		while ( timeSince < half )
+		while ( timeSince < seconds )
 		{
-			var size = Vector3.Lerp( from, to, easer( timeSince / seconds ) );
-			WorldScale = size;
-			await Task.Frame(); // wait one frame
-		}
+			float t = (timeSince / seconds).Clamp( 0f, 1f );
+			float pingPong = 1f - MathF.Abs( t * 2f - 1f );
 
-		TickSfx();
+			float eased = easer(pingPong);
+			WorldScale = Vector3.Lerp( from, to, easer( eased ) );
 
-		_tickRate = _sinceLastTick;
-		Log.Info( $"tick rate: {_tickRate}" );
-		_sinceLastTick = 0;
+			// trigger tick once at midpoint
+			if ( !ticked && t >= 0.5f )
+			{
+				TickSfx();
 
-		timeSince = 0;
-		while ( timeSince < half )
-		{
-			float t = timeSince / (seconds * 0.5f);
-			WorldScale = Vector3.Lerp( to, from, easer( t ) );
+				_tickRate = _sinceLastTick;
+				Log.Info( $"tick rate: {_tickRate}" );
+				_sinceLastTick = 0;
+
+				ticked = true;
+			}
+
 			await Task.Frame();
 		}
 
+		WorldScale = from;
 		_finishedTick = true;
 	}
 
@@ -123,10 +127,10 @@ public sealed class Bomb : Component
 	async private Task BombTickAsync()
 	{
 		_finishedTick = false;
-		await GameTask.DelaySeconds( Time / _originalTime );
+		await GameTask.DelaySeconds( Time / OriginalTime );
 		if ( Time > 0 )
 		{
-			await BombTickScaleLerp();
+			BombTickScaleLerp();
 			Time -= 1;
 
 			//Log.Info( Time );
@@ -141,13 +145,28 @@ public sealed class Bomb : Component
 
 
 
-    async private Task BombTickScaleLerp()
+    private void BombTickScaleLerp()
     {
-        float lerpTime = Time / _originalTime;
+        float lerpTime = Time / OriginalTime;
         float tickTime = (1f - lerpTime) * _lerpScaleMultiplier;
         _tickSize = _originalSize + (_originalSize * tickTime);
 
-        LerpSize( lerpTime, _tickSize, Easing.BounceInOut );
+		Easing.Function easer = null;
+		if ( Time >= OriginalTime * 0.7f)
+		{
+			easer = Easing.SineEaseInOut;
+		}
+		else if ( Time >= OriginalTime * 0.3f  )
+		{
+			easer = Easing.QuadraticInOut;
+		}
+		else
+		{
+			easer = Easing.ExpoInOut;
+		}
+
+
+		LerpSize( lerpTime, _tickSize, easer );
 
 
     }
@@ -162,9 +181,9 @@ public sealed class Bomb : Component
             return;
         }
         _gameManager = GameManager.Instance;
-        Time = Game.Random.Int( 60, 500 );
-        //Time = 100;
-        _originalTime = Time;
+        Time = Game.Random.Int( BombMinTime, BombMaxTime);
+		//Time = 100;
+		OriginalTime = Time;
         _originalSize = LocalScale;
         _tickSize = _originalSize * _lerpScaleMultiplier;
 
@@ -189,12 +208,16 @@ public sealed class Bomb : Component
     [Property] public GameObject ExplosionRef { get; set; }
     [Property] public SoundPointComponent InputSoundRef { get; set; }
 
-    [Sync] public float Time { get; set; } = 0f;
+	public float OriginalTime = 0f;
+
+	public int BombMinTime { get; private set; } = 60;
+	public int BombMaxTime { get; private set; } = 600;
+	[Sync] public float Time { get; set; } = 0f;
 
     [Sync] public bool IsActive { get; set; } = false;
-    private float _originalTime = 0f;
 
-    private const float _lerpScaleMultiplier = 4f;
+
+    private const float _lerpScaleMultiplier = 2f;
     private Vector3 _originalSize;
     private Vector3 _tickSize;
     [Sync] private bool _finishedTick { get; set; } = true;

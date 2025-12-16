@@ -237,7 +237,10 @@ public sealed class GameManager : Component
 
 	}
 
-
+	public void SetAIDifficulty(string difficulty)
+	{
+		_aiComponent.SetAIDifficulty(difficulty);
+	}
 	private void MainMenu()
 	{
 		CreateMainMenuUI();
@@ -469,6 +472,7 @@ public sealed class GameManager : Component
 	private GameObject _activeCamera = null;
 
 	private GameObject UIParent{ get; set; } = null;
+
 
 
 

@@ -11,7 +11,7 @@ MainMenuUI {
 
 	.title {
 		position: relative;
-		left: -2.3%;
+		left: -1.6%;
 		top: 2%;
 		font-size: 5vw;
 		font-family: Poppins;
@@ -21,10 +21,34 @@ MainMenuUI {
 	> .ai {
 		position: relative;
 		top: 30%;
-		left: -4.5%;
+		left: -3%;
 		color: green;
 		font-size: 2vw;
 		font-family: Poppins;
+		flex-direction: column;
+
+		> .difficulty {
+			position: relative;
+			left: 10%;
+			font-size: 1.7vw;
+			flex-direction: column;
+
+			&.hide {
+				opacity: 0;
+			}
+		}
+
+		.easy {
+			color: green;
+		}
+
+		.normal {
+			color: white;
+		}
+
+		.hard {
+			color: red;
+		}
 	}
 
 	> .human {
@@ -34,6 +58,7 @@ MainMenuUI {
 		font-size: 2vw;
 		flex-direction: row;
 	}
+
 
 	&.hide {
 		opacity: 0;
