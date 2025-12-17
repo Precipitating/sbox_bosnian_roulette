@@ -11,7 +11,7 @@
   "Mounts": null,
   "IsStandaloneOnly": false,
   "Metadata": {
-    "MaxPlayers": 2,
+    "MaxPlayers": 1,
     "MinPlayers": 1,
     "TickRate": 50,
     "GameNetworkType": "Multiplayer",

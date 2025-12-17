@@ -23,7 +23,7 @@
 
 @code
 {
-    protected override int BuildHash() => System.HashCode.Combine(Title, _gameManager.IsMatchmaking, _choosingDifficulty);
+    protected override int BuildHash() => System.HashCode.Combine(Title, _gameManager.GameStarted, _gameManager.IsMatchmaking, _choosingDifficulty);
 
     protected override void OnStart()
     {
@@ -31,6 +31,8 @@
         _gameManager = GameManager.Instance;
         Log.Info("Main menu UI valid");
         Sound.Play("sound/ambience.sound");
+
+
 
 
     }
@@ -63,8 +65,9 @@
         Log.Info("Play AI");
 
         // single player lobby to prevent any ownership issues if both playing AI mode
-        if (Networking.MaxPlayers != 1)
+        if (Networking.MaxPlayers != 1 || Connection.All.Count > 1)
         {
+            Log.Info("Coop server / 2 players detected, creating single player lobby...");
             Networking.CreateLobby(new LobbyConfig()
             {
                 MaxPlayers = 1,
@@ -83,21 +86,43 @@
     private void MatchmakeCoop()
     {
 
-        // if (Networking.MaxPlayers != 2)
-        // {
-        //     Networking.CreateLobby(new LobbyConfig()
-        //     {
-        //         MaxPlayers = 2,
-        //         DestroyWhenHostLeaves = true,
-        //         Privacy = LobbyPrivacy.Public,
-        //         Name = "Coop"
-        //     });
-        //     return;
+        if (Networking.MaxPlayers != 2)
+        {
+            // find an open coop lobby first
+            Networking.QueryLobbies().ContinueWith(task =>
+            {
 
-        // }
-        Log.Info("MatchmakeCoop");
+                // join available coop lobby if possible
+                foreach (var lobby in task.Result)
+                {
+                    if (lobby.Members == 1 && lobby.MaxMembers == 2)
+                    {
+                        Log.Info("Lobby found! joining!");
+                        Networking.Connect(lobby.LobbyId);
+                        return;
+                    }
+                }
+
+                // fail = create a lobby instead
+                Log.Info("No lobbies to join, creating one.");
+                Networking.CreateLobby(new LobbyConfig()
+                {
+                    MaxPlayers = 2,
+                    DestroyWhenHostLeaves = true,
+                    Privacy = LobbyPrivacy.Public,
+                    Name = "Coop"
+                });
+
+            }); 
+
+
+
+        }
+        Log.Info("Matchmake Coop");
         _gameManager.MatchmakeCoop();
         _gameManager.StartCoop();
+     
+
 
 
 

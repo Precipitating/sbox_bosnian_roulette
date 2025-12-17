@@ -8,7 +8,7 @@ public sealed class AiMode : Component
 	async public Task SimulateTurn()
 	{
 		Log.Info( AIDifficulty );
-		Log.Warning( $"AI simulate turn, current time = {_bombRef.Time}, active: {_bombRef.IsActive}" );
+		//Log.Warning( $"AI simulate turn, current time = {_bombRef.Time}, active: {_bombRef.IsActive}" );
 		await GameTask.DelaySeconds( Game.Random.Float( AIDifficulty.MinDelay, AIDifficulty.MaxDelay) );
 
 		if ( !_bombRef.IsActive )
@@ -29,7 +29,7 @@ public sealed class AiMode : Component
 		int finalReduction = Math.Max( 1, (int)MathF.Round( reduction ) );
 		_bombRef.ReduceBombTime( finalReduction);
 
-		Log.Warning( $"AI's reduction = {finalReduction}" );
+		//Log.Warning( $"AI's reduction = {finalReduction}" );
 
 	}
 
@@ -75,9 +75,12 @@ public sealed class AiMode : Component
 				break;
 		}
 
+		DifficultyString = difficultyType;
 		Log.Info( $"Difficulty set to {difficultyType}" );
 	}
 
+
+	public string DifficultyString;
 	public BombAIDifficulty AIDifficulty { get; private set; }
 
 

@@ -62,66 +62,48 @@ public sealed class GameManager : Component
 		}
 	}
 
+
+	private void StartCoopMatch()
+	{
+
+
+		_bombRef.IsActive = true;
+		CreateBombUI();
+		BombUI.Enabled = true;
+
+	}
+
+
+
 	[Rpc.Broadcast]
 	public void InitPlayerCoop()
 	{
 
-		// host
-		if ( CurrentPlayer == Player1Model || AIMode )
-		{
-			GameStarted = true;
-			LerpCameraTo(Player1Camera, "player1").ContinueWith( async task =>
-			{
-				await GameTask.MainThread();
-				SetCamera( Player1Camera );
-				PlayerIndex = 1;
-				Log.Info( "Player 1 selected (red)" );
+		if ( CurrentPlayer != Player1Model && !AIMode && CurrentPlayer != Player2Model )
+			return;
 
-			} );
+		bool isPlayer1 = CurrentPlayer == Player1Model || AIMode;
 
-
-
-		}
-		// non host
-		else if ( CurrentPlayer == Player2Model )
-		{
-			GameStarted = true;
-			LerpCameraTo(Player2Camera, "player2").ContinueWith(async task =>
-			{
-				await GameTask.MainThread();
-				SetCamera( Player2Camera );
-				PlayerIndex = 2;
-				Log.Info( "Player 2 selected (green)" );
-
-			} );
-
-		}
-
+		GameObject camera = isPlayer1 ? Player1Camera : Player2Camera;
+		string cameraTag = isPlayer1 ? "player1" : "player2";
+		int playerIndex = isPlayer1 ? 1 : 2;
+		string playerName = isPlayer1 ? "Player 1 (red)" : "Player 2 (green)";
 		IsMatchmaking = false;
-
-		// start ticking bomb
-		_bombRef.IsActive = true;
-
-		CreateBombUI();
-		BombUI.Enabled = true;
-
-		Scene.TimeScale = 1;
-
-
-
-		if (!IsProxy )
+		LerpCameraTo( camera, cameraTag ).ContinueWith( async _ =>
 		{
-			CurrentTurn = true;
-		}
-		else
-		{
-			CurrentTurn = false;
-		}
+			await GameTask.MainThread();
+			GameStarted = true;
+			SetCamera( camera );
+			PlayerIndex = playerIndex;
+			Log.Info( $"{playerName} selected" );
 
-		Log.Info( $"Your turn? {CurrentTurn}" );
+			StartCoopMatch();
 
-
+			CurrentTurn = !IsProxy;
+			Log.Info( $"Your turn? {CurrentTurn}" );
+		} );
 	}
+
 
 
 	public void InitPlayerAI()
@@ -222,7 +204,24 @@ public sealed class GameManager : Component
 
 		}
 
-		await GameTask.DelaySeconds( 5 );
+		if (PlayerIndex != LoserPlayerIndex)
+		{
+			Log.Info( "Won achievement" );
+			Sandbox.Services.Achievements.Unlock( "won_a_game" );
+
+			if (_aiComponent.DifficultyString == "Hard")
+			{
+				Sandbox.Services.Achievements.Unlock( "hard_mode_won" );
+				Log.Info( "Won hard mode" );
+			}
+		}
+		else
+		{
+			Log.Info( "Lose acheivement" );
+			Sandbox.Services.Achievements.Unlock( "lost_a_game" );
+		}
+
+			await GameTask.DelaySeconds( 5 );
 		ReloadGame();
 	}
 
@@ -283,9 +282,9 @@ public sealed class GameManager : Component
 	[Rpc.Host]
 	public void StartCoop()
 	{
-		if ( MatchmakingPlayers == 2 )
+		if ( MatchmakingPlayers == 2 && Connection.All.Count == 2)
 		{
-			Sound.StopAll( 0.5f );
+			Sound.StopAll( 1f );
 			Log.Info( "2 Players detected, initiating game!" );
 
 			// set cameras
@@ -407,7 +406,6 @@ public sealed class GameManager : Component
 		Scene.TimeScale = 1;
 		while ( !(TransitionCamera.WorldPosition.Distance( target.WorldPosition ) < 0.10f))
 		{
-			Log.Info( "Lerpin'" );
 			TransitionCamera.WorldTransform = TransitionCamera.WorldTransform.LerpTo( target.WorldTransform, Time.Delta * 2f);
 			
 			await Task.Frame();
