@@ -58,7 +58,7 @@ public sealed class Bomb : Component
 				TickSfx();
 
 				_tickRate = _sinceLastTick;
-				Log.Info( $"tick rate: {_tickRate}" );
+				//Log.Info( $"tick rate: {_tickRate}" );
 				_sinceLastTick = 0;
 
 				ticked = true;

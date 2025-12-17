@@ -2135,10 +2135,10 @@
                         {
                           "__guid": "9f35bc1e-8d81-4166-9c00-e39020532f7e",
                           "__version": 1,
-                          "Flags": 4,
+                          "Flags": 1028,
                           "Name": "QuickRigCharacter1_Neck",
-                          "Position": "0,0,0",
-                          "Rotation": "0,0,0,1",
+                          "Position": "6.965176,0.00001621246,-0.00002687316",
+                          "Rotation": "-0.00000001366244,0.0000001311813,0.2057854,0.9785971",
                           "Scale": "1,1,1",
                           "Tags": "",
                           "Enabled": true,
@@ -2743,10 +2743,10 @@
                         {
                           "__guid": "55f3ff36-9b25-4730-b77b-05adc6b4c3d6",
                           "__version": 1,
-                          "Flags": 4,
+                          "Flags": 1028,
                           "Name": "QuickRigCharacter1_Neck",
-                          "Position": "0,0,0",
-                          "Rotation": "0,0,0,1",
+                          "Position": "6.965176,0.00001621246,-0.00002687316",
+                          "Rotation": "-0.00000001366244,0.0000001311813,0.2057854,0.9785971",
                           "Scale": "1,1,1",
                           "Tags": "",
                           "Enabled": true,
@@ -2765,7 +2765,7 @@
                               "Position": "6.685223,-0.00000667572,-0.00004060776",
                               "Rotation": "-0.003985144,-0.01397046,0.2584109,0.9659258",
                               "Scale": "1,1,1",
-                              "Tags": "",
+                              "Tags": "head",
                               "Enabled": true,
                               "NetworkMode": 2,
                               "NetworkInterpolation": true,
@@ -2921,6 +2921,10 @@
             "_type": "gameobject",
             "go": "9fc4e073-1e10-460d-ae6f-754d9bd0a602"
           },
+          "Player1Neck": {
+            "_type": "gameobject",
+            "go": "55f3ff36-9b25-4730-b77b-05adc6b4c3d6"
+          },
           "Player2Camera": {
             "_type": "gameobject",
             "go": "17a4c6d0-fd72-44c5-b055-26ee2ba0f7d5"
@@ -2928,6 +2932,10 @@
           "Player2Model": {
             "_type": "gameobject",
             "go": "00f9e4ed-b579-40e0-b035-f692be32203d"
+          },
+          "Player2Neck": {
+            "_type": "gameobject",
+            "go": "9f35bc1e-8d81-4166-9c00-e39020532f7e"
           },
           "TransitionCamera": {
             "_type": "gameobject",

@@ -3,7 +3,10 @@ using Sandbox.Html;
 using Sandbox.Network;
 using Sandbox.UI;
 using System;
+using System.Numerics;
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
+using static Sandbox.PhysicsContact;
 
 
 public sealed class GameManager : Component
@@ -170,6 +173,7 @@ public sealed class GameManager : Component
 
 
 		LoserProp = (LoserPlayerIndex == 1) ? Player1Model.GetComponent<Prop>() : Player2Model.GetComponent<Prop>();
+
 		
 
 		Log.Info( $"Loser Detected: Player {LoserPlayerIndex}" );
@@ -204,6 +208,13 @@ public sealed class GameManager : Component
 
 		}
 
+		// rotate head up
+		if ( LoserPlayerIndex == 1)
+			_ = LerpHead( Player2Neck, -90);
+		else
+			_ = LerpHead( Player1Neck, -90);
+
+
 		if (PlayerIndex != LoserPlayerIndex)
 		{
 			Log.Info( "Won achievement" );
@@ -214,6 +225,8 @@ public sealed class GameManager : Component
 				Sandbox.Services.Achievements.Unlock( "hard_mode_won" );
 				Log.Info( "Won hard mode" );
 			}
+
+
 		}
 		else
 		{
@@ -221,7 +234,7 @@ public sealed class GameManager : Component
 			Sandbox.Services.Achievements.Unlock( "lost_a_game" );
 		}
 
-			await GameTask.DelaySeconds( 5 );
+		await GameTask.DelaySeconds( 5 );
 		ReloadGame();
 	}
 
@@ -413,6 +426,21 @@ public sealed class GameManager : Component
 
 	}
 
+	private async Task LerpHead( GameObject head, float targetRoll )
+	{
+		var targetRot = new Angles( 0f, targetRoll,0f  ).ToRotation();
+
+		while ( !head.LocalRotation.AlmostEqual( targetRot, 0.001f ) )
+		{
+			float frac = MathF.Min( 1f, 10f * Time.Delta );
+			head.LocalRotation = head.LocalRotation.LerpTo( targetRot, frac );
+
+			await Task.Frame();
+		}
+
+		head.LocalRotation = targetRot;
+	}
+
 	protected override void OnStart()
 	{
 		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
@@ -444,6 +472,8 @@ public sealed class GameManager : Component
 	[Property] public GameObject Player2Model { get; set; }
 	[Property] public GameObject BombUI { get; set; }
 	[Property] public GameObject MatchmakeUI { get; set; }
+	[Property] public GameObject Player1Neck { get; set; }
+	[Property] public GameObject Player2Neck { get; set; }
 	[Property] public GameObject MenuUI { get; set; }
 	[Sync] public Prop LoserProp { get; set; }
 
