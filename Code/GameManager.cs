@@ -68,8 +68,6 @@ public sealed class GameManager : Component
 
 	private void StartCoopMatch()
 	{
-
-
 		_bombRef.IsActive = true;
 		CreateBombUI();
 		BombUI.Enabled = true;
@@ -91,6 +89,8 @@ public sealed class GameManager : Component
 		string cameraTag = isPlayer1 ? "player1" : "player2";
 		int playerIndex = isPlayer1 ? 1 : 2;
 		string playerName = isPlayer1 ? "Player 1 (red)" : "Player 2 (green)";
+		ChosenCard = _cards.GetRandomCard();
+
 		IsMatchmaking = false;
 		LerpCameraTo( camera, cameraTag ).ContinueWith( async _ =>
 		{
@@ -128,7 +128,7 @@ public sealed class GameManager : Component
 	public void NextTurn()
 	{
 		if ( _bombRef.Time <= 0 ) { return; }
-		_bombRef.InputSoundRef.StartSound();
+
 		_ = NextTurnAsync();
 
 	}
@@ -152,9 +152,15 @@ public sealed class GameManager : Component
 
 
 
+
 		}
 	}
-
+	
+	public void ActivateCard()
+	{
+		CardUsed = true;
+		
+	}
 	public void DetermineWinner()
 	{
 
@@ -270,6 +276,8 @@ public sealed class GameManager : Component
 		PlayerIndex = 1;
 		AIMode = true;
 		AssignPlayer();
+		ChosenCard = _cards.GetRandomCard();
+		Log.Info( ChosenCard.Image );
 		GameStarted = true;
 		LerpCameraTo( Player1Camera, "player1" ).ContinueWith( async task =>
 		{
@@ -456,6 +464,7 @@ public sealed class GameManager : Component
 		
 		MainMenu();
 		MenuUI.Enabled = true;
+		_cards = new CardDatabase(_bombRef);
 
 
 	}
@@ -480,6 +489,8 @@ public sealed class GameManager : Component
 	public GameObject CurrentPlayer = null;
 
 	[Sync] public int LoserPlayerIndex { get; set; } = -1;
+
+	public Card ChosenCard { get; set; } = null;
 	public int PlayerIndex { get; set; } = -1;
 
 	public bool GameStarted { get; set; } = false;
@@ -492,7 +503,7 @@ public sealed class GameManager : Component
 
 	public bool IsMatchmaking { get; set; } = false;
 
-
+	public bool CardUsed { get; set; } = false;
 
 	// private
 	private AiMode _aiComponent;
@@ -500,6 +511,10 @@ public sealed class GameManager : Component
 	private GameObject _activeCamera = null;
 
 	private GameObject UIParent{ get; set; } = null;
+
+	private CardDatabase _cards; 
+
+
 
 
 

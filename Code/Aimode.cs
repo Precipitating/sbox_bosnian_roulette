@@ -28,6 +28,8 @@ public sealed class AiMode : Component
 
 		int finalReduction = Math.Max( 1, (int)MathF.Round( reduction ) );
 		_bombRef.ReduceBombTime( finalReduction);
+		Sound.Play( InputSound );
+
 
 		//Log.Warning( $"AI's reduction = {finalReduction}" );
 
@@ -40,7 +42,7 @@ public sealed class AiMode : Component
 		base.OnStart();
 		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
 		Log.Warning( $"AIMODE BombRef instance: {_bombRef?.GetHashCode()}" );
-		//SetAIDifficulty( "Hard" );
+		InputSound = Cloud.SoundEvent( "igrotronika.click8" );
 
 	}
 
@@ -117,6 +119,6 @@ public sealed class AiMode : Component
 
 
 
-
-	Bomb _bombRef = null;
+	public SoundEvent InputSound { get; set; }
+	private Bomb _bombRef = null;
 }

@@ -31,10 +31,10 @@ BombTimerInput {
 		}
 	}
 
-	 &.hide {
+	&.hide {
 		opacity: 0;
+	}
 
-	 }
 	> .background {
 		position: absolute;
 		top: 61%;
@@ -102,6 +102,73 @@ BombTimerInput {
 		top: 65%;
 		height: 5px;
 		background-color: red;
+	}
 
+	> .card {
+		position: relative;
+		flex-direction: column;
+		background: linear-gradient(90deg, rgb(20,20,20), rgb(20,20,20));
+		font-family: 'Times New Roman', Times, serif;
+		padding: 20px;
+		border-radius: 20px;
+		border-width: 5px;
+		border-color: white;
+		width: 20%;
+		height: 70%;
+		left: 77%;
+		top: 15%;
+		transition: opacity 0.2s ease;
+
+		> .card-name {
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
+
+		> .card-img {
+			position: relative;
+			top: 5%;
+			border-radius: 20px;
+			width: 100%;
+			justify-content: center;
+			align-items: center;
+			height: 55%;
+			padding: 20px;
+			font-size: 2rem;
+		}
+
+		> .card-activation_button {
+			position: relative;
+			top: 12%;
+			width: 50%;
+			height: 8%;
+			left: 50%;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			transform: translate(-50%, -50%);
+			color: white;
+			border-radius: 10px;
+			background-color: rgba(255, 0, 0, 0.5);
+		}
+
+		> .card-description {
+			position: relative;
+			top: 11%;
+			background-color: rgba(0, 0, 0, 0.5);
+			border-radius: 20px;
+			height: 20%;
+			padding: 20px;
+			font-size: 2rem;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
+
+
+
+		> &.hide {
+			opacity: 0;
+		}
 	}
 }

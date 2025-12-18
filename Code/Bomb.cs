@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 
 public sealed class Bomb : Component
 {
-    public float GetTickRate()
-    {
-        return _tickRate;
-    }
+
+	class BombEffects
+	{
+		public BombEffects( CardDatabase.PersistingEffects name, int turns)
+		{
+			Name = name;
+			TurnsLeft = turns;
+		}
+		public CardDatabase.PersistingEffects Name;
+		public int TurnsLeft;
 
 
+	}
 
 
 	[Rpc.Host]
@@ -25,12 +32,13 @@ public sealed class Bomb : Component
 
 		}
 		Time = float.Max( 0, Time - reductionTime );
-        //Log.Warning( $"Bomb time has reduced by {reductionTime}" );
-        //Log.Warning( Time );
+		ApplyEffects();
+		//Log.Warning( $"Bomb time has reduced by {reductionTime}" );
+		//Log.Warning( Time );
 
 
 
-    }
+	}
 
     public void LerpSize( float seconds, Vector3 to, Easing.Function easer )
     {
@@ -56,11 +64,6 @@ public sealed class Bomb : Component
 			if ( !ticked && t >= 0.5f )
 			{
 				TickSfx();
-
-				_tickRate = _sinceLastTick;
-				//Log.Info( $"tick rate: {_tickRate}" );
-				_sinceLastTick = 0;
-
 				ticked = true;
 			}
 
@@ -93,9 +96,10 @@ public sealed class Bomb : Component
 
 	private async Task ExplodeAsync()
 	{
+		IsActive = false;
 		_gameManager.GetWinner();
 		Log.Info( "Explode" );
-		IsActive = false;
+
 
 		_gameManager.SetCamera( _gameManager.OverheadCamera );
 		_gameManager.BombUI.Enabled = false;
@@ -116,47 +120,90 @@ public sealed class Bomb : Component
 
 
 	[Rpc.Host]
-	public void BombTick()
+	public void BombScale()
     {
-		if (!_finishedTick) { return; }
-		_ = BombTickAsync();
+		if (IsProxy) { return; }
+		_ = BombScaleAsync();
 
     }
 
+	[Rpc.Host]
+	private void BombTick()
+	{
+		if (_timeElapsed > 1)
+		{
+			_timeElapsed = 0;
 
-	async private Task BombTickAsync()
+			Time = float.Max( 0, Time - 1 );
+
+			if ( Time <= 0 )
+			{
+				Explode();
+			}
+			Log.Info( Time );
+		}
+
+	}
+
+	[Rpc.Host]
+	public void ApplyEffects()
+	{
+		for ( int i = _effectsQueue.Count - 1; i >= 0; i-- )
+		{
+
+			if ( _effectsQueue[i].TurnsLeft <= 0 )
+			{
+				switch ( _effectsQueue[i].Name )
+				{
+					case CardDatabase.PersistingEffects.ElTrolle:
+						LeTrolleModeToggle();
+						Log.Info( "Disable el trolle" );
+						break;
+				}
+
+				_effectsQueue.RemoveAt( i );
+			}
+			else
+			{
+				Log.Info( $"Reduce turn for {_effectsQueue[i].Name}, turns left: {_effectsQueue[i].TurnsLeft}" );
+				--_effectsQueue[i].TurnsLeft; 
+			}
+		}
+
+	}
+
+	async private Task BombScaleAsync()
 	{
 		_finishedTick = false;
-		await GameTask.DelaySeconds( Time / OriginalTime );
-		if ( Time > 0 )
+		float realTime = _isTrollMode ? _fakeTime : Time;
+		float ratio = 1f - (realTime / OriginalTime);
+		float delay = MathX.Lerp( _maxLerpDelay, _minLerpDelay, ratio );
+		await GameTask.DelaySeconds( delay );
+		//Log.Info( $"Lerp delay = {delay}" );
+		if ( realTime > 0 )
 		{
 			BombTickScaleLerp();
-			Time -= 1;
-
 			//Log.Info( Time );
 
 		}
-		else
-		{
-			Explode();
 
-		}
 	}
 
 
 
     private void BombTickScaleLerp()
     {
-        float lerpTime = Time / OriginalTime;
+		float realTime = _isTrollMode ? _fakeTime : Time;
+        float lerpTime = realTime / OriginalTime;
         float tickTime = (1f - lerpTime) * _lerpScaleMultiplier;
         _tickSize = _originalSize + (_originalSize * tickTime);
 
 		Easing.Function easer = null;
-		if ( Time >= OriginalTime * 0.7f)
+		if ( realTime >= OriginalTime * 0.7f)
 		{
 			easer = Easing.SineEaseInOut;
 		}
-		else if ( Time >= OriginalTime * 0.3f  )
+		else if ( realTime >= OriginalTime * 0.3f  )
 		{
 			easer = Easing.QuadraticInOut;
 		}
@@ -188,25 +235,44 @@ public sealed class Bomb : Component
         _tickSize = _originalSize * _lerpScaleMultiplier;
 
 
+
     }
 
     async protected override void OnUpdate()
     {
 
-        if ( IsActive && _finishedTick )
+        if ( IsActive )
         {
-            BombTick();
+			if ( _finishedTick )
+			{
+				BombScale();
+			}
+
+			BombTick();
+
         }
 
 
     }
+	[Rpc.Host]
+	public void LeTrolleModeToggle()
+	{
+		_isTrollMode = !_isTrollMode;
+
+		if ( _isTrollMode )
+		{
+			_effectsQueue.Add( new BombEffects(CardDatabase.PersistingEffects.ElTrolle, 2));
+		}
+
+
+	}
+
 
 
     [Property] public SoundPointComponent TickSound { get; set; }
     [Property] public SoundEvent ExplodeSound { get; set; }
     [Property] public SoundPointComponent JingleSound { get; set; }
     [Property] public GameObject ExplosionRef { get; set; }
-    [Property] public SoundPointComponent InputSoundRef { get; set; }
 
 	public float OriginalTime = 0f;
 
@@ -214,18 +280,25 @@ public sealed class Bomb : Component
 	public int BombMaxTime { get; private set; } = 600;
 	[Sync] public float Time { get; set; } = 0f;
 
-    [Sync] public bool IsActive { get; set; } = false;
 
 
+	[Sync] public bool IsActive { get; set; } = false;
+
+	// private
     private const float _lerpScaleMultiplier = 2f;
     private Vector3 _originalSize;
     private Vector3 _tickSize;
     [Sync] private bool _finishedTick { get; set; } = true;
     private GameManager _gameManager = null;
 
-    [Sync] private float _tickRate { get; set; } = 0f;
-    [Sync] private TimeSince _sinceLastTick { get; set; } = 0;
+    [Sync] private TimeSince _timeElapsed { get; set; } = 0;
 
+	private const float _minLerpDelay = 0.2f;
+	private const float _maxLerpDelay = 1f;
 
+	[Sync] private bool _isTrollMode { get; set; } = false;
+	private const float _fakeTime = 10f;
+
+	private List<BombEffects> _effectsQueue = new List<BombEffects>();
 
 }
