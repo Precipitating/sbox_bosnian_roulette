@@ -1329,7 +1329,6 @@
           "__type": "Bomb",
           "__guid": "a284ee30-e49f-4bf2-8859-78460062e08f",
           "__enabled": true,
-          "ExplodeSound": "sound/explosion.sound",
           "ExplosionRef": {
             "_type": "gameobject",
             "go": "e3b44851-3f5e-47db-87d3-d5a6426fc842"
@@ -3174,53 +3173,6 @@
         "2ef5d023-8fda-4783-9484-e58513cc91ba": "b99cf1a2-6a77-4c05-805d-69fea9eece4d",
         "5bf581d4-0359-4503-bf8a-e401f8cb2e82": "d0f772df-a9a0-4c35-aefb-c6104f164e87"
       }
-    },
-    {
-      "__guid": "445f89a4-7fa2-4380-9956-aa65a4b5efff",
-      "__version": 1,
-      "Flags": 0,
-      "Name": "Screen",
-      "Position": "212.3634,57.43618,-18.87952",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": false,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.ScreenPanel",
-          "__guid": "761ca8ed-b34e-49d4-bfeb-1b9ff4841ab3",
-          "__enabled": true,
-          "AutoScreenScale": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Opacity": 1,
-          "Scale": 1,
-          "ScaleStrategy": "ConsistentHeight",
-          "TargetCamera": null,
-          "ZIndex": 100
-        },
-        {
-          "__type": "Sandbox.BombTimerInput",
-          "__guid": "493c05c0-3066-44bd-8041-04038c1ebece",
-          "__enabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
-        }
-      ],
-      "Children": []
     }
   ],
   "SceneProperties": {

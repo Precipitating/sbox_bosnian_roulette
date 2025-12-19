@@ -3,6 +3,7 @@ using Sandbox.Html;
 using Sandbox.Network;
 using Sandbox.UI;
 using System;
+using System.IO;
 using System.Numerics;
 using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
@@ -168,15 +169,35 @@ public sealed class GameManager : Component
 	}
 
 
-	// host determines the winner 
-	// host is always player 1
-	// when detonation occurs, current turn is not swapped
+	[Rpc.Host]
+	public void SetUnoReversal(bool val)
+	{
+
+		UnoReversed = val;
+	}
+
+	[Rpc.Host]
+	void HandleUnoReversal()
+	{
+		if ( !Rpc.Caller.IsHost || IsProxy ) { return; }
+		SoundManager.PlayAcrossClients( "Yanno", true, "sound/yanno.sound" );
+		// invert the winner
+		LoserPlayerIndex = 3 - LoserPlayerIndex;
+		UnoReversed = false;
+		Log.Info( "Uno reverse activated" );
+	}
+
+	[Rpc.Host]
 	public void GetWinner()
 	{
-		if (!Networking.IsHost) { return; }
+		if (!Rpc.Caller.IsHost || IsProxy) { return; }
 		Log.Warning( "Determining Winner..." );
-		LoserPlayerIndex = CurrentTurn ? 1 : 2;	
 
+		LoserPlayerIndex = CurrentTurn ? 1 : 2;
+		if (UnoReversed)
+		{
+			HandleUnoReversal();
+		}
 
 		LoserProp = (LoserPlayerIndex == 1) ? Player1Model.GetComponent<Prop>() : Player2Model.GetComponent<Prop>();
 
@@ -272,12 +293,11 @@ public sealed class GameManager : Component
 
 	public void PlayAI()
 	{
-		Sound.StopAll(1);
+		SoundManager.StopPathSound( "ambience", 1f );
 		PlayerIndex = 1;
 		AIMode = true;
 		AssignPlayer();
 		ChosenCard = _cards.GetRandomCard();
-		Log.Info( ChosenCard.Image );
 		GameStarted = true;
 		LerpCameraTo( Player1Camera, "player1" ).ContinueWith( async task =>
 		{
@@ -305,7 +325,7 @@ public sealed class GameManager : Component
 	{
 		if ( MatchmakingPlayers == 2 && Connection.All.Count == 2)
 		{
-			Sound.StopAll( 1f );
+			SoundManager.StopPathSound( "ambience", 1f);
 			Log.Info( "2 Players detected, initiating game!" );
 
 			// set cameras
@@ -451,6 +471,7 @@ public sealed class GameManager : Component
 
 	protected override void OnStart()
 	{
+		SoundManager.InitializeSounds();
 		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
 		if (BombRadiusDmg == null)
 		{
@@ -465,6 +486,9 @@ public sealed class GameManager : Component
 		MainMenu();
 		MenuUI.Enabled = true;
 		_cards = new CardDatabase(_bombRef);
+
+
+
 
 
 	}
@@ -486,6 +510,8 @@ public sealed class GameManager : Component
 	[Property] public GameObject MenuUI { get; set; }
 	[Sync] public Prop LoserProp { get; set; }
 
+	[Sync] public bool UnoReversed { get; set; } = false;
+
 	public GameObject CurrentPlayer = null;
 
 	[Sync] public int LoserPlayerIndex { get; set; } = -1;
@@ -504,6 +530,8 @@ public sealed class GameManager : Component
 	public bool IsMatchmaking { get; set; } = false;
 
 	public bool CardUsed { get; set; } = false;
+
+
 
 	// private
 	private AiMode _aiComponent;

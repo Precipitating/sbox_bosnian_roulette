@@ -50,28 +50,24 @@ public sealed class Bomb : Component
 	{
 		TimeSince timeSince = 0f;
 		Vector3 from = WorldScale;
-		bool ticked = false;
 
+
+		TickSfx();
 		while ( timeSince < seconds )
 		{
 			float t = (timeSince / seconds).Clamp( 0f, 1f );
 			float pingPong = 1f - MathF.Abs( t * 2f - 1f );
 
 			float eased = easer(pingPong);
-			WorldScale = Vector3.Lerp( from, to, easer( eased ) );
+			WorldScale = Vector3.Lerp( from, to, easer(eased ));
 
-			// trigger tick once at midpoint
-			if ( !ticked && t >= 0.5f )
-			{
-				TickSfx();
-				ticked = true;
-			}
 
 			await Task.Frame();
 		}
 
 		WorldScale = from;
 		_finishedTick = true;
+		Log.Info( "Done lerp" );
 	}
 
 	[Rpc.Broadcast]
@@ -110,7 +106,7 @@ public sealed class Bomb : Component
 
 		ExplosionRef.Enabled = true;
 
-		var explodeSound = Sound.Play( ExplodeSound );
+		SoundManager.Play2DByPath( "Explosion", "Sound/Explosion.sound");
 		await GameTask.Delay( 100 );
 
 		_gameManager.DetermineWinner();
@@ -140,7 +136,7 @@ public sealed class Bomb : Component
 			{
 				Explode();
 			}
-			Log.Info( Time );
+			//Log.Info( Time );
 		}
 
 	}
@@ -195,7 +191,7 @@ public sealed class Bomb : Component
     {
 		float realTime = _isTrollMode ? _fakeTime : Time;
         float lerpTime = realTime / OriginalTime;
-        float tickTime = (1f - lerpTime) * _lerpScaleMultiplier;
+        float tickTime = (1f - lerpTime);
         _tickSize = _originalSize + (_originalSize * tickTime);
 
 		Easing.Function easer = null;
@@ -238,8 +234,10 @@ public sealed class Bomb : Component
 
     }
 
-    async protected override void OnUpdate()
+	[Rpc.Host]
+    protected override void OnUpdate()
     {
+		if (IsProxy) { return; }
 
         if ( IsActive )
         {
@@ -270,11 +268,12 @@ public sealed class Bomb : Component
 
 
     [Property] public SoundPointComponent TickSound { get; set; }
-    [Property] public SoundEvent ExplodeSound { get; set; }
     [Property] public SoundPointComponent JingleSound { get; set; }
     [Property] public GameObject ExplosionRef { get; set; }
 
 	public float OriginalTime = 0f;
+
+	public bool UnoReversed { get; set; } = false;
 
 	public int BombMinTime { get; private set; } = 60;
 	public int BombMaxTime { get; private set; } = 600;
@@ -293,12 +292,14 @@ public sealed class Bomb : Component
 
     [Sync] private TimeSince _timeElapsed { get; set; } = 0;
 
-	private const float _minLerpDelay = 0.2f;
+	private const float _minLerpDelay = 0.1f;
 	private const float _maxLerpDelay = 1f;
 
 	[Sync] private bool _isTrollMode { get; set; } = false;
 	private const float _fakeTime = 10f;
 
 	private List<BombEffects> _effectsQueue = new List<BombEffects>();
+
+	
 
 }

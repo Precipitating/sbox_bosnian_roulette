@@ -8,6 +8,7 @@ BombTimerInput {
 	font-size: 30px;
 	flex-direction: column;
 	color: white;
+	transition: opacity 0.2s ease;
 
 	> .reduce-text-bg {
 		position: absolute;
@@ -112,7 +113,7 @@ BombTimerInput {
 		padding: 20px;
 		border-radius: 20px;
 		border-width: 5px;
-		border-color: white;
+		border-color: slategray;
 		width: 20%;
 		height: 70%;
 		left: 77%;
@@ -130,11 +131,13 @@ BombTimerInput {
 			top: 5%;
 			border-radius: 20px;
 			width: 100%;
+			height: 100%;
+			background-position: center;
 			justify-content: center;
 			align-items: center;
 			height: 55%;
 			padding: 20px;
-			font-size: 2rem;
+
 		}
 
 		> .card-activation_button {
@@ -149,6 +152,7 @@ BombTimerInput {
 			transform: translate(-50%, -50%);
 			color: white;
 			border-radius: 10px;
+			font-size: 15%;
 			background-color: rgba(255, 0, 0, 0.5);
 		}
 
@@ -159,7 +163,7 @@ BombTimerInput {
 			border-radius: 20px;
 			height: 20%;
 			padding: 20px;
-			font-size: 2rem;
+			font-size: 14%;
 			justify-content: center;
 			align-items: center;
 			text-align: center;

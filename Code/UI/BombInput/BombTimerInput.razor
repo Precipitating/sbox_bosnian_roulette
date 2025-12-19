@@ -55,15 +55,7 @@
     }
 
 
-    private void PlayInputSound()
-    {
-        if (InputSound == null)
-        {
-            InputSound = Cloud.SoundEvent("igrotronika.click8");
-        }
-        Sound.Play(InputSound);
 
-    }
     protected override void OnStart()
     {
         base.OnStart();
@@ -99,7 +91,6 @@
         if (Input.Pressed("ActivateCard"))
         {
             if (_gameManager.CardUsed) { return; }
-
             _gameManager.ActivateCard();
         }
 
@@ -117,7 +108,7 @@
         else if (Input.Pressed("SubmitReductionTime") || _timeSinceInput >= _maxInputTime)
         {
             if (!_bombRef.IsActive) { return; }
-            PlayInputSound();
+            SoundManager.PlayAcrossClients("Input");
 
             if (_gameManager.CardUsed && !_cardEffectsApplied)
             {
