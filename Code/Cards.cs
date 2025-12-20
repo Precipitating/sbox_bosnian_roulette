@@ -2,22 +2,34 @@ using Sandbox;
 using System;
 using System.Diagnostics;
 
+public enum CardEnum
+{
+	None = 0,
+	LeTrolle = 1,
+	DoubleTrouble = 2,
+	Hollup = 3,
+	Yannow = 4,
 
+}
 public class Card
 {
 	public string Name { get; private set; }
 	public string Description { get; private set; }
 	public string Image { get; private set; }
+	
+	// more efficient doing comparison operations
+	public CardEnum CardID = CardEnum.None;
 
 	public Func<float, float> Activate { get;set; }
 
 	public float Use( float inputTime ) => Activate?.Invoke( inputTime ) ?? inputTime;
 
-	public Card( string name, string description, string imgPath, Func<float, float> activate = null )
+	public Card( string name, string description, string imgPath, CardEnum cardID, Func<float, float> activate = null )
 	{
 		Name = name;
 		Description = description;
 		Image = imgPath;
+		CardID = cardID;
 		Activate = activate;
 	}
 
@@ -37,7 +49,12 @@ public class CardDatabase
 		_gameManager = GameManager.Instance;
 		_cards = new List<Card>
 		{
-			new Card("Le Trolle","Falsely speed up the tick count for one turn","ui/letrolle.png",(inputTime)=>
+			new Card(
+			"Le Trolle",
+			"Falsely speed up the tick count for one turn",
+			"ui/letrolle.png",
+			CardEnum.LeTrolle,
+			(inputTime)=>
 			{
 				Log.Warning($"Le Trolle activated with inputTime={inputTime}");
 				_bombRef.LeTrolleModeToggle();
@@ -45,20 +62,35 @@ public class CardDatabase
 
 
 			}),
-			new Card("Double Trouble","Double your input time","ui/doubletrouble.png",(inputTime)=>
+			new Card(
+			"Double Trouble",
+			"Double your input time",
+			"ui/doubletrouble.png",
+			CardEnum.DoubleTrouble,
+			(inputTime)=>
 			{
 				Log.Warning($"Double Trouble activated");
 				return inputTime *= 2f;
 
 
 			}),
-			new Card("Hollup","Double the current time","ui/hollup.png",(inputTime)=>
+			new Card(
+			"Hollup",
+			"Double the current time",
+			"ui/hollup.png",
+			CardEnum.Hollup,
+			(inputTime)=>
 			{
 				Log.Warning($"Hollup activated");
 				return -_bombRef.Time + inputTime;
 				
 			}),
-			new Card("Yannow","On this round, if the deduction results in the bomb time being EXACTLY 0, the other player loses instantly. Guess wrong? Add +100 to input","ui/yannow.png",(inputTime)=>
+			new Card(
+			"Yannow",
+			"On this round, if the deduction results in the bomb time being EXACTLY 0, the other player loses instantly. Guess wrong? Add +100 to input",
+			"ui/yannow.png",
+			CardEnum.Yannow,
+			(inputTime)=>
 			{
 				Log.Warning($"Yannow activated");
 				if ((_bombRef.Time - inputTime) == 0)

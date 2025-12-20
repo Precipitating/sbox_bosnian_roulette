@@ -22,6 +22,7 @@ public static class SoundManager
 		_sounds = new Dictionary<string, SoundEvent>
 		{
 			["Input"] = Cloud.SoundEvent( "igrotronika.click8" ),
+			["CardActivation"] = Cloud.SoundEvent( "igrotronika.click5" ),
 			["Wrong"] = Cloud.SoundEvent( "ipvfour.buzzerincorrect" ),
 		};
 

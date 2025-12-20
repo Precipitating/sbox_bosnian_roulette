@@ -1,33 +1,10 @@
-using Sandbox;
-using Sandbox.Html;
-using Sandbox.Network;
-using Sandbox.UI;
 using System;
-using System.IO;
-using System.Numerics;
-using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
-using static Sandbox.PhysicsContact;
+
 
 
 public sealed class GameManager : Component
 {
-	public static async Task<SoundFile> DownloadSound( string packageIdent )
-	{
-		var package = await Package.Fetch( packageIdent, false );
-		if ( package == null || package.Revision == null )
-		{
-			// Package not found
-			return null;
-		}
-		// If the package was found, mount it (download the content)
-		await package.MountAsync();
-
-		// Get the path to the primary asset (vmdl for Model, vsnd for Sound, ect.)
-		var primaryAsset = package.GetMeta( "PrimaryAsset", "" );
-		return SoundFile.Load( primaryAsset );
-	}
-
 	public void SetCamera(GameObject cameraGameObject, string excludeName = null )
 	{
 		cameraGameObject.Enabled = true;
@@ -90,7 +67,7 @@ public sealed class GameManager : Component
 		string cameraTag = isPlayer1 ? "player1" : "player2";
 		int playerIndex = isPlayer1 ? 1 : 2;
 		string playerName = isPlayer1 ? "Player 1 (red)" : "Player 2 (green)";
-		ChosenCard = _cards.GetRandomCard();
+		ChosenCard = Cards.GetRandomCard();
 
 		IsMatchmaking = false;
 		LerpCameraTo( camera, cameraTag ).ContinueWith( async _ =>
@@ -159,6 +136,7 @@ public sealed class GameManager : Component
 	
 	public void ActivateCard()
 	{
+		SoundManager.PlayAcrossClients( "CardActivation" );
 		CardUsed = true;
 		
 	}
@@ -297,7 +275,7 @@ public sealed class GameManager : Component
 		PlayerIndex = 1;
 		AIMode = true;
 		AssignPlayer();
-		ChosenCard = _cards.GetRandomCard();
+		ChosenCard = Cards.GetRandomCard();
 		GameStarted = true;
 		LerpCameraTo( Player1Camera, "player1" ).ContinueWith( async task =>
 		{
@@ -473,20 +451,22 @@ public sealed class GameManager : Component
 	{
 		SoundManager.InitializeSounds();
 		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
+		Cards = new CardDatabase( _bombRef );
 		if (BombRadiusDmg == null)
 		{
 			BombRadiusDmg = _bombRef.GetComponent<RadiusDamage>();
 		}
 		BombRadiusDmg.Enabled = false;
-		_aiComponent = GetComponent<AiMode>() as AiMode;
+		_aiComponent = GetComponent<AiMode>();
 		Log.Warning( $"MANAGER BombRef instance: {_bombRef?.GetHashCode()}" );
 
 		// Create UI dynamically.
 		
 		MainMenu();
 		MenuUI.Enabled = true;
-		_cards = new CardDatabase(_bombRef);
 
+
+		IGameManagerEvent.Post(x => x.OnInitialized());
 
 
 
@@ -531,6 +511,8 @@ public sealed class GameManager : Component
 
 	public bool CardUsed { get; set; } = false;
 
+	public CardDatabase Cards { get; set; }
+
 
 
 	// private
@@ -540,7 +522,7 @@ public sealed class GameManager : Component
 
 	private GameObject UIParent{ get; set; } = null;
 
-	private CardDatabase _cards; 
+
 
 
 

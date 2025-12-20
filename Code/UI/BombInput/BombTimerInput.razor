@@ -59,10 +59,10 @@
     protected override void OnStart()
     {
         base.OnStart();
-        _gameManager = GameManager.Instance;
         _bombRef = Scene.Directory.FindByName("BombModel").First().GetComponent<Bomb>();
 
         Log.Warning($"BOMBTIMERINPUT BombRef instance: {_bombRef?.GetHashCode()}");
+        _gameManager = GameManager.Instance;
 
 
     }
@@ -91,6 +91,7 @@
         if (Input.Pressed("ActivateCard"))
         {
             if (_gameManager.CardUsed) { return; }
+
             _gameManager.ActivateCard();
         }
 
@@ -114,7 +115,8 @@
             {
                 _reductionTime = _gameManager.ChosenCard.Use(_reductionTime);
                 _cardEffectsApplied = true;
-                Log.Info($"New reduction time: {_reductionTime}");
+
+                //Log.Info($"New reduction time: {_reductionTime}");
             }
 
             _bombRef.ReduceBombTime(_reductionTime);
