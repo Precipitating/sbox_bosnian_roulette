@@ -1,5 +1,6 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -7,35 +8,34 @@
       && (_gameManager?.CurrentTurn ?? false)
       && (_bombRef?.IsActive ?? false)
          ? ""
-         : "hide")">
+         : "hideAll")">
 
-    <div class="background">
+    <section class="background">
         <div class="background-inner">
-            <div class="reduce-button">Q</div>
-            <div class="description">Reduce 
-
-
+            <div class="reduce-button">Q</div> 
+            <div class="description" style="animation-duration: @(MathF.Max(0.1f, _bombRef?.CurrentTickTime ?? 1f))s;">
+                Reduce
             </div>
             <div class="increase-button">E</div>
         </div>
-    </div>
+    </section>
 
     <div class="reduce-text-bg">
         <div class="reduce-text">@_reductionTime s</div>
     </div>
-    <div class="enter-label">
+    <p class="enter-label">
         <div class="enter-label">PRESS ENTER TO SUBMIT</div>
-    </div>
+    </p>
 
     <div class="timeout-bar" style="width:@_currentTimeoutWidth"></div>
 
-    <div class="card @(!_gameManager?.CardUsed ?? true ? "" : "hide")">
-        <div class="card-name">@_gameManager?.ChosenCard.Name</div>
+    <article class="card @(!_gameManager?.CardUsed ?? false ? "" : "hide") @(_gameManager?.CurrentTurn ?? false ? "card-in" : "card-out")">
+        <h2 class="card-name">@_gameManager?.ChosenCard.Name</h2>
         <img class ="card-img" src=@_gameManager?.ChosenCard.Image />
         <div class="card-activation_button">F To Activate</div>
         <div class="card-description">@_gameManager?.ChosenCard.Description</div>
 
-    </div>
+    </article>
 
 
 </root>
@@ -84,7 +84,6 @@
             _timeSinceInput = 0f;
             return; 
         }
-
 
         _currentTimeoutWidth = (1f - (_timeSinceInput / _maxInputTime)) * 400f;
 

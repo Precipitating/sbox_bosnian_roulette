@@ -133,8 +133,12 @@ public sealed class AiMode : Component, IGameManagerEvent
 		float progress = 1f - (_bombRef.Time / _bombRef.OriginalTime).Clamp( 0f, 1f );
 		float hazard = MathF.Pow( 1f - progress, AIDifficulty.HazardExponent );
 
-		float minReduction = _bombRef.Time * AIDifficulty.MinReductionPercent;
-		float maxReduction = _bombRef.Time * AIDifficulty.MaxReductionPercent;
+		float minReduction = (_bombRef.IsTrollMode ? Game.Random.Int( 1, 5 ) : _bombRef.Time) * AIDifficulty.MinReductionPercent;
+		float maxReduction = (_bombRef.IsTrollMode ? Game.Random.Int( 6, 10 ) : _bombRef.Time) * AIDifficulty.MaxReductionPercent;
+
+		
+
+		
 
 		float reduction = MathX.Lerp( minReduction, maxReduction, hazard );
 		reduction *= Game.Random.Float( 1f - AIDifficulty.Variance, 1f + AIDifficulty.Variance );

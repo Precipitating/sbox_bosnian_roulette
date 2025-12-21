@@ -1,3 +1,17 @@
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+	}
+
+	70% {
+		transform: scale(1);
+	}
+
+	100% {
+		transform: scale(0.95);
+	}
+}
+
 MainMenuUI {
 	position: absolute;
 	top: 0;
@@ -9,6 +23,7 @@ MainMenuUI {
 	justify-content: center;
 	flex-direction: row;
 
+
 	.title {
 		position: relative;
 		left: -1.6%;
@@ -16,6 +31,7 @@ MainMenuUI {
 		font-size: 5vw;
 		font-family: Poppins;
 		color: white;
+		animation: pulse 1s infinite;
 	}
 
 	> .ai {

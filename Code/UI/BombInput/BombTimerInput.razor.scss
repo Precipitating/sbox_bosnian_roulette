@@ -1,3 +1,17 @@
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+	}
+
+	70% {
+		transform: scale(1);
+	}
+
+	100% {
+		transform: scale(0.95);
+	}
+}
+
 BombTimerInput {
 	position: absolute;
 	top: 0;
@@ -32,7 +46,7 @@ BombTimerInput {
 		}
 	}
 
-	&.hide {
+	&.hideAll {
 		opacity: 0;
 	}
 
@@ -55,6 +69,11 @@ BombTimerInput {
 			height: 100%;
 			background-color: darkslategray;
 			border-radius: 20px;
+
+			> .description {
+				animation-name: pulse;
+				animation-iteration-count: infinite;
+			}
 
 
 			> .reduce-button {
@@ -90,11 +109,6 @@ BombTimerInput {
 		transform: translate(-50%, -50%);
 		justify-content: center;
 		align-items: center;
-
-
-		> .enter-label {
-			position: relative;
-		}
 	}
 
 	> .timeout-bar {
@@ -104,6 +118,9 @@ BombTimerInput {
 		height: 5px;
 		background-color: red;
 	}
+
+
+
 
 	> .card {
 		position: relative;
@@ -118,7 +135,7 @@ BombTimerInput {
 		height: 70%;
 		left: 77%;
 		top: 15%;
-		transition: opacity 0.2s ease;
+		transition: opacity 0.2s ease, transform 0.2s ease;
 
 		> .card-name {
 			justify-content: center;
@@ -137,7 +154,6 @@ BombTimerInput {
 			align-items: center;
 			height: 55%;
 			padding: 20px;
-
 		}
 
 		> .card-activation_button {
@@ -170,9 +186,17 @@ BombTimerInput {
 		}
 
 
+		&.card-in {
+			transform: translateX(0%);
+		}
 
-		> &.hide {
+		&.card-out {
+			transform: translateX(200%);
+		}
+
+		&.hide {
 			opacity: 0;
+			transform: scale(0);
 		}
 	}
 }

@@ -87,7 +87,7 @@ public class CardDatabase
 			}),
 			new Card(
 			"Yannow",
-			"On this round, if the deduction results in the bomb time being EXACTLY 0, the other player loses instantly. Guess wrong? Add +100 to input",
+			"On activation, deduct enough for the resulting time to be exactly 0 to win instantly; guess wrong and receive +100s to your input.",
 			"ui/yannow.png",
 			CardEnum.Yannow,
 			(inputTime)=>

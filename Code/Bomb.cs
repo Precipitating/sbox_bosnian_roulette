@@ -171,7 +171,7 @@ public sealed class Bomb : Component
 	async private Task BombScaleAsync()
 	{
 		_finishedTick = false;
-		float realTime = _isTrollMode ? _fakeTime : Time;
+		float realTime = IsTrollMode ? _fakeTime : Time;
 		float ratio = 1f - (realTime / OriginalTime);
 		float delay = MathX.Lerp( _maxLerpDelay, _minLerpDelay, ratio );
 		await GameTask.DelaySeconds( delay );
@@ -189,9 +189,9 @@ public sealed class Bomb : Component
 
     private void BombTickScaleLerp()
     {
-		float realTime = _isTrollMode ? _fakeTime : Time;
-        float lerpTime = realTime / OriginalTime;
-        float tickTime = (1f - lerpTime);
+		float realTime = IsTrollMode ? _fakeTime : Time;
+		CurrentTickTime = realTime / OriginalTime;
+        float tickTime = (1f - CurrentTickTime);
         _tickSize = _originalSize + (_originalSize * tickTime);
 
 		Easing.Function easer = null;
@@ -209,7 +209,7 @@ public sealed class Bomb : Component
 		}
 
 
-		LerpSize( lerpTime, _tickSize, easer );
+		LerpSize( CurrentTickTime, _tickSize, easer );
 
 
     }
@@ -255,9 +255,9 @@ public sealed class Bomb : Component
 	[Rpc.Host]
 	public void LeTrolleModeToggle()
 	{
-		_isTrollMode = !_isTrollMode;
+		IsTrollMode = !IsTrollMode;
 
-		if ( _isTrollMode )
+		if ( IsTrollMode )
 		{
 			_effectsQueue.Add( new BombEffects(CardDatabase.PersistingEffects.ElTrolle, 2));
 		}
@@ -277,9 +277,11 @@ public sealed class Bomb : Component
 
 	public int BombMinTime { get; private set; } = 60;
 	public int BombMaxTime { get; private set; } = 600;
+
+	public float CurrentTickTime = 0f;
 	[Sync] public float Time { get; set; } = 0f;
 
-
+	[Sync] public bool IsTrollMode { get; set; } = false;
 
 	[Sync] public bool IsActive { get; set; } = false;
 
@@ -295,7 +297,7 @@ public sealed class Bomb : Component
 	private const float _minLerpDelay = 0.1f;
 	private const float _maxLerpDelay = 1f;
 
-	[Sync] private bool _isTrollMode { get; set; } = false;
+
 	private const float _fakeTime = 10f;
 
 	private List<BombEffects> _effectsQueue = new List<BombEffects>();

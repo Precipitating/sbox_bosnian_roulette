@@ -7,16 +7,15 @@
 
 <root class="@((_gameManager?.GameStarted ?? false)|| (_gameManager?.IsMatchmaking ?? false)? "hide": "")">
 
-    <div class="human" onclick="@MatchmakeCoop">Play HUMAN</div>
-    <div class="title">@Title</div>
-    <div class="ai" onclick=@AIModeClicked>Play AI
-        <div class="difficulty @(!_choosingDifficulty ? "hide" : "" )">
-            <div class="easy" onclick=@EasyMode>&#x2192; Easy</div>
-            <div class="normal" onclick=@NormalMode>&#x2192; Normal</div>
-            <div class="hard" onclick=@HardMode>&#x2192; Hard</div>
-        </div>
-
-    </div>
+    <button class="human" onclick="@MatchmakeCoop">Play HUMAN</button>
+    <h1 class="title">@Title</h1>
+    <button class="ai" onclick=@AIModeClicked>Play AI
+        <sec class="difficulty @(!_choosingDifficulty ? "hide" : "" )">
+            <p class="easy" onclick=@EasyMode>&#x2192; Easy</p>
+            <p class="normal" onclick=@NormalMode>&#x2192; Normal</p>
+            <p class="hard" onclick=@HardMode>&#x2192; Hard</p>
+        </sec>
+    </button>
 
 
 </root>
