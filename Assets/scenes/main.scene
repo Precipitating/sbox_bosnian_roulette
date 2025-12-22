@@ -2,41 +2,6 @@
   "__guid": "11a1da55-1e8a-48dd-bf77-3fe634fb4eba",
   "GameObjects": [
     {
-      "__guid": "f3e26380-2f31-451f-95c4-1874f77293f4",
-      "__version": 1,
-      "Flags": 0,
-      "Name": "Directional Light",
-      "Position": "-127.6597,-127.6596,1023.882",
-      "Rotation": "-0.2459842,0.5938582,0.2931525,0.7077327",
-      "Scale": "1,1,1",
-      "Tags": "light_directional,light",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.DirectionalLight",
-          "__guid": "9d3c2de6-0814-4263-a958-215b242e94da",
-          "__enabled": true,
-          "FogMode": "Enabled",
-          "FogStrength": 1,
-          "LightColor": "0.91373,0.98039,1,1",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Shadows": true,
-          "SkyColor": "0,0,0,0"
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "5922751b-430d-4e0f-8d8e-1871eea83100",
       "__version": 1,
       "Flags": 0,

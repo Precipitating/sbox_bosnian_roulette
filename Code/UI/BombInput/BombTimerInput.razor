@@ -114,8 +114,6 @@
             {
                 _reductionTime = _gameManager.ChosenCard.Use(_reductionTime);
                 _cardEffectsApplied = true;
-
-                //Log.Info($"New reduction time: {_reductionTime}");
             }
 
             _bombRef.ReduceBombTime(_reductionTime);

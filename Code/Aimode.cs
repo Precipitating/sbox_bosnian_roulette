@@ -13,51 +13,48 @@ public sealed class AiMode : Component, IGameManagerEvent
 		Hard = 3,
 	}
 
+	private T ByDifficulty<T>( T easy, T normal, T hard ) =>
+	AIDifficulty.Difficulty switch
+	{
+		Difficulty.Easy => easy,
+		Difficulty.Normal => normal,
+		Difficulty.Hard => hard,
+		_ => default
+	};
+
 
 	private bool ShouldUseYannow()
 	{
-		return AIDifficulty.Difficulty switch
-		{
-			Difficulty.Easy => (_bombRef.Time <= Game.Random.Float( 1f, 30f )),
-			Difficulty.Normal => (_bombRef.Time <= Game.Random.Float( 1f, 15f )),
-			Difficulty.Hard => (_bombRef.Time <= Game.Random.Float(1f,5f)),
-			_ => false
-		};
+		float max = ByDifficulty( 30f, 15f, 5f );
+		return _bombRef.Time <= Game.Random.Float( 1f, max );
 	}
 
-
-
-	private bool ShouldUseDoubleTrouble(float reduction)
+	private bool ShouldUseDoubleTrouble( float reduction )
 	{
-		return AIDifficulty.Difficulty switch
-		{
-			Difficulty.Easy => (reduction <= 40f && _bombRef.Time >= 180f),
-			Difficulty.Normal => (reduction <= 60f && _bombRef.Time >= 120f),
-			Difficulty.Hard => (reduction <= 80f && _bombRef.Time >= 120f),
-			_ => false
-		};
-	}
+		float maxReduction = ByDifficulty( 40f, 60f, 80f );
+		float minTime = ByDifficulty( 180f, 120f, 120f );
 
+		return reduction <= maxReduction && _bombRef.Time >= minTime;
+	}
 
 	private bool ShouldUseHollup()
 	{
-		return AIDifficulty.Difficulty switch
-		{
-			Difficulty.Easy => (_bombRef.Time <= 200f),
-			Difficulty.Normal => (_bombRef.Time <= 100f),
-			Difficulty.Hard => (_bombRef.Time <= 50f),
-			_ => false
-		};
+		float threshold = ByDifficulty( 200f, 100f, 50f );
+		return _bombRef.Time <= threshold;
 	}
+
 	private bool ShouldUseLeTrolle()
 	{
-		return AIDifficulty.Difficulty switch
-		{
-			Difficulty.Easy => (_bombRef.Time <= 50f),
-			Difficulty.Normal => (_bombRef.Time <= 100f),
-			Difficulty.Hard => (_bombRef.Time <= 200f),
-			_ => false
-		};
+		float threshold = ByDifficulty( 50f, 100f, 200f );
+		return _bombRef.Time <= threshold;
+	}
+
+
+	private bool ShouldUseGandering()
+	{
+		float threshold = ByDifficulty( 100f, 70f, 50f );
+
+		return _bombRef.Time < threshold;
 	}
 	private void HandleCardUsage(ref float reduction)
 	{
@@ -111,11 +108,55 @@ public sealed class AiMode : Component, IGameManagerEvent
 					//Log.Info( $"AI's reduction = {reduction}" );
 				}
 				break;
+
+			case CardEnum.Calma:
+				{
+					UseCard( ref reduction );
+					break;
+				}
+			case CardEnum.Gandering:
+				{
+					if ( ShouldUseGandering() )
+					{
+						UseCard( ref reduction );
+						// just give ai 20% chance of correctly guessing instead for consistency
+						if ( Game.Random.Float() <= _ganderingChance)
+						{
+							// ai knows the range due to card's successful activation, so next turn queue a logical (random) time
+							int logicalGuess = (int)Game.Random.Int( 1, Math.Max( 1, (int)_bombRef.Time - 1 ));
+							queuedInputs.Enqueue( logicalGuess );
+							//Log.Info( $"AI queued a val {logicalGuess}" );
+						}
+					}
+					break;
+				}
+
+
 		}
 
 
 	}
 
+
+	float CalculateReduction()
+	{
+		// calculate reduction to apply depending on difficulty
+		float progress = 1f - (_bombRef.Time / _bombRef.OriginalTime).Clamp( 0f, 1f );
+		float hazard = MathF.Pow( 1f - progress, AIDifficulty.HazardExponent );
+
+
+
+		float minReduction = (_bombRef.IsTrollMode ? Game.Random.Int( 1, 5 ) : _bombRef.Time) * AIDifficulty.MinReductionPercent;
+		float maxReduction = (_bombRef.IsTrollMode ? Game.Random.Int( 6, 10 ) : _bombRef.Time) * AIDifficulty.MaxReductionPercent;
+
+
+		float reduction = MathX.Lerp( minReduction, maxReduction, hazard );
+		reduction *= Game.Random.Float( 1f - AIDifficulty.Variance, 1f + AIDifficulty.Variance );
+
+		float finalReduction = Math.Max( 1, (int)MathF.Round( reduction ) );
+
+		return finalReduction;
+	}
 
 	async public Task SimulateTurn()
 	{
@@ -129,27 +170,22 @@ public sealed class AiMode : Component, IGameManagerEvent
 			return;
 		}
 
-		// calculate reduction to apply depending on difficulty
-		float progress = 1f - (_bombRef.Time / _bombRef.OriginalTime).Clamp( 0f, 1f );
-		float hazard = MathF.Pow( 1f - progress, AIDifficulty.HazardExponent );
 
-		float minReduction = (_bombRef.IsTrollMode ? Game.Random.Int( 1, 5 ) : _bombRef.Time) * AIDifficulty.MinReductionPercent;
-		float maxReduction = (_bombRef.IsTrollMode ? Game.Random.Int( 6, 10 ) : _bombRef.Time) * AIDifficulty.MaxReductionPercent;
+		// get reduction depending on difficulty, used if queuedInputs is empty.
+		float finalReduction = CalculateReduction();
 
-		
-
-		
-
-		float reduction = MathX.Lerp( minReduction, maxReduction, hazard );
-		reduction *= Game.Random.Float( 1f - AIDifficulty.Variance, 1f + AIDifficulty.Variance );
-
-		float finalReduction = Math.Max( 1, (int)MathF.Round( reduction ) );	
 
 		// use card if necessary
 		HandleCardUsage( ref finalReduction );
 
+		// queued inputs > 0 means that a card was used that gives the AI a rough idea on what to pick next.
+		if (queuedInputs.Count > 0 && finalReduction != 0)
+		{
+			finalReduction = queuedInputs.Dequeue(); 
+			//Log.Info( "AI using queued input" );
+		}
 
-		_bombRef.ReduceBombTime( finalReduction);
+		_bombRef.ReduceBombTime( finalReduction );
 		SoundManager.Play2D( "Input" );
 
 
@@ -216,39 +252,45 @@ public sealed class AiMode : Component, IGameManagerEvent
 	private BombAIDifficulty _easyDifficulty = new BombAIDifficulty
 	{
 		Difficulty = Difficulty.Easy,
-		MinReductionPercent = 0.02f, 
-		MaxReductionPercent = 0.06f, 
-		HazardExponent = 1.5f,
-		Variance = 0.20f,
-		MinDelay = 3f,
-		MaxDelay = 6f
+		MinReductionPercent = 0.03f,
+		MaxReductionPercent = 0.08f,
+		HazardExponent = 1.2f,
+		Variance = 0.30f,
+		MinDelay = 3.5f,
+		MaxDelay = 6.5f
 	};
+
 
 	private BombAIDifficulty _normalDifficulty = new BombAIDifficulty
 	{
 		Difficulty = Difficulty.Normal,
-		MinReductionPercent = 0.05f, 
-		MaxReductionPercent = 0.15f, 
-		HazardExponent = 2.5f,
-		Variance = 0.15f,
+		MinReductionPercent = 0.05f,
+		MaxReductionPercent = 0.20f,
+		HazardExponent = 1.8f,
+		Variance = 0.25f,
 		MinDelay = 1.5f,
-		MaxDelay = 4f
+		MaxDelay = 3.5f
 	};
+
 
 	private BombAIDifficulty _hardDifficulty = new BombAIDifficulty
 	{
 		Difficulty = Difficulty.Hard,
-		MinReductionPercent = 0.01f, 
-		MaxReductionPercent = 0.30f, 
-		HazardExponent = 3.5f,
-		Variance = 0.01f,
-		MinDelay = 0.5f,
-		MaxDelay = 1f
+		MinReductionPercent = 0.06f,
+		MaxReductionPercent = 0.35f,
+		HazardExponent = 2.2f,
+		Variance = 0.20f,
+		MinDelay = 0.6f,
+		MaxDelay = 1.2f
 	};
 
 
 
+	private Queue<int> queuedInputs = new Queue<int>();
+
 	private Bomb _bombRef = null;
 	private Card _chosenCard;
+	private const float _ganderingChance = 0.9f;
 	private bool _cardUsed = false;
+
 }

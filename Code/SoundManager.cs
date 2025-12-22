@@ -24,6 +24,7 @@ public static class SoundManager
 			["Input"] = Cloud.SoundEvent( "igrotronika.click8" ),
 			["CardActivation"] = Cloud.SoundEvent( "igrotronika.click5" ),
 			["Wrong"] = Cloud.SoundEvent( "ipvfour.buzzerincorrect" ),
+			["IsBelow"] = Cloud.SoundEvent( "igrotronika.click3" )
 		};
 
 

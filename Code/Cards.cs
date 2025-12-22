@@ -9,6 +9,8 @@ public enum CardEnum
 	DoubleTrouble = 2,
 	Hollup = 3,
 	Yannow = 4,
+	Calma = 5,
+	Gandering
 
 }
 public class Card
@@ -105,6 +107,30 @@ public class CardDatabase
 				}
 				return inputTime;
 
+			}),
+			new Card(
+			"Calma",
+			"On activation, input a safe number if your next input detonates the bomb",
+			"ui/calma.jpg",
+			CardEnum.Calma,
+			(inputTime)=>
+			{
+				return (_bombRef.Time - inputTime <= 0) ? Game.Random.Int(1,int.Max(1, (int)_bombRef.Time - 1)) : inputTime;
+
+			}),
+			new Card(
+			"Gandering",
+			"Next input is checked if it's below the bomb time, emitting a sound if so. This action reduces 0 seconds.",
+			"ui/gandering.png",
+			CardEnum.Gandering,
+			(inputTime)=>
+			{
+				if (_bombRef.Time < inputTime)
+				{
+					SoundManager.Play2D("IsBelow");
+				}
+				return 0;
+
 			})
 		};
 
@@ -117,7 +143,7 @@ public class CardDatabase
 
 	public Card GetRandomCard()
 	{
-		//return Cards[3];
+		//return Cards[5];
 		return Cards[Game.Random.Int( 0, Cards.Count - 1 )];
 
 	}

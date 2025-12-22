@@ -2,53 +2,35 @@
 
 Layer0
 {
-	shader "shaders/simple_pixel.shader"
+	shader "shaders/complex.shader"
 
-	//---- Rendering ----
-	F_ENABLE_VERTEX_SNAP 1
-
-	//---- AmbientOcclusion ----
-	AmbientOcclusionA "materials/woodplanks/Planks023A_1K-JPG_AmbientOcclusion.jpg"
+	//---- Ambient Occlusion ----
+	g_flAmbientOcclusionDirectDiffuse "0.000"
+	TextureAmbientOcclusion "materials/woodplanks/Planks023A_1K-JPG_AmbientOcclusion.jpg"
 
 	//---- Color ----
-	ColorA "materials/woodplanks/planks023a_1k-jpg_color.jpg"
-	g_vTintcolorA "[1.000000 1.000000 1.000000 1.000000]"
-	TintmaskA "materials/default/default_mask.tga"
+	g_flModelTintAmount "1.000"
+	g_vColorTint "[1.000000 1.000000 1.000000 0.000000]"
+	TextureColor "materials/woodplanks/Planks023A_1K-JPG_Color.jpg"
 
-	//---- Emission ----
-	EmissionA "materials/default/default_selfillum.tga"
-	g_flSelfillumStrengthA "1.000"
-
-	//---- Filtering ----
-	g_iRetroFiltering "1"
+	//---- Fade ----
+	g_flFadeExponent "1.000"
 
 	//---- Fog ----
 	g_bFogEnabled "1"
 
 	//---- Metalness ----
-	MetalnessA "materials/woodplanks/Planks023A_1K-JPG_Metalness.jpg"
+	g_flMetalness "0.000"
 
 	//---- Normal ----
-	NormalA "materials/woodplanks/Planks023A_1K-JPG_NormalGL.jpg"
+	TextureNormal "materials/woodplanks/Planks023A_1K-JPG_NormalGL.jpg"
 
 	//---- Roughness ----
-	g_flRoughnessStrengthA "1.000"
-	RoughnessA "materials/woodplanks/Planks023A_1K-JPG_Roughness.jpg"
-
-	//---- Surface Warp ----
-	g_bVertexSnapEnabled "1.000"
-	g_flSnapPixels "1.00"
-	g_vVertexSnapScale "[120 160]"
+	g_flRoughnessScaleFactor "1.000"
+	TextureRoughness "materials/woodplanks/Planks023A_1K-JPG_Roughness.jpg"
 
 	//---- Texture Coordinates ----
-	g_vTexCoordScaleA "[1.000 1.000]"
-	g_vTexCoordScrollSpeedA "[0.000 0.000]"
-
-	//---- Texture Warp ----
-	g_flAmplitude "0.000"
-	g_flFrequency "0.000"
-	g_flSpeed "0.000"
-
-	//---- Translucent ----
-	AlphaMask "materials/default/default_trans.tga"
+	g_vTexCoordOffset "[0.000 0.000]"
+	g_vTexCoordScale "[1.000 1.000]"
+	g_vTexCoordScrollSpeed "[0.000 0.000]"
 }
