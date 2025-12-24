@@ -10,7 +10,9 @@ public enum CardEnum
 	Hollup = 3,
 	Yannow = 4,
 	Calma = 5,
-	Gandering
+	Gandering,
+	PassOff,
+	Shuffle
 
 }
 public class Card
@@ -131,6 +133,28 @@ public class CardDatabase
 				}
 				return 0;
 
+			}),
+			new Card(
+			"Pass Off!",
+			"Skip a turn",
+			"ui/passoff.png",
+			CardEnum.PassOff,
+			(inputTime)=>
+			{
+				return 0;
+
+			}),
+			new Card(
+			"Shuffle",
+			"Change current card to a new random one",
+			"ui/shuffle.jpg",
+			CardEnum.Shuffle,
+			(inputTime)=>
+			{
+				_gameManager.ChosenCard =  Cards[Game.Random.Int( 0, Cards.Count - 1 )];
+				Log.Info($"New card = {_gameManager.ChosenCard.Name}");
+				return 0;
+
 			})
 		};
 
@@ -143,8 +167,8 @@ public class CardDatabase
 
 	public Card GetRandomCard()
 	{
-		//return Cards[5];
-		return Cards[Game.Random.Int( 0, Cards.Count - 1 )];
+		return Cards[7];
+		//return Cards[Game.Random.Int( 0, Cards.Count - 1 )];
 
 	}
 

@@ -130,6 +130,9 @@ public sealed class AiMode : Component, IGameManagerEvent
 					}
 					break;
 				}
+			case CardEnum.PassOff:
+				UseCard(ref reduction);
+				break;
 
 
 		}

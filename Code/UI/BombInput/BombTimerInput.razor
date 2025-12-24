@@ -76,6 +76,33 @@
     }
 
 
+
+    private void SubmitTime()
+    {
+        if (!_bombRef.IsActive) { return; }
+        SoundManager.PlayAcrossClients("Input");
+
+        if (_gameManager.CardUsed && !_cardEffectsApplied)
+        {
+            Card currentCard = _gameManager.ChosenCard;
+            _reductionTime = currentCard.Use(_reductionTime);
+
+            _cardEffectsApplied = true;
+
+
+            if (currentCard.CardID == CardEnum.Shuffle)
+            {
+                _cardEffectsApplied = false;
+
+            }
+        }
+
+
+        _bombRef.ReduceBombTime(_reductionTime);
+        ResetTimer();
+        _gameManager.NextTurn();
+    }
+
     async protected override void OnUpdate()
     {
         if (!_gameManager.GameStarted) return;
@@ -91,7 +118,32 @@
         {
             if (_gameManager.CardUsed) { return; }
 
-            _gameManager.ActivateCard();
+
+
+            switch (_gameManager.ChosenCard.CardID)
+            {
+                // these cards activate on F, not on ENTER, so skip that step when card activated
+                case CardEnum.PassOff:
+                case CardEnum.Gandering:
+                    {
+                        SubmitTime();
+                        _gameManager.ActivateCard();
+                        break;
+                    }
+                // change card on same turn
+                case CardEnum.Shuffle:
+                    {
+                        _gameManager.ChosenCard.Use(_reductionTime);
+                        _gameManager.ActivateCard(false);
+                        break;
+                    }
+
+                default:
+                    _gameManager.ActivateCard();
+                    break;
+
+
+            }
         }
 
         if (Input.Down("IncreaseBombTime") && _inputFireRate > _increaseSpeed)
@@ -107,19 +159,7 @@
         }
         else if (Input.Pressed("SubmitReductionTime") || _timeSinceInput >= _maxInputTime)
         {
-            if (!_bombRef.IsActive) { return; }
-            SoundManager.PlayAcrossClients("Input");
-
-            if (_gameManager.CardUsed && !_cardEffectsApplied)
-            {
-                _reductionTime = _gameManager.ChosenCard.Use(_reductionTime);
-                _cardEffectsApplied = true;
-            }
-
-            _bombRef.ReduceBombTime(_reductionTime);
-            ResetTimer();
-            _gameManager.NextTurn();
-
+            SubmitTime();
 
         }
 
@@ -143,6 +183,6 @@
 
     protected override int BuildHash()
     {
-        return System.HashCode.Combine(_reductionTime, _currentTimeoutWidth, _gameManager.CurrentTurn, _gameManager.CardUsed );
+        return System.HashCode.Combine(_reductionTime, _currentTimeoutWidth, _gameManager.CurrentTurn, _gameManager.CardUsed, _gameManager.ChosenCard );
     }
 }

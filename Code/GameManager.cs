@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.Transactions;
 
 
 
@@ -134,11 +135,13 @@ public sealed class GameManager : Component
 		}
 	}
 	
-	public void ActivateCard()
+	public void ActivateCard(bool cardUsed = true)
 	{
 		SoundManager.PlayAcrossClients( "CardActivation" );
-		CardUsed = true;
+
+		CardUsed = cardUsed;
 		
+
 	}
 	public void DetermineWinner()
 	{
