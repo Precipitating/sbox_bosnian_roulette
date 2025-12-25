@@ -28,8 +28,6 @@ public sealed class GameManager : Component
 		_activeCamera = cameraGameObject;
 	}
 
-
-	// set camera
 	public void AssignPlayer()
 	{
 		if (Networking.IsHost)
@@ -157,6 +155,10 @@ public sealed class GameManager : Component
 		UnoReversed = val;
 	}
 
+
+	/// <summary>
+	/// Swap the winner when uno reverse card has been activated succesfully.
+	/// </summary>
 	[Rpc.Host]
 	void HandleUnoReversal()
 	{
@@ -228,7 +230,7 @@ public sealed class GameManager : Component
 			Log.Info( "Won achievement" );
 			Sandbox.Services.Achievements.Unlock( "won_a_game" );
 
-			if (_aiComponent.DifficultyString == "Hard")
+			if (_aiComponent.DifficultyEnum == Difficulty.Hard)
 			{
 				Sandbox.Services.Achievements.Unlock( "hard_mode_won" );
 				Log.Info( "Won hard mode" );
@@ -257,7 +259,7 @@ public sealed class GameManager : Component
 
 	}
 
-	public void SetAIDifficulty(string difficulty)
+	public void SetAIDifficulty(Difficulty difficulty)
 	{
 		_aiComponent.SetAIDifficulty(difficulty);
 	}

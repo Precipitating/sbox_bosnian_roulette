@@ -41,20 +41,21 @@
 
     private void EasyMode()
     {
-        _gameManager.SetAIDifficulty("Easy");
+        
+        _gameManager.SetAIDifficulty(global::Difficulty.Easy);
         PlayAI();
     }
 
     private void NormalMode()
     {
-        _gameManager.SetAIDifficulty("Normal");
+        _gameManager.SetAIDifficulty(global::Difficulty.Normal);
         PlayAI();
     }
 
 
     private void HardMode()
     {
-        _gameManager.SetAIDifficulty("Hard");
+        _gameManager.SetAIDifficulty(global::Difficulty.Hard);
         PlayAI();
     }
     private void PlayAI()

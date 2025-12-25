@@ -3,23 +3,20 @@ using Sandbox.Utility;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+class BombEffects
+{
+	public BombEffects( CardDatabase.PersistingEffects name, int turns )
+	{
+		Name = name;
+		TurnsLeft = turns;
+	}
+	public CardDatabase.PersistingEffects Name;
+	public int TurnsLeft;
 
+
+}
 public sealed class Bomb : Component
 {
-
-	class BombEffects
-	{
-		public BombEffects( CardDatabase.PersistingEffects name, int turns)
-		{
-			Name = name;
-			TurnsLeft = turns;
-		}
-		public CardDatabase.PersistingEffects Name;
-		public int TurnsLeft;
-
-
-	}
-
 
 	[Rpc.Host]
     public void ReduceBombTime( float reductionTime )
@@ -141,6 +138,10 @@ public sealed class Bomb : Component
 
 	}
 
+
+	/// <summary>
+	/// Bomb effects that get applied when it lasts for over a round
+	/// </summary>
 	[Rpc.Host]
 	public void ApplyEffects()
 	{
@@ -152,7 +153,7 @@ public sealed class Bomb : Component
 				switch ( _effectsQueue[i].Name )
 				{
 					case CardDatabase.PersistingEffects.ElTrolle:
-						LeTrolleModeToggle();
+						LeTrolleModeToggle(false);
 						Log.Info( "Disable el trolle" );
 						break;
 				}
@@ -167,6 +168,7 @@ public sealed class Bomb : Component
 		}
 
 	}
+
 
 	async private Task BombScaleAsync()
 	{
@@ -186,7 +188,9 @@ public sealed class Bomb : Component
 	}
 
 
-
+	/// <summary>
+	/// Lerp the bomb's size up and down based on time left
+	/// </summary>
     private void BombTickScaleLerp()
     {
 		float realTime = IsTrollMode ? _fakeTime : Time;
@@ -253,13 +257,25 @@ public sealed class Bomb : Component
 
     }
 	[Rpc.Host]
-	public void LeTrolleModeToggle()
+	public void LeTrolleModeToggle(bool isOn)
 	{
-		IsTrollMode = !IsTrollMode;
+		IsTrollMode = isOn;
 
 		if ( IsTrollMode )
 		{
-			_effectsQueue.Add( new BombEffects(CardDatabase.PersistingEffects.ElTrolle, 2));
+			// check if already exists and add on turns if so
+			BombEffects exists = _effectsQueue.Find( c => c.Name == CardDatabase.PersistingEffects.ElTrolle );
+
+			if (exists != null)
+			{
+				exists.TurnsLeft += 2;
+
+			}
+			else
+			{
+				_effectsQueue.Add( new BombEffects( CardDatabase.PersistingEffects.ElTrolle, 2 ) );
+			}
+				
 		}
 
 

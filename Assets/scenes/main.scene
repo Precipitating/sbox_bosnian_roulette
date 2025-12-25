@@ -2861,6 +2861,41 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
+        },
+        {
+          "__type": "PlayerManager",
+          "__guid": "b2b79d3a-0c21-4f4d-b3af-cb45ead57a50",
+          "__enabled": true,
+          "_player1Camera": {
+            "_type": "gameobject",
+            "go": "75d26ce5-5e51-4ab4-8d80-827a8e40fd8c"
+          },
+          "_player1Neck": {
+            "_type": "gameobject",
+            "go": "55f3ff36-9b25-4730-b77b-05adc6b4c3d6"
+          },
+          "_player1Ref": {
+            "_type": "gameobject",
+            "go": "9fc4e073-1e10-460d-ae6f-754d9bd0a602"
+          },
+          "_player2Camera": {
+            "_type": "gameobject",
+            "go": "17a4c6d0-fd72-44c5-b055-26ee2ba0f7d5"
+          },
+          "_player2Neck": {
+            "_type": "gameobject",
+            "go": "9f35bc1e-8d81-4166-9c00-e39020532f7e"
+          },
+          "_player2Ref": {
+            "_type": "gameobject",
+            "go": "00f9e4ed-b579-40e0-b035-f692be32203d"
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": []

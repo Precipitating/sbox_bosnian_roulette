@@ -3,16 +3,23 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+public static class CardActivationChance
+{
+	public const float Gandering = 0.35f;
+}
+
+
 public sealed class AiMode : Component, IGameManagerEvent
 {
-	public enum Difficulty
-	{
-		None = 0,
-		Easy = 1,
-		Normal = 2,
-		Hard = 3,
-	}
 
+	/// <summary>
+	/// Returns a value depending on what the AI difficulty mode is.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="easy"></param>
+	/// <param name="normal"></param>
+	/// <param name="hard"></param>
+	/// <returns>Value depending on AI difficulty mode set</returns>
 	private T ByDifficulty<T>( T easy, T normal, T hard ) =>
 	AIDifficulty.Difficulty switch
 	{
@@ -23,109 +30,121 @@ public sealed class AiMode : Component, IGameManagerEvent
 	};
 
 
-	private bool ShouldUseYannow()
+	private bool ShouldUseCard(CardEnum cardType, float reduction = 0)
 	{
-		float max = ByDifficulty( 30f, 15f, 5f );
-		return _bombRef.Time <= Game.Random.Float( 1f, max );
+		bool result = false;
+
+		switch (cardType)
+		{
+			case CardEnum.Hollup:
+			case CardEnum.LeTrolle:
+				{
+					var thresholdData = (cardType == CardEnum.Hollup) ? MoveThresholdConfig.Hollup : MoveThresholdConfig.LeTrolle; 
+					float threshold = ByDifficulty( thresholdData.Easy, thresholdData.Normal, thresholdData.Hard );
+					result = _bombRef.Time <= threshold;
+					break;
+				}
+			case CardEnum.Yannow:
+				{
+					var thresholdData = MoveThresholdConfig.Yannow;
+					float max = ByDifficulty( thresholdData.Easy, thresholdData.Normal, thresholdData.Hard );
+					result = _bombRef.Time <= Game.Random.Float( 1f, max );
+					break;
+				}
+			case CardEnum.DoubleTrouble:
+				{
+					MoveThreshold thresholdMin = MoveThresholdConfig.DoubleTroubleMin;
+					MoveThreshold thresholdMax = MoveThresholdConfig.DoubleTroubleMax;
+
+					float maxReduction = ByDifficulty( thresholdMax.Easy, thresholdMax.Normal, thresholdMax.Hard );
+					float minTime = ByDifficulty( thresholdMin.Easy, thresholdMin.Normal, thresholdMin.Hard );
+
+					result = reduction <= maxReduction && _bombRef.Time >= minTime;
+					break;
+				}
+			case CardEnum.Gandering:
+				{
+					MoveThreshold thresholdData = MoveThresholdConfig.Gandering;
+					float threshold = ByDifficulty( thresholdData.Easy, thresholdData.Normal, thresholdData.Hard );
+					result = _bombRef.Time < threshold;
+					break;
+				}
+					
+
+		}
+
+		return result;
+
 	}
 
-	private bool ShouldUseDoubleTrouble( float reduction )
+	void UseCard( ref float reduction )
 	{
-		float maxReduction = ByDifficulty( 40f, 60f, 80f );
-		float minTime = ByDifficulty( 180f, 120f, 120f );
-
-		return reduction <= maxReduction && _bombRef.Time >= minTime;
+		reduction = _chosenCard.Use( reduction );
+		SoundManager.PlayAcrossClients( "CardActivation" );
+		_cardUsed = true;
 	}
 
-	private bool ShouldUseHollup()
-	{
-		float threshold = ByDifficulty( 200f, 100f, 50f );
-		return _bombRef.Time <= threshold;
-	}
-
-	private bool ShouldUseLeTrolle()
-	{
-		float threshold = ByDifficulty( 50f, 100f, 200f );
-		return _bombRef.Time <= threshold;
-	}
-
-
-	private bool ShouldUseGandering()
-	{
-		float threshold = ByDifficulty( 100f, 70f, 50f );
-
-		return _bombRef.Time < threshold;
-	}
+	/// <summary>
+	/// Determine the player's card, if it can be used, and activate it if so.
+	/// </summary>
+	/// <param name="reduction"></param>
 	private void HandleCardUsage(ref float reduction)
 	{
 		if (_cardUsed) {  return; }
-
-
-		void UseCard(ref float reduction)
-		{
-			reduction = _chosenCard.Use( reduction );
-			SoundManager.PlayAcrossClients( "CardActivation" );
-			_cardUsed = true;
-		}
-
 		switch (_chosenCard.CardID )
 		{
 			case CardEnum.Yannow:
 				{
-					if (ShouldUseYannow())
+					if (ShouldUseCard(CardEnum.Yannow))
 					{
 						Log.Info( "AI using Yannow" );
 						UseCard( ref reduction );
-						//Log.Info( $"AI's reduction = {reduction}" );
 					}
 					break;
-
-				
 				}
 
 			case CardEnum.DoubleTrouble:
-				if (ShouldUseDoubleTrouble(reduction))
+				if (ShouldUseCard(CardEnum.DoubleTrouble, reduction))
 				{
 					Log.Info( "AI using Double Trouble" );
 					UseCard(ref reduction );
-					//Log.Info( $"AI's reduction = {reduction}" );
 				}
 				break;
 			case CardEnum.Hollup:
-				if ( ShouldUseHollup() )
+				if ( ShouldUseCard(CardEnum.Hollup))
 				{
-					Log.Info( "AI using Hollup" );
+					Log.Info( "AI using Hollup");
 					UseCard( ref reduction );
-					//Log.Info( $"AI's reduction = {reduction}" );
 				}
 				break;
 
 			case CardEnum.LeTrolle:
-				if ( ShouldUseLeTrolle())
+				if ( ShouldUseCard(CardEnum.LeTrolle))
 				{
 					Log.Info( "AI using LeTrolle" );
 					UseCard( ref reduction );
-					//Log.Info( $"AI's reduction = {reduction}" );
 				}
 				break;
 
 			case CardEnum.Calma:
 				{
+					Log.Info( "AI using Calma" );
 					UseCard( ref reduction );
 					break;
 				}
 			case CardEnum.Gandering:
 				{
-					if ( ShouldUseGandering() )
+
+					if (ShouldUseCard(CardEnum.Gandering))
 					{
 						UseCard( ref reduction );
-						// just give ai 20% chance of correctly guessing instead for consistency
-						if ( Game.Random.Float() <= _ganderingChance)
+						if ( Game.Random.Float() <= CardActivationChance.Gandering)
 						{
-							// ai knows the range due to card's successful activation, so next turn queue a logical (random) time
+							Log.Info( "AI using Gandering" );
+							// simulate successful card activation for gandering
+							// AI will use random input range from 1 -> bomb time for next turn
 							int logicalGuess = (int)Game.Random.Int( 1, Math.Max( 1, (int)_bombRef.Time - 1 ));
-							queuedInputs.Enqueue( logicalGuess );
-							//Log.Info( $"AI queued a val {logicalGuess}" );
+							_queuedInputs.Enqueue( logicalGuess );
 						}
 					}
 					break;
@@ -141,7 +160,11 @@ public sealed class AiMode : Component, IGameManagerEvent
 	}
 
 
-	float CalculateReduction()
+	/// <summary>
+	/// Calculate the time to reduce from the bomb depending on the AI difficulty.
+	/// </summary>
+	/// <returns>Final time to shave off the bomb</returns>
+	private float CalculateReduction()
 	{
 		// calculate reduction to apply depending on difficulty
 		float progress = 1f - (_bombRef.Time / _bombRef.OriginalTime).Clamp( 0f, 1f );
@@ -161,10 +184,13 @@ public sealed class AiMode : Component, IGameManagerEvent
 		return finalReduction;
 	}
 
+
+	/// <summary>
+	/// AI simulation of the turn, handling the time to reduce, when to use a card and how long to wait.
+	/// </summary>
+	/// <returns></returns>
 	async public Task SimulateTurn()
 	{
-		//Log.Info( AIDifficulty );
-		//Log.Warning( $"AI simulate turn, current time = {_bombRef.Time}, active: {_bombRef.IsActive}" );
 		await GameTask.DelaySeconds( Game.Random.Float( AIDifficulty.MinDelay, AIDifficulty.MaxDelay) );
 
 		if ( !_bombRef.IsActive )
@@ -173,19 +199,14 @@ public sealed class AiMode : Component, IGameManagerEvent
 			return;
 		}
 
-
-		// get reduction depending on difficulty, used if queuedInputs is empty.
 		float finalReduction = CalculateReduction();
 
-
-		// use card if necessary
 		HandleCardUsage( ref finalReduction );
 
-		// queued inputs > 0 means that a card was used that gives the AI a rough idea on what to pick next.
-		if (queuedInputs.Count > 0 && finalReduction != 0)
+		// queued inputs have priority, so override finalReduction
+		if (_queuedInputs.Count > 0 && finalReduction != 0)
 		{
-			finalReduction = queuedInputs.Dequeue(); 
-			//Log.Info( "AI using queued input" );
+			finalReduction = _queuedInputs.Dequeue(); 
 		}
 
 		_bombRef.ReduceBombTime( finalReduction );
@@ -193,11 +214,10 @@ public sealed class AiMode : Component, IGameManagerEvent
 
 
 
-		//Log.Warning( $"AI's reduction = {finalReduction}" );
+		Log.Warning( $"AI's reduction = {finalReduction}" );
 
 	}
 
-	// guarantees game manager is initialized, so we can set references safely here
 	void IGameManagerEvent.OnInitialized()
 	{
 		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
@@ -211,89 +231,36 @@ public sealed class AiMode : Component, IGameManagerEvent
 		base.OnStart();
 	}
 
-
-	public struct BombAIDifficulty
-	{
-		public Difficulty Difficulty;
-		public float MinReductionPercent;   // of original time
-		public float MaxReductionPercent;   // of original time
-		public float HazardExponent;        // curve shape
-		public float Variance;              // randomness
-
-		public float MinDelay;              // seconds
-		public float MaxDelay;
-	}
-
-
-	public void SetAIDifficulty(string difficultyType)
+	public void SetAIDifficulty(Difficulty difficultyType)
 	{
 		switch ( difficultyType )
 		{
-			case "Easy":
-				AIDifficulty = _easyDifficulty;
+			case Difficulty.Easy:
+				AIDifficulty = BombAIDifficultyConfig.All[Difficulty.Easy];
 				break;
-			case "Normal":
-				AIDifficulty = _normalDifficulty;
+			case Difficulty.Normal:
+				AIDifficulty = BombAIDifficultyConfig.All[Difficulty.Normal];
 				break;
-			case "Hard":
-				AIDifficulty = _hardDifficulty;
+			case Difficulty.Hard:
+				AIDifficulty = BombAIDifficultyConfig.All[Difficulty.Hard];
 				break;
 			default:
-				AIDifficulty = _normalDifficulty;
+				AIDifficulty = BombAIDifficultyConfig.All[Difficulty.Normal];
 				break;
 		}
 
-		DifficultyString = difficultyType;
 		Log.Info( $"Difficulty set to {difficultyType}" );
 	}
 
-
-	public string DifficultyString;
+	public Difficulty DifficultyEnum{ get; set; }
 	public BombAIDifficulty AIDifficulty { get; private set; }
 
 
-	private BombAIDifficulty _easyDifficulty = new BombAIDifficulty
-	{
-		Difficulty = Difficulty.Easy,
-		MinReductionPercent = 0.03f,
-		MaxReductionPercent = 0.08f,
-		HazardExponent = 1.2f,
-		Variance = 0.30f,
-		MinDelay = 3.5f,
-		MaxDelay = 6.5f
-	};
-
-
-	private BombAIDifficulty _normalDifficulty = new BombAIDifficulty
-	{
-		Difficulty = Difficulty.Normal,
-		MinReductionPercent = 0.05f,
-		MaxReductionPercent = 0.20f,
-		HazardExponent = 1.8f,
-		Variance = 0.25f,
-		MinDelay = 1.5f,
-		MaxDelay = 3.5f
-	};
-
-
-	private BombAIDifficulty _hardDifficulty = new BombAIDifficulty
-	{
-		Difficulty = Difficulty.Hard,
-		MinReductionPercent = 0.06f,
-		MaxReductionPercent = 0.35f,
-		HazardExponent = 2.2f,
-		Variance = 0.20f,
-		MinDelay = 0.6f,
-		MaxDelay = 1.2f
-	};
-
-
-
-	private Queue<int> queuedInputs = new Queue<int>();
+	// private variables
+	private Queue<int> _queuedInputs = new Queue<int>();
 
 	private Bomb _bombRef = null;
 	private Card _chosenCard;
-	private const float _ganderingChance = 0.9f;
 	private bool _cardUsed = false;
 
 }

@@ -1,6 +1,6 @@
 using Sandbox;
 using System;
-using System.Diagnostics;
+
 
 public enum CardEnum
 {
@@ -10,22 +10,28 @@ public enum CardEnum
 	Hollup = 3,
 	Yannow = 4,
 	Calma = 5,
-	Gandering,
-	PassOff,
-	Shuffle
+	Gandering = 6,
+	PassOff = 7,
+	Shuffle = 8
 
 }
+
+
 public class Card
 {
 	public string Name { get; private set; }
 	public string Description { get; private set; }
 	public string Image { get; private set; }
 	
-	// more efficient doing comparison operations
 	public CardEnum CardID = CardEnum.None;
 
 	public Func<float, float> Activate { get;set; }
 
+	/// <summary>
+	/// Call the lambda assigned to the card if it exists.
+	/// </summary>
+	/// <param name="inputTime"></param>
+	/// <returns>New input time after card is used</returns>
 	public float Use( float inputTime ) => Activate?.Invoke( inputTime ) ?? inputTime;
 
 	public Card( string name, string description, string imgPath, CardEnum cardID, Func<float, float> activate = null )
@@ -35,12 +41,17 @@ public class Card
 		Image = imgPath;
 		CardID = cardID;
 		Activate = activate;
+		
+
 	}
 
 }
 
 public class CardDatabase
 {
+	/// <summary>
+	/// If assigned, it means the card's activation will persist for X rounds.
+	/// </summary>
 	public enum PersistingEffects
 	{
 		None = 0,
@@ -61,7 +72,7 @@ public class CardDatabase
 			(inputTime)=>
 			{
 				Log.Warning($"Le Trolle activated with inputTime={inputTime}");
-				_bombRef.LeTrolleModeToggle();
+				_bombRef.LeTrolleModeToggle(true);
 				return inputTime;
 
 
@@ -151,7 +162,7 @@ public class CardDatabase
 			CardEnum.Shuffle,
 			(inputTime)=>
 			{
-				_gameManager.ChosenCard =  Cards[Game.Random.Int( 0, Cards.Count - 1 )];
+				_gameManager.ChosenCard =  _cards[Game.Random.Int( 0, _cards.Count - 1 )];
 				Log.Info($"New card = {_gameManager.ChosenCard.Name}");
 				return 0;
 
@@ -159,19 +170,21 @@ public class CardDatabase
 		};
 
 	}
-	private readonly List<Card> _cards;
 
+	// public variables/properties
 	public IReadOnlyList<Card> Cards => _cards;
 
 	public Card GetCard( int id ) => _cards[id];
 
 	public Card GetRandomCard()
 	{
-		return Cards[7];
-		//return Cards[Game.Random.Int( 0, Cards.Count - 1 )];
+		//return Cards[7];
+		return _cards[Game.Random.Int( 0, _cards.Count - 1 )];
 
 	}
 
-	private Bomb _bombRef;
-	private GameManager _gameManager;
+	// private variables
+	private readonly List<Card> _cards;
+	private readonly Bomb _bombRef;
+	private readonly GameManager _gameManager;
 }
