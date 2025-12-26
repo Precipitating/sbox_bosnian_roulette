@@ -94,7 +94,7 @@ public sealed class Bomb : Component
 		Log.Info( "Explode" );
 
 
-		_gameManager.SetCamera( _gameManager.OverheadCamera );
+		_gameManager.CameraManager.SetCamera( _gameManager.CameraManager.OverheadCamera );
 		_gameManager.BombUI.Enabled = false;
 
 		JingleSound.StartSound();
@@ -286,7 +286,6 @@ public sealed class Bomb : Component
     [Property] public SoundPointComponent TickSound { get; set; }
     [Property] public SoundPointComponent JingleSound { get; set; }
     [Property] public GameObject ExplosionRef { get; set; }
-
 	public float OriginalTime = 0f;
 
 	public bool UnoReversed { get; set; } = false;

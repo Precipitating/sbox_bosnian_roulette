@@ -4,7 +4,7 @@
 @namespace Sandbox
 
 <root>
-    <h1 class="title pulse" style="color: @(_gameManager.PlayerIndex != _gameManager.LoserPlayerIndex ? "green" : "red")">@WinOrNotText</h1>
+    <h1 class="title pulse" style="color: @((int)_gameManager.PlayerManager.CurrentPlayer.PlayerId != _gameManager.LoserPlayerIndex ? "green" : "red")">@WinOrNotText</h1>
 </root>
 
 
@@ -13,8 +13,8 @@
     protected override void OnStart()
     {
         _gameManager = GameManager.Instance;
-        Log.Info(_gameManager.PlayerIndex);
-        WinOrNotText = (_gameManager.PlayerIndex != _gameManager.LoserPlayerIndex) ? "You Win!" : "You Lose!";
+        Log.Info((int)_gameManager.PlayerManager.CurrentPlayer.PlayerId);
+        WinOrNotText = ((int)_gameManager.PlayerManager.CurrentPlayer.PlayerId != _gameManager.LoserPlayerIndex) ? "You Win!" : "You Lose!";
 
     }
 

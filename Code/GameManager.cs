@@ -1,48 +1,9 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
-
-
 
 public sealed class GameManager : Component
 {
-	public void SetCamera(GameObject cameraGameObject, string excludeName = null )
-	{
-		cameraGameObject.Enabled = true;
-		CameraComponent cam = cameraGameObject.GetComponent<CameraComponent>();
-		cam.IsMainCamera = true;
-
-		if ( !string.IsNullOrEmpty( excludeName ) )
-		{
-			cam.RenderExcludeTags = new TagSet();
-			cam.RenderExcludeTags.Add( excludeName );
-		}
-
-		if ( _activeCamera != null )
-		{
-			CameraComponent oldCam = _activeCamera.GetComponent<CameraComponent>();
-			oldCam.IsMainCamera = false;
-			_activeCamera.Enabled = false;
-			_activeCamera = null;
-		}
-		_activeCamera = cameraGameObject;
-	}
-
-	public void AssignPlayer()
-	{
-		if (Networking.IsHost)
-		{
-			CurrentPlayer = Player1Model;
-			Log.Warning( $"Player1 slot chosen" );
-		}
-		else
-		{
-			CurrentPlayer = Player2Model;
-			Log.Warning( $"Player2 slot chosen" );
-		}
-	}
-
-
 	private void StartCoopMatch()
 	{
 		_bombRef.IsActive = true;
@@ -51,30 +12,21 @@ public sealed class GameManager : Component
 
 	}
 
-
-
 	[Rpc.Broadcast]
 	public void InitPlayerCoop()
 	{
+		var currentPlayer = PlayerManager.CurrentPlayer;
+		GameObject camera = currentPlayer.PlayerRef.PlayerCamera;
 
-		if ( CurrentPlayer != Player1Model && !AIMode && CurrentPlayer != Player2Model )
-			return;
-
-		bool isPlayer1 = CurrentPlayer == Player1Model || AIMode;
-
-		GameObject camera = isPlayer1 ? Player1Camera : Player2Camera;
-		string cameraTag = isPlayer1 ? "player1" : "player2";
-		int playerIndex = isPlayer1 ? 1 : 2;
-		string playerName = isPlayer1 ? "Player 1 (red)" : "Player 2 (green)";
+		string playerName = (currentPlayer.PlayerId == PlayerType.Player1) ? "Player 1 (red)" : "Player 2 (green)";
 		ChosenCard = Cards.GetRandomCard();
 
 		IsMatchmaking = false;
-		LerpCameraTo( camera, cameraTag ).ContinueWith( async _ =>
+		CameraManager.LerpTransitionCameraTo(camera, currentPlayer.TagName ).ContinueWith( async _ =>
 		{
 			await GameTask.MainThread();
 			GameStarted = true;
-			SetCamera( camera );
-			PlayerIndex = playerIndex;
+			CameraManager.SetCamera( camera );
 			Log.Info( $"{playerName} selected" );
 
 			StartCoopMatch();
@@ -82,23 +34,6 @@ public sealed class GameManager : Component
 			CurrentTurn = !IsProxy;
 			Log.Info( $"Your turn? {CurrentTurn}" );
 		} );
-	}
-
-
-
-	public void InitPlayerAI()
-	{
-		if ( CurrentPlayer == Player1Model || AIMode )
-		{
-			SetCamera( Player1Camera );
-
-
-		}
-		else if ( CurrentPlayer == Player2Model )
-		{
-			SetCamera( Player2Camera );
-		}
-
 	}
 
 	[Rpc.Broadcast]
@@ -170,6 +105,17 @@ public sealed class GameManager : Component
 		Log.Info( "Uno reverse activated" );
 	}
 
+	private void UnanchorLoser(int loserIdx)
+	{
+		// network cant serialize custom Player type so we have to manually find the prop
+		var loserProp = (loserIdx == 1) ?
+			Scene.Directory.FindByName( "Player1" ).First().GetComponent<Prop>():
+			Scene.Directory.FindByName( "Player2" ).First().GetComponent<Prop>();
+
+		loserProp.IsStatic = false;
+
+	}
+
 	[Rpc.Host]
 	public void GetWinner()
 	{
@@ -182,11 +128,11 @@ public sealed class GameManager : Component
 			HandleUnoReversal();
 		}
 
-		LoserProp = (LoserPlayerIndex == 1) ? Player1Model.GetComponent<Prop>() : Player2Model.GetComponent<Prop>();
+		//LoserProp = (LoserPlayerIndex == 1) ? PlayerManager.CurrentPlayer.PlayerRef.PlayerModel.GetComponent<Prop>(): 
+		//									  PlayerManager.PlayerList[PlayerType.Player2].PlayerRef.PlayerModel.GetComponent<Prop>();
 
-		
 
-		Log.Info( $"Loser Detected: Player {LoserPlayerIndex}" );
+	
 
 	}
 	public async Task GameEnd()
@@ -198,17 +144,12 @@ public sealed class GameManager : Component
 
 		CurrentTurn = false;
 		BombUI.Enabled = false;
-		LoserProp.IsStatic = false;
+		UnanchorLoser( LoserPlayerIndex );
+		//LoserProp.IsStatic = false;
 
-		if (Player1Camera != null)
-		{
-			Player1Camera.Enabled = false;
-		}
-
-		if ( Player2Camera != null )
-		{
-			Player2Camera.Enabled = false;
-		}
+		var playerCam = PlayerManager.CurrentPlayer.PlayerRef.PlayerCamera;
+		Log.Info( playerCam );
+		playerCam.Enabled = false;
 
 		BombRadiusDmg.Enabled = true;
 		if (_bombRef != null && _bombRef.IsValid)
@@ -219,13 +160,13 @@ public sealed class GameManager : Component
 		}
 
 		// rotate head up
-		if ( LoserPlayerIndex == 1)
-			_ = LerpHead( Player2Neck, -90);
+		if ( LoserPlayerIndex == 1 )
+			_ = PlayerManager.RotateHeadY( PlayerType.Player2, -90 );
 		else
-			_ = LerpHead( Player1Neck, -90);
+			_ = PlayerManager.RotateHeadY( PlayerType.Player1, -90 );
 
 
-		if (PlayerIndex != LoserPlayerIndex)
+		if ((int)PlayerManager.CurrentPlayer.PlayerId != LoserPlayerIndex)
 		{
 			Log.Info( "Won achievement" );
 			Sandbox.Services.Achievements.Unlock( "won_a_game" );
@@ -266,7 +207,7 @@ public sealed class GameManager : Component
 	private void MainMenu()
 	{
 		CreateMainMenuUI();
-		SetCamera( OverheadCamera );
+		CameraManager.SetCamera( CameraManager.OverheadCamera );
 	}
 	protected override void OnAwake()
 	{
@@ -277,17 +218,18 @@ public sealed class GameManager : Component
 	public void PlayAI()
 	{
 		SoundManager.StopPathSound( "ambience", 1f );
-		PlayerIndex = 1;
 		AIMode = true;
-		AssignPlayer();
+		Player currPlayer = PlayerManager.AddPlayer();
+		PlayerManager.AddPlayer(true);
+
 		ChosenCard = Cards.GetRandomCard();
 		GameStarted = true;
-		LerpCameraTo( Player1Camera, "player1" ).ContinueWith( async task =>
+		CameraManager.LerpTransitionCameraTo( currPlayer.PlayerRef.PlayerCamera, currPlayer.TagName ).ContinueWith( async task =>
 		{
 			await Task.MainThread();
 
 			CreateBombUI();
-			InitPlayerAI();
+			CameraManager.SetCamera( currPlayer.PlayerRef.PlayerCamera );
 
 			CurrentTurn = true;
 
@@ -315,8 +257,6 @@ public sealed class GameManager : Component
 			InitPlayerCoop();
 
 
-
-
 			Log.Warning( $"Game started: {GameStarted} CurrentTurn: {CurrentTurn} IsBombActive: {_bombRef.IsActive} IsMatchmaking: {IsMatchmaking}" );
 		}
 	}
@@ -334,7 +274,7 @@ public sealed class GameManager : Component
 		CreateMatchMakeUI();
 		MatchmakeUI.Enabled = true;
 		IsMatchmaking = true;
-		AssignPlayer();
+		PlayerManager.AddPlayer();
 		UpdateMatchmakingCount(true);
 		Scene.TimeScale = 1;
 
@@ -419,44 +359,14 @@ public sealed class GameManager : Component
 
 	}
 
-	async Task LerpCameraTo( GameObject target, string excludeTag = null)
-	{
-		SetCamera( TransitionCamera );
-		if (!string.IsNullOrEmpty(excludeTag))
-		{
-			TransitionCamera.GetComponent<CameraComponent>().RenderExcludeTags.Add(excludeTag );
-		}
-
-		Scene.TimeScale = 1;
-		while ( !(TransitionCamera.WorldPosition.Distance( target.WorldPosition ) < 0.10f))
-		{
-			TransitionCamera.WorldTransform = TransitionCamera.WorldTransform.LerpTo( target.WorldTransform, Time.Delta * 2f);
-			
-			await Task.Frame();
-		}
-
-	}
-
-	private async Task LerpHead( GameObject head, float targetRoll )
-	{
-		var targetRot = new Angles( 0f, targetRoll,0f  ).ToRotation();
-
-		while ( !head.LocalRotation.AlmostEqual( targetRot, 0.001f ) )
-		{
-			float frac = MathF.Min( 1f, 10f * Time.Delta );
-			head.LocalRotation = head.LocalRotation.LerpTo( targetRot, frac );
-
-			await Task.Frame();
-		}
-
-		head.LocalRotation = targetRot;
-	}
-
 	protected override void OnStart()
 	{
 		SoundManager.InitializeSounds();
 		_bombRef = Scene.Directory.FindByName( "BombModel" ).First().GetComponent<Bomb>();
 		Cards = new CardDatabase( _bombRef );
+		PlayerManager = GetComponent<PlayerManager>();
+		CameraManager = GetComponent<CameraManager>();
+
 		if (BombRadiusDmg == null)
 		{
 			BombRadiusDmg = _bombRef.GetComponent<RadiusDamage>();
@@ -480,20 +390,25 @@ public sealed class GameManager : Component
 
 	// public
 	public static GameManager Instance { get; private set; } = null;
-	[Property] public GameObject Player1Camera { get; private set; } = null;
-	[Property] public GameObject Player2Camera { get; private set; } = null;
-	[Property] public GameObject TransitionCamera{ get; private set; } = null;
-	[Property] public GameObject OverheadCamera { get; private set; } = null;
+	//[Property] public GameObject Player1Camera { get; private set; } = null;
+	//[Property] public GameObject Player2Camera { get; private set; } = null;
+	//[Property] public GameObject TransitionCamera{ get; private set; } = null;
+	//[Property] public GameObject OverheadCamera { get; private set; } = null;
 	[Property] public RadiusDamage BombRadiusDmg { get; set; }
 
-	[Property] public GameObject Player1Model { get; set; }
-	[Property] public GameObject Player2Model { get; set; }
+	//[Property] public GameObject Player1Model { get; set; }
+	//[Property] public GameObject Player2Model { get; set; }
 	[Property] public GameObject BombUI { get; set; }
 	[Property] public GameObject MatchmakeUI { get; set; }
-	[Property] public GameObject Player1Neck { get; set; }
-	[Property] public GameObject Player2Neck { get; set; }
+	public CameraManager CameraManager { get; private set; }
+	public PlayerManager PlayerManager { get; private set; }
+
+	//[Property] public GameObject Player1Neck { get; set; }
+	//[Property] public GameObject Player2Neck { get; set; }
 	[Property] public GameObject MenuUI { get; set; }
-	[Sync] public Prop LoserProp { get; set; }
+	//[Sync] public Prop LoserProp { get; set; }
+
+
 
 	[Sync] public bool UnoReversed { get; set; } = false;
 
@@ -502,7 +417,7 @@ public sealed class GameManager : Component
 	[Sync] public int LoserPlayerIndex { get; set; } = -1;
 
 	public Card ChosenCard { get; set; } = null;
-	public int PlayerIndex { get; set; } = -1;
+	//public int PlayerIndex { get; set; } = -1;
 
 	public bool GameStarted { get; set; } = false;
 
@@ -523,7 +438,7 @@ public sealed class GameManager : Component
 	// private
 	private AiMode _aiComponent;
 	private Bomb _bombRef { get; set; }
-	private GameObject _activeCamera = null;
+	//private GameObject _activeCamera = null;
 
 	private GameObject UIParent{ get; set; } = null;
 

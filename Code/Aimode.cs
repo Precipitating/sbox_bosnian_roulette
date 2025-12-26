@@ -214,7 +214,7 @@ public sealed class AiMode : Component, IGameManagerEvent
 
 
 
-		Log.Warning( $"AI's reduction = {finalReduction}" );
+		//Log.Warning( $"AI's reduction = {finalReduction}" );
 
 	}
 

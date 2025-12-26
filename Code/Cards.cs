@@ -71,7 +71,7 @@ public class CardDatabase
 			CardEnum.LeTrolle,
 			(inputTime)=>
 			{
-				Log.Warning($"Le Trolle activated with inputTime={inputTime}");
+				//Log.Warning($"Le Trolle activated with inputTime={inputTime}");
 				_bombRef.LeTrolleModeToggle(true);
 				return inputTime;
 
@@ -84,7 +84,7 @@ public class CardDatabase
 			CardEnum.DoubleTrouble,
 			(inputTime)=>
 			{
-				Log.Warning($"Double Trouble activated");
+				//Log.Warning($"Double Trouble activated");
 				return inputTime *= 2f;
 
 
@@ -96,7 +96,7 @@ public class CardDatabase
 			CardEnum.Hollup,
 			(inputTime)=>
 			{
-				Log.Warning($"Hollup activated");
+				//Log.Warning($"Hollup activated");
 				return -_bombRef.Time + inputTime;
 				
 			}),
@@ -163,7 +163,7 @@ public class CardDatabase
 			(inputTime)=>
 			{
 				_gameManager.ChosenCard =  _cards[Game.Random.Int( 0, _cards.Count - 1 )];
-				Log.Info($"New card = {_gameManager.ChosenCard.Name}");
+				//Log.Info($"New card = {_gameManager.ChosenCard.Name}");
 				return 0;
 
 			})

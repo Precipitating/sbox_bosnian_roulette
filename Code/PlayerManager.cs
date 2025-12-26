@@ -1,19 +1,30 @@
 using Sandbox;
+using System;
+using System.Threading.Tasks;
 
 public sealed class PlayerManager : Component
 {
 
 	public PlayerType GetNewPlayerId()
 	{
-		PlayerType validPlayer = (_assignedPlayers[PlayerType.Player1] ? PlayerType.Player2 : PlayerType.Player1);
-		_assignedPlayers[validPlayer] = true;
+		PlayerType validPlayer;
+
+		if (Networking.IsHost)
+		{
+			validPlayer = PlayerType.Player1;
+
+		}
+		else
+		{
+			validPlayer = PlayerType.Player2;
+		}
 
 		return validPlayer;
 	}
 
 	public GameObject GetPlayerModel(PlayerType playerType)
 	{
-		return (playerType == PlayerType.Player1) ? _player1Ref : _player2Ref;
+		return (playerType == PlayerType.Player1) ? Player1Ref : Player2Ref;
 	}
 
 	public GameObject GetPlayerCamera( PlayerType playerType )
@@ -27,35 +38,73 @@ public sealed class PlayerManager : Component
 		return (playerType == PlayerType.Player1) ? _player1Neck : _player2Neck;
 	}
 
-	public void AddPlayer()
-	{
-		PlayerType validId = GetNewPlayerId();
 
+	void AddPlayerToList( PlayerType id, Player player)
+	{
+		PlayerList[id] = player;
+		_assignedPlayers[id] = true;
+		Log.Info( $"{id} added to player list" );
+		Log.Info( _assignedPlayers );
+	}
+
+	
+	public Player AddPlayer(bool aiMode = false)
+	{
+		PlayerType validId = (aiMode ? PlayerType.Player2 : GetNewPlayerId());
 		GameObject playerModel = GetPlayerModel( validId );
 		GameObject playerNeck = GetPlayerNeck( validId );
 		GameObject playerCamera= GetPlayerCamera( validId );
 		Player newPlayer = new Player( validId, new PlayerReferences( playerModel, playerNeck, playerCamera));
 
-		PlayerList.Add(newPlayer);
+		AddPlayerToList( validId, newPlayer );
+		Log.Info( $"Player added: {newPlayer}" );
+
+		CurrentPlayer = (Networking.IsHost || aiMode) ? PlayerList[PlayerType.Player1] : PlayerList[PlayerType.Player2];
+
+		return newPlayer;
 	}
 
-	public void RemovePlayer(Player playerToRemove)
+	public void RemovePlayer(PlayerType playerToRemove)
 	{
+		_assignedPlayers.Remove(playerToRemove);
 		PlayerList.Remove( playerToRemove );
-		_assignedPlayers.Remove( playerToRemove.PlayerId );
+
+	}
+
+	public async Task RotateHeadY(PlayerType playerType, float targetRoll )
+	{
+		Player player = null;
+		if (!PlayerList.TryGetValue(playerType, out player) ) { return; }
+
+		var neck = player.PlayerRef.PlayerNeck;
+		var targetRot = new Angles( 0f, targetRoll, 0f ).ToRotation();
+		while ( !neck.LocalRotation.AlmostEqual( targetRot, 0.001f ) )
+		{
+			float frac = MathF.Min( 1f, 10f * Time.Delta );
+			neck.LocalRotation = neck.LocalRotation.LerpTo( targetRot, frac );
+
+			await Task.Frame();
+		}
+
+		neck.LocalRotation = targetRot;
 	}
 
 
-	public List<Player> PlayerList {  get; private set; } = new List<Player>();
+	public Dictionary<PlayerType, Player> PlayerList {  get; private set; } = new Dictionary<PlayerType, Player>();
 
-	private Dictionary<PlayerType, bool> _assignedPlayers = new Dictionary<PlayerType, bool>();
+	public Player CurrentPlayer { get; private set; }
 
-	[Property] private GameObject _player1Ref { get; set; }
+	[Sync] private Dictionary<PlayerType, bool> _assignedPlayers { get; set; } = new Dictionary<PlayerType, bool>();
+
+	[Property] public GameObject Player1Ref { get; set; }
 	[Property] private GameObject _player1Neck { get; set; }
 	[Property] private GameObject _player1Camera { get; set; }
-	[Property] private GameObject _player2Ref { get; set; }
+	[Property] public GameObject Player2Ref { get; set; }
 	[Property] private GameObject _player2Neck{ get; set; }
 	[Property] private GameObject _player2Camera{ get; set; }
+
+
+
 
 
 }

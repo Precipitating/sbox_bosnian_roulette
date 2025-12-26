@@ -1,5 +1,7 @@
+using System;
+using System.Threading.Tasks;
 using Sandbox;
-using System.Runtime.CompilerServices;
+
 public enum PlayerType
 {
 	None = 0,
@@ -19,14 +21,21 @@ public sealed class Player
 
 	public Player(PlayerType type, PlayerReferences references)
 	{
-		_playerReferences = references;
+		PlayerRef = references;
 		PlayerId = type;
+
+		switch ( type )
+		{
+			case PlayerType.Player1: TagName = "player1"; break;
+			case PlayerType.Player2: TagName = "player2"; break;
+		}
 	}
 
 
 
-	private PlayerReferences _playerReferences;
+	public PlayerReferences PlayerRef { get; set; }
 	public PlayerType PlayerId { get; set; } = PlayerType.None;
+	public string TagName { get; set; }
 
 
 
