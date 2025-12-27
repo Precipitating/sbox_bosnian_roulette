@@ -26,8 +26,9 @@
         _gameManager.IsMatchmaking = false;
         _gameManager.MenuUI.Enabled = true;
         _gameManager.MatchmakeUI.Enabled = false;
-        Log.Info($"Removed {_gameManager.PlayerManager.CurrentPlayer.PlayerId} ");
-        _gameManager.PlayerManager.RemovePlayer(_gameManager.PlayerManager.CurrentPlayer.PlayerId);
+       // Log.Info($"Removed {_gameManager.PlayerManager.CurrentPlayer.PlayerId} ");
+        //_gameManager.PlayerManager.RemovePlayer(_gameManager.PlayerManager.CurrentPlayer.PlayerId);
+
 
         Scene.TimeScale = 0;
     }

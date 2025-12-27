@@ -5,7 +5,9 @@
 @inherits PanelComponent
 @namespace Sandbox
 
-<root class="@((_gameManager?.GameStarted ?? false)|| (_gameManager?.IsMatchmaking ?? false)? "hide": "")">
+<root class="@(((_gameManager?.GameStarted ?? false) ||
+                (_gameManager?.IsMatchmaking ?? false) ||
+                (_gameManager?.CameraManager?.IsLerping ?? false)) ? "hide": "")">
 
     <button class="human" onclick="@MatchmakeCoop">Play HUMAN</button>
     <h1 class="title">@Title</h1>
@@ -63,9 +65,9 @@
         Log.Info("Play AI");
 
         // single player lobby to prevent any ownership issues if both playing AI mode
-        if (Networking.MaxPlayers != 1 || Connection.All.Count > 1)
+        if (Networking.MaxPlayers != 1)
         {
-            Log.Info("Coop server / 2 players detected, creating single player lobby...");
+            Log.Info("Max players is 2, creating single player lobby...");
             Networking.CreateLobby(new LobbyConfig()
             {
                 MaxPlayers = 1,
@@ -83,7 +85,6 @@
 
     private void MatchmakeCoop()
     {
-
         if (Networking.MaxPlayers != 2)
         {
             // find an open coop lobby first

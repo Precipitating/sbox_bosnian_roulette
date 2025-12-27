@@ -105,12 +105,12 @@ public sealed class GameManager : Component
 		Log.Info( "Uno reverse activated" );
 	}
 
+
 	private void UnanchorLoser(int loserIdx)
 	{
-		// network cant serialize custom Player type so we have to manually find the prop
 		var loserProp = (loserIdx == 1) ?
-			Scene.Directory.FindByName( "Player1" ).First().GetComponent<Prop>():
-			Scene.Directory.FindByName( "Player2" ).First().GetComponent<Prop>();
+		PlayerManager.PlayerList[PlayerType.Player1].PlayerRef.PlayerModel.GetComponent<Prop>() :
+		PlayerManager.PlayerList[PlayerType.Player2].PlayerRef.PlayerModel.GetComponent<Prop>();
 
 		loserProp.IsStatic = false;
 
@@ -128,11 +128,6 @@ public sealed class GameManager : Component
 			HandleUnoReversal();
 		}
 
-		//LoserProp = (LoserPlayerIndex == 1) ? PlayerManager.CurrentPlayer.PlayerRef.PlayerModel.GetComponent<Prop>(): 
-		//									  PlayerManager.PlayerList[PlayerType.Player2].PlayerRef.PlayerModel.GetComponent<Prop>();
-
-
-	
 
 	}
 	public async Task GameEnd()
@@ -140,50 +135,61 @@ public sealed class GameManager : Component
 		if ( GameComplete ) { return; }
 		GameComplete = true;
 
-		CreateWinnerUI();
+		void RotateHeadUp()
+		{
+			if ( LoserPlayerIndex == 1 )
+				_ = PlayerManager.RotateHeadY( PlayerType.Player2, -90 );
+			else
+				_ = PlayerManager.RotateHeadY( PlayerType.Player1, -90 );
+		}
+
+		void DetonateBomb()
+		{
+			BombRadiusDmg.Enabled = true;
+			if ( _bombRef != null && _bombRef.IsValid )
+			{
+				_bombRef.GameObject.Destroy();
+
+			}
+
+		}
+
+		void DisablePlayerCam()
+		{
+			var playerCam = PlayerManager.CurrentPlayer.PlayerRef.PlayerCamera;
+			Log.Info( playerCam );
+			playerCam.Enabled = false;
+		}
+
+		void AwardAchievements()
+		{
+			if ( (int)PlayerManager.CurrentPlayer.PlayerId != LoserPlayerIndex )
+			{
+				Log.Info( "Won achievement" );
+				Sandbox.Services.Achievements.Unlock( "won_a_game" );
+
+				if ( _aiComponent.DifficultyEnum == Difficulty.Hard )
+				{
+					Sandbox.Services.Achievements.Unlock( "hard_mode_won" );
+					Log.Info( "Won hard mode" );
+				}
+			}
+			else
+			{
+				Log.Info( "Lose acheivement" );
+				Sandbox.Services.Achievements.Unlock( "lost_a_game" );
+			}
+		}
 
 		CurrentTurn = false;
 		BombUI.Enabled = false;
+
+		DisablePlayerCam();
+		CreateWinnerUI();
 		UnanchorLoser( LoserPlayerIndex );
-		//LoserProp.IsStatic = false;
-
-		var playerCam = PlayerManager.CurrentPlayer.PlayerRef.PlayerCamera;
-		Log.Info( playerCam );
-		playerCam.Enabled = false;
-
-		BombRadiusDmg.Enabled = true;
-		if (_bombRef != null && _bombRef.IsValid)
-		{
-			_bombRef.GameObject.Destroy();
-
-
-		}
-
-		// rotate head up
-		if ( LoserPlayerIndex == 1 )
-			_ = PlayerManager.RotateHeadY( PlayerType.Player2, -90 );
-		else
-			_ = PlayerManager.RotateHeadY( PlayerType.Player1, -90 );
-
-
-		if ((int)PlayerManager.CurrentPlayer.PlayerId != LoserPlayerIndex)
-		{
-			Log.Info( "Won achievement" );
-			Sandbox.Services.Achievements.Unlock( "won_a_game" );
-
-			if (_aiComponent.DifficultyEnum == Difficulty.Hard)
-			{
-				Sandbox.Services.Achievements.Unlock( "hard_mode_won" );
-				Log.Info( "Won hard mode" );
-			}
-
-
-		}
-		else
-		{
-			Log.Info( "Lose acheivement" );
-			Sandbox.Services.Achievements.Unlock( "lost_a_game" );
-		}
+		DetonateBomb();
+		RotateHeadUp();
+		AwardAchievements();
 
 		await GameTask.DelaySeconds( 5 );
 		ReloadGame();
@@ -219,8 +225,9 @@ public sealed class GameManager : Component
 	{
 		SoundManager.StopPathSound( "ambience", 1f );
 		AIMode = true;
-		Player currPlayer = PlayerManager.AddPlayer();
-		PlayerManager.AddPlayer(true);
+		PlayerManager.AddPlayer();
+		PlayerManager.AddPlayer();
+		Player currPlayer = PlayerManager.CurrentPlayer;
 
 		ChosenCard = Cards.GetRandomCard();
 		GameStarted = true;
@@ -274,7 +281,10 @@ public sealed class GameManager : Component
 		CreateMatchMakeUI();
 		MatchmakeUI.Enabled = true;
 		IsMatchmaking = true;
+
 		PlayerManager.AddPlayer();
+		PlayerManager.AddPlayer();
+
 		UpdateMatchmakingCount(true);
 		Scene.TimeScale = 1;
 
@@ -390,23 +400,13 @@ public sealed class GameManager : Component
 
 	// public
 	public static GameManager Instance { get; private set; } = null;
-	//[Property] public GameObject Player1Camera { get; private set; } = null;
-	//[Property] public GameObject Player2Camera { get; private set; } = null;
-	//[Property] public GameObject TransitionCamera{ get; private set; } = null;
-	//[Property] public GameObject OverheadCamera { get; private set; } = null;
 	[Property] public RadiusDamage BombRadiusDmg { get; set; }
 
-	//[Property] public GameObject Player1Model { get; set; }
-	//[Property] public GameObject Player2Model { get; set; }
 	[Property] public GameObject BombUI { get; set; }
 	[Property] public GameObject MatchmakeUI { get; set; }
 	public CameraManager CameraManager { get; private set; }
 	public PlayerManager PlayerManager { get; private set; }
-
-	//[Property] public GameObject Player1Neck { get; set; }
-	//[Property] public GameObject Player2Neck { get; set; }
 	[Property] public GameObject MenuUI { get; set; }
-	//[Sync] public Prop LoserProp { get; set; }
 
 
 
@@ -416,10 +416,13 @@ public sealed class GameManager : Component
 
 	[Sync] public int LoserPlayerIndex { get; set; } = -1;
 
+
+
 	public Card ChosenCard { get; set; } = null;
 	//public int PlayerIndex { get; set; } = -1;
 
 	public bool GameStarted { get; set; } = false;
+
 
 	public int MatchmakingPlayers { get; set; } = 0;
 
@@ -432,6 +435,7 @@ public sealed class GameManager : Component
 	public bool CardUsed { get; set; } = false;
 
 	public CardDatabase Cards { get; set; }
+
 
 
 

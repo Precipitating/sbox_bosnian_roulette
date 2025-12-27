@@ -64,7 +64,7 @@ public sealed class Bomb : Component
 
 		WorldScale = from;
 		_finishedTick = true;
-		Log.Info( "Done lerp" );
+		//Log.Info( "Done lerp" );
 	}
 
 	[Rpc.Broadcast]

@@ -28,7 +28,7 @@ public class Card
 	public Func<float, float> Activate { get;set; }
 
 	/// <summary>
-	/// Call the lambda assigned to the card if it exists.
+	/// Call the lambda assigned to the card if it exists. Responsible for activating card logic.
 	/// </summary>
 	/// <param name="inputTime"></param>
 	/// <returns>New input time after card is used</returns>
@@ -178,7 +178,7 @@ public class CardDatabase
 
 	public Card GetRandomCard()
 	{
-		//return Cards[7];
+		//return Cards[5];
 		return _cards[Game.Random.Int( 0, _cards.Count - 1 )];
 
 	}

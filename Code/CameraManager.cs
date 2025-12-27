@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 public sealed class CameraManager : Component
 {
 	/// <summary>
-	/// Change current camera view locally. Disable old camera.
+	/// Change current camera view locally. Disable previously active camera.
 	/// </summary>
 	/// <param name="cameraGameObject"></param>
 	/// <param name="excludeName"></param>
@@ -32,8 +32,15 @@ public sealed class CameraManager : Component
 	}
 
 
+	/// <summary>
+	/// Used for transitioning the camera from main menu to player
+	/// </summary>
+	/// <param name="target"></param>
+	/// <param name="excludeTag"></param>
+	/// <returns></returns>
 	public async Task LerpTransitionCameraTo( GameObject target, string excludeTag = null )
 	{
+		IsLerping = true;
 		SetCamera( TransitionCamera );
 		if ( !string.IsNullOrEmpty( excludeTag ) )
 		{
@@ -49,11 +56,12 @@ public sealed class CameraManager : Component
 		}
 
 
-
+		IsLerping = false;
 	}
 
 
 	public GameObject ActiveCamera { get; set; } = null;
+	public bool IsLerping { get; set; } = false;
 	[Property] public GameObject TransitionCamera { get; private set; } = null;
 	[Property] public GameObject OverheadCamera { get; private set; } = null;
 }

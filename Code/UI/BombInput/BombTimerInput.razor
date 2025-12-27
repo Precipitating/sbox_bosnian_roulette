@@ -96,7 +96,7 @@
 
             }
         }
-
+        Log.Info(_reductionTime);
 
         _bombRef.ReduceBombTime(_reductionTime);
         ResetTimer();
@@ -126,15 +126,15 @@
                 case CardEnum.PassOff:
                 case CardEnum.Gandering:
                     {
-                        SubmitTime();
                         _gameManager.ActivateCard();
+                        SubmitTime();
                         break;
                     }
                 // change card on same turn
                 case CardEnum.Shuffle:
                     {
-                        _gameManager.ChosenCard.Use(_reductionTime);
                         _gameManager.ActivateCard(false);
+                        _gameManager.ChosenCard.Use(_reductionTime);
                         break;
                     }
 
@@ -167,6 +167,7 @@
     }
 
     public SoundEvent InputSound {get; set;}
+
     private float _reductionTime = 1f;
     private GameManager _gameManager = null;
     private TimeSince _timeSinceInput = 0;

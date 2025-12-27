@@ -11,12 +11,12 @@ public sealed class PlayerManager : Component
 
 		if (Networking.IsHost)
 		{
-			validPlayer = PlayerType.Player1;
+			validPlayer = (!PlayerList.ContainsKey( PlayerType.Player1 )) ? PlayerType.Player1: PlayerType.Player2;	
 
 		}
 		else
 		{
-			validPlayer = PlayerType.Player2;
+			validPlayer = (!PlayerList.ContainsKey( PlayerType.Player2 )) ? PlayerType.Player2 : PlayerType.Player1;
 		}
 
 		return validPlayer;
@@ -44,13 +44,12 @@ public sealed class PlayerManager : Component
 		PlayerList[id] = player;
 		_assignedPlayers[id] = true;
 		Log.Info( $"{id} added to player list" );
-		Log.Info( _assignedPlayers );
 	}
 
-	
-	public Player AddPlayer(bool aiMode = false)
+	public Player AddPlayer()
 	{
-		PlayerType validId = (aiMode ? PlayerType.Player2 : GetNewPlayerId());
+		if (PlayerList.Count == 2) { return null; }
+		PlayerType validId =  GetNewPlayerId();
 		GameObject playerModel = GetPlayerModel( validId );
 		GameObject playerNeck = GetPlayerNeck( validId );
 		GameObject playerCamera= GetPlayerCamera( validId );
@@ -59,7 +58,7 @@ public sealed class PlayerManager : Component
 		AddPlayerToList( validId, newPlayer );
 		Log.Info( $"Player added: {newPlayer}" );
 
-		CurrentPlayer = (Networking.IsHost || aiMode) ? PlayerList[PlayerType.Player1] : PlayerList[PlayerType.Player2];
+		CurrentPlayer = (Networking.IsHost) ? PlayerList[PlayerType.Player1] : PlayerList[PlayerType.Player2];
 
 		return newPlayer;
 	}
@@ -71,6 +70,12 @@ public sealed class PlayerManager : Component
 
 	}
 
+	/// <summary>
+	/// Rotate the player's neck in the Y axis
+	/// </summary>
+	/// <param name="playerType"></param>
+	/// <param name="targetRoll"></param>
+	/// <returns></returns>
 	public async Task RotateHeadY(PlayerType playerType, float targetRoll )
 	{
 		Player player = null;
@@ -90,11 +95,11 @@ public sealed class PlayerManager : Component
 	}
 
 
-	public Dictionary<PlayerType, Player> PlayerList {  get; private set; } = new Dictionary<PlayerType, Player>();
+	public NetDictionary<PlayerType, Player> PlayerList {  get; private set; } = new();
 
 	public Player CurrentPlayer { get; private set; }
 
-	[Sync] private Dictionary<PlayerType, bool> _assignedPlayers { get; set; } = new Dictionary<PlayerType, bool>();
+	[Sync] private NetDictionary<PlayerType, bool> _assignedPlayers { get; set; } = new();
 
 	[Property] public GameObject Player1Ref { get; set; }
 	[Property] private GameObject _player1Neck { get; set; }
